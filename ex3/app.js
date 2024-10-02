@@ -1,4 +1,3 @@
-
 document.addEventListener('DOMContentLoaded', () => {
     const postForm = document.getElementById('postForm');
     const postContent = document.getElementById('postContent');
@@ -91,6 +90,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const likeButton = document.createElement('button');
         likeButton.classList.add('like-button');
         likeButton.innerHTML = '&#10084;'; // Heart symbol
+        likeButton.style.color = 'red'; // Set like button color to red
 
         // Add like count display
         const likeCountDisplay = document.createElement('span');
@@ -107,7 +107,7 @@ document.addEventListener('DOMContentLoaded', () => {
         // Add dislike button
         const dislikeButton = document.createElement('button');
         dislikeButton.classList.add('dislike-button');
-        dislikeButton.innerHTML = '&#10060;'; // Cross mark symbol
+        dislikeButton.innerHTML = '&#128078;'; // Thumbs down symbol
 
         // Add dislike count display
         const dislikeCountDisplay = document.createElement('span');
@@ -203,6 +203,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const likeButton = document.createElement('button');
         likeButton.classList.add('like-button');
         likeButton.innerHTML = '&#10084;'; // Heart symbol
+        likeButton.style.color = 'red'; // Set like button color to red
         likeButton.addEventListener('click', () => {
             comment.likeCount++;
             likeCountDisplay.textContent = ` Likes: ${comment.likeCount}`;
@@ -216,7 +217,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const dislikeButton = document.createElement('button');
         dislikeButton.classList.add('dislike-button');
-        dislikeButton.innerHTML = '&#10060;'; // Cross mark symbol
+        dislikeButton.innerHTML = '&#128078;'; // Thumbs down symbol
         dislikeButton.addEventListener('click', () => {
             comment.dislikeCount++;
             dislikeCountDisplay.textContent = ` Dislikes: ${comment.dislikeCount}`;
