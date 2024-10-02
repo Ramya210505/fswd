@@ -3,22 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Microblogging App with Images, Date, Time, and Likes</title>
+    <title>Microblogging App</title>
     <link rel="stylesheet" href="miblo.css">
 </head>
 <body>
     <div class="container">
         <h1>Microblogging App</h1>
-        <form id="postForm">
-            <textarea id="postContent" placeholder="What's on your mind?" required></textarea>
-            <input type="file" id="postImage" accept="image/*">
-            <button type="submit">Post</button>
-        </form>
-        <div id="postsContainer">
-            <!-- Posts will be dynamically added here -->
-        </div>
+        <textarea id="postInput" placeholder="What's on your mind?" rows="4"></textarea>
+        <button id="postButton">Post</button>
+        <div id="postsContainer"></div>
     </div>
     <script src="app.js"></script>
 </body>
 </html>
-
