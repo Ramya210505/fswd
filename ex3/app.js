@@ -1,238 +1,212 @@
-document.addEventListener('DOMContentLoaded', () => {
-    const postForm = document.getElementById('postForm');
-    const postContent = document.getElementById('postContent');
-    const postImage = document.getElementById('postImage');
-    const postsContainer = document.getElementById('postsContainer');
+let currentUser = null;
+let users = JSON.parse(localStorage.getItem('users')) || [];
+let posts = JSON.parse(localStorage.getItem('posts')) || [];
 
-    // Load posts from localStorage on page load
-    loadPosts();
-
-    postForm.addEventListener('submit', (event) => {
-        event.preventDefault();
-
-        const content = postContent.value.trim();
-        const imageFile = postImage.files[0];
-
-        if (content || imageFile) {
-            const post = {
-                id: Date.now(),
-                content: content,
-                image: imageFile ? URL.createObjectURL(imageFile) : null,
-                likeCount: 0,
-                dislikeCount: 0,
-                comments: []
-            };
-
-            // Add post to localStorage
-            addPostToStorage(post);
-            renderPost(post);
-
-            // Clear form fields
-            postContent.value = '';
-            postImage.value = '';
-        }
-    });
-
-    function loadPosts() {
-        const posts = JSON.parse(localStorage.getItem('posts')) || [];
-        posts.forEach(post => {
-            renderPost(post);
-        });
+// Register or login a user
+function registerOrLogin() {
+    const username = document.getElementById('username').value.trim();
+    if (!username) {
+        alert("Please enter a username.");
+        return;
     }
 
-    function addPostToStorage(post) {
-        const posts = JSON.parse(localStorage.getItem('posts')) || [];
-        posts.push(post);
-        localStorage.setItem('posts', JSON.stringify(posts));
+    let user = users.find(user => user.username === username);
+    if (!user) {
+        user = { username, following: [], followers: [] };
+        users.push(user);
+        localStorage.setItem('users', JSON.stringify(users));
     }
 
-    function renderPost(post) {
+    currentUser = user;
+    document.getElementById('current-user').textContent = currentUser.username;
+    document.getElementById('auth-section').style.display = 'none';
+    document.getElementById('user-section').style.display = 'block';
+
+    loadUserList();
+    loadFeed();
+}
+
+// Log out the current user
+function logout() {
+    currentUser = null;
+    document.getElementById('auth-section').style.display = 'block';
+    document.getElementById('user-section').style.display = 'none';
+}
+
+// Create a new post
+function createPost() {
+    const content = document.getElementById('post-content').value.trim();
+    const imageInput = document.getElementById('post-image');
+    const imageFile = imageInput.files[0];
+    const imageUrl = imageFile ? URL.createObjectURL(imageFile) : '';
+
+    if (!content && !imageUrl) {
+        alert("Post content or image cannot be empty.");
+        return;
+    }
+
+    const post = {
+        content,
+        author: currentUser.username,
+        likes: 0,
+        dislikes: 0,
+        comments: [],
+        timestamp: new Date().toLocaleString(),
+        image: imageUrl // Save image URL
+    };
+    posts.push(post);
+    localStorage.setItem('posts', JSON.stringify(posts));
+    document.getElementById('post-content').value = ''; // Clear input after posting
+    imageInput.value = ''; // Clear image input
+    loadFeed();
+}
+
+// Load the feed of posts from followed users
+function loadFeed() {
+    const feed = document.getElementById('feed');
+    feed.innerHTML = '';
+
+    let followedPosts = posts.filter(post => currentUser.following.includes(post.author) || post.author === currentUser.username);
+
+    followedPosts.forEach((post) => {
         const postDiv = document.createElement('div');
-        postDiv.classList.add('post');
+        postDiv.classList.add('post', 'feed-item');
+        
+        postDiv.innerHTML = `
+            <div class="feed-content">
+                <strong>${post.author}</strong><br>
+                <span>${post.content}</span><br>
+                <span class="timestamp">${post.timestamp}</span><br>
+            </div>
+            <span>Likes: <span class="red-heart">${post.likes} ❤️</span></span><br>
+            <span>Dislikes: <span class="brown-thumb">${post.dislikes} 👎</span></span><br>
+            <span>Comments: ${post.comments.length}</span><br>
+        `;
 
-        // Add timestamp
-        const timestamp = document.createElement('div');
-        timestamp.classList.add('timestamp');
-        timestamp.textContent = new Date(post.id).toLocaleString();
-        postDiv.appendChild(timestamp);
-
-        // Add post content
-        const textPara = document.createElement('p');
-        textPara.textContent = post.content;
-        postDiv.appendChild(textPara);
-
-        // Add image if available
         if (post.image) {
             const img = document.createElement('img');
             img.src = post.image;
+            img.style.width = '100%';
+            img.style.borderRadius = '5px';
             postDiv.appendChild(img);
         }
 
-        // Render like/dislike section
-        addLikeDislikeSection(postDiv, post);
+        // Click to like
+        const likeSpan = postDiv.querySelector('.red-heart');
+        likeSpan.onclick = function () {
+            post.likes++;
+            localStorage.setItem('posts', JSON.stringify(posts));
+            loadFeed();
+        };
 
-        // Render comment section
-        addCommentSection(postDiv, post);
+        // Click to dislike
+        const dislikeSpan = postDiv.querySelector('.brown-thumb');
+        dislikeSpan.onclick = function () {
+            post.dislikes++;
+            localStorage.setItem('posts', JSON.stringify(posts));
+            loadFeed();
+        };
 
-        // Render existing comments
-        post.comments.forEach(comment => {
-            renderComment(comment, postDiv, post);
-        });
-
-        postsContainer.appendChild(postDiv);
-    }
-
-    function addLikeDislikeSection(postDiv, post) {
-        const likeSection = document.createElement('div');
-        likeSection.classList.add('like-section');
-
-        // Add like button
-        const likeButton = document.createElement('button');
-        likeButton.classList.add('like-button');
-        likeButton.innerHTML = '&#10084;'; // Heart symbol
-        likeButton.style.color = 'red'; // Set like button color to red
-
-        // Add like count display
-        const likeCountDisplay = document.createElement('span');
-        likeCountDisplay.textContent = ` Likes: ${post.likeCount}`;
-        likeSection.appendChild(likeCountDisplay);
-
-        likeButton.addEventListener('click', () => {
-            post.likeCount++;
-            likeCountDisplay.textContent = ` Likes: ${post.likeCount}`;
-            updatePostInStorage(post);
-        });
-        likeSection.appendChild(likeButton);
-
-        // Add dislike button
-        const dislikeButton = document.createElement('button');
-        dislikeButton.classList.add('dislike-button');
-        dislikeButton.innerHTML = '&#128078;'; // Thumbs down symbol
-
-        // Add dislike count display
-        const dislikeCountDisplay = document.createElement('span');
-        dislikeCountDisplay.textContent = ` Dislikes: ${post.dislikeCount}`;
-        likeSection.appendChild(dislikeCountDisplay);
-
-        dislikeButton.addEventListener('click', () => {
-            post.dislikeCount++;
-            dislikeCountDisplay.textContent = ` Dislikes: ${post.dislikeCount}`;
-            updatePostInStorage(post);
-        });
-        likeSection.appendChild(dislikeButton);
-
-        postDiv.appendChild(likeSection);
-    }
-
-    function addCommentSection(postDiv, post) {
-        const commentSection = document.createElement('div');
-        commentSection.classList.add('comment-section');
-
-        // Comment count display
-        const commentCountDisplay = document.createElement('span');
-        commentCountDisplay.textContent = ` Comments: ${post.comments.length}`;
-        commentSection.appendChild(commentCountDisplay);
-
-        // Comment input
-        const commentInput = document.createElement('input');
-        commentInput.type = 'text';
-        commentInput.placeholder = 'Add a comment...';
-        commentSection.appendChild(commentInput);
-
-        // Emotions dropdown
-        const emotionsSelect = document.createElement('select');
-        const emotions = ['😊', '😢', '😡', '❤️', '😂'];
-        emotions.forEach(emotion => {
-            const option = document.createElement('option');
-            option.value = emotion;
-            option.textContent = emotion;
-            emotionsSelect.appendChild(option);
-        });
-        commentSection.appendChild(emotionsSelect);
-
-        // Comment button
-        const commentButton = document.createElement('button');
-        commentButton.textContent = 'Comment';
-        commentSection.appendChild(commentButton);
-
-        commentButton.addEventListener('click', () => {
-            const commentText = commentInput.value.trim();
-            const selectedEmotion = emotionsSelect.value;
-
+        // Comment section
+        const commentBtn = document.createElement('button');
+        commentBtn.innerHTML = `<i class="fa fa-comments"></i> Comment`;
+        commentBtn.classList.add('comment-btn');
+        commentBtn.onclick = function () {
+            const commentText = prompt("Add your comment:");
             if (commentText) {
                 const comment = {
-                    text: commentText,
-                    emotion: selectedEmotion,
-                    likeCount: 0,
-                    dislikeCount: 0
+                    author: currentUser.username,
+                    comment: commentText,
+                    likes: 0,
+                    dislikes: 0,
+                    timestamp: new Date().toLocaleString()
                 };
-
-                // Add comment to post and localStorage
                 post.comments.push(comment);
-                commentCountDisplay.textContent = ` Comments: ${post.comments.length}`;
-                updatePostInStorage(post);
-                renderComment(comment, postDiv, post);
-
-                // Clear the input
-                commentInput.value = '';
+                localStorage.setItem('posts', JSON.stringify(posts));
+                loadFeed();
             }
+        };
+
+        postDiv.appendChild(commentBtn);
+
+        // Display comments
+        post.comments.forEach(comment => {
+            const commentDiv = document.createElement('div');
+            commentDiv.classList.add('comment');
+            commentDiv.innerHTML = `
+                <strong>${comment.author}</strong>: ${comment.comment} 
+                <span class="timestamp">${comment.timestamp}</span><br>
+                Likes: <span class="red-heart">${comment.likes} ❤️</span><br>
+                Dislikes: <span class="brown-thumb">${comment.dislikes} 👎</span>
+            `;
+            
+            // Click to like comment
+            const likeCommentSpan = commentDiv.querySelector('.red-heart');
+            likeCommentSpan.onclick = function () {
+                comment.likes++;
+                localStorage.setItem('posts', JSON.stringify(posts));
+                loadFeed();
+            };
+
+            // Click to dislike comment
+            const dislikeCommentSpan = commentDiv.querySelector('.brown-thumb');
+            dislikeCommentSpan.onclick = function () {
+                comment.dislikes++;
+                localStorage.setItem('posts', JSON.stringify(posts));
+                loadFeed();
+            };
+
+            postDiv.appendChild(commentDiv);
         });
 
-        postDiv.appendChild(commentSection);
+        feed.appendChild(postDiv);
+    });
+}
+
+// Load users for following/unfollowing
+function loadUserList() {
+    const userList = document.getElementById('user-list');
+    userList.innerHTML = '';
+
+    users.forEach(user => {
+        if (user.username !== currentUser.username) {
+            const userDiv = document.createElement('div');
+            const isFollowing = currentUser.following.includes(user.username);
+            userDiv.innerHTML = `<strong>${user.username}</strong>`;
+
+            const followBtn = document.createElement('button');
+            followBtn.innerHTML = isFollowing ? `<i class="fa fa-user-times"></i> Unfollow` : `<i class="fa fa-user-plus"></i> Follow`;
+            followBtn.classList.add('follow-btn');
+            followBtn.onclick = function () {
+                if (isFollowing) {
+                    currentUser.following = currentUser.following.filter(f => f !== user.username);
+                    user.followers = user.followers.filter(f => f !== currentUser.username);
+                } else {
+                    currentUser.following.push(user.username);
+                    user.followers.push(currentUser.username);
+                }
+                localStorage.setItem('users', JSON.stringify(users));
+                loadUserList();
+                loadFeed();
+            };
+
+            userDiv.appendChild(followBtn);
+            userList.appendChild(userDiv);
+        }
+    });
+}
+
+// Load existing data on page load
+window.onload = function() {
+    if (users.length > 0) {
+        const savedUser = localStorage.getItem('currentUser');
+        if (savedUser) {
+            currentUser = users.find(user => user.username === savedUser);
+            document.getElementById('current-user').textContent = currentUser.username;
+            document.getElementById('auth-section').style.display = 'none';
+            document.getElementById('user-section').style.display = 'block';
+            loadUserList();
+            loadFeed();
+        }
     }
-
-    function updatePostInStorage(post) {
-        const posts = JSON.parse(localStorage.getItem('posts')) || [];
-        const updatedPosts = posts.map(p => p.id === post.id ? post : p);
-        localStorage.setItem('posts', JSON.stringify(updatedPosts));
-    }
-
-    function renderComment(comment, postDiv, post) {
-        const commentDisplay = document.createElement('div');
-        commentDisplay.classList.add('comment-display');
-        commentDisplay.textContent = `${comment.emotion} ${comment.text}`;
-
-        // Like/Dislike section for the comment
-        const likeSection = document.createElement('div');
-        likeSection.classList.add('like-section');
-
-        const likeCountDisplay = document.createElement('span');
-        likeCountDisplay.textContent = ` Likes: ${comment.likeCount}`;
-        likeSection.appendChild(likeCountDisplay);
-
-        const likeButton = document.createElement('button');
-        likeButton.classList.add('like-button');
-        likeButton.innerHTML = '&#10084;'; // Heart symbol
-        likeButton.style.color = 'red'; // Set like button color to red
-        likeButton.addEventListener('click', () => {
-            comment.likeCount++;
-            likeCountDisplay.textContent = ` Likes: ${comment.likeCount}`;
-            updateCommentInPost(post, comment);
-        });
-        likeSection.appendChild(likeButton);
-
-        const dislikeCountDisplay = document.createElement('span');
-        dislikeCountDisplay.textContent = ` Dislikes: ${comment.dislikeCount}`;
-        likeSection.appendChild(dislikeCountDisplay);
-
-        const dislikeButton = document.createElement('button');
-        dislikeButton.classList.add('dislike-button');
-        dislikeButton.innerHTML = '&#128078;'; // Thumbs down symbol
-        dislikeButton.addEventListener('click', () => {
-            comment.dislikeCount++;
-            dislikeCountDisplay.textContent = ` Dislikes: ${comment.dislikeCount}`;
-            updateCommentInPost(post, comment);
-        });
-        likeSection.appendChild(dislikeButton);
-
-        commentDisplay.appendChild(likeSection);
-        postDiv.appendChild(commentDisplay);
-    }
-
-    function updateCommentInPost(post, comment) {
-        const updatedComments = post.comments.map(c => c.text === comment.text ? comment : c);
-        post.comments = updatedComments;
-        updatePostInStorage(post);
-    }
-});
-
+};
