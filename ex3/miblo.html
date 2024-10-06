@@ -3,21 +3,33 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Microblogging App with Images, Date, Time, and Likes</title>
-    <link rel="stylesheet" href="miblo.css">
+    <title>Social Media App</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 </head>
 <body>
-    <div class="container">
-        <h1>Microblogging App</h1>
-        <form id="postForm">
-            <textarea id="postContent" placeholder="What's on your mind?" required></textarea>
-            <input type="file" id="postImage" accept="image/*">
-            <button type="submit">Post</button>
-        </form>
-        <div id="postsContainer">
-            <!-- Posts will be dynamically added here -->
-        </div>
-    </div>
-    <script src="app.js"></script>
+
+<div id="auth-section">
+    <h2>Login</h2>
+    <input type="text" id="username" placeholder="Username">
+    <button onclick="registerOrLogin()">Log In</button>
+</div>
+
+<div id="user-section" style="display:none;">
+    <h2>Welcome, <span id="current-user"></span></h2>
+    <button onclick="logout()">Logout</button>
+
+    <h3>Create a Post</h3>
+    <textarea id="post-content" placeholder="What's on your mind?"></textarea>
+    <input type="file" id="post-image" accept="image/*">
+    <button onclick="createPost()">Post</button>
+
+    <div id="feed"></div>
+</div>
+
+<h3>Users to Follow:</h3>
+<div id="user-list"></div>
+
+<script src="app.js"></script>
 </body>
 </html>
