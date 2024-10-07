@@ -119,7 +119,7 @@ function loadFeed() {
                     comment: commentText,
                     likes: 0,
                     dislikes: 0,
-                    timestamp: new Date().toLocaleString()
+                    timestamp: new Date().toLocaleString(),
                 };
                 post.comments.push(comment);
                 localStorage.setItem('posts', JSON.stringify(posts));
@@ -138,8 +138,10 @@ function loadFeed() {
                 <span class="timestamp">${comment.timestamp}</span><br>
                 Likes: <span class="red-heart">${comment.likes} ❤️</span><br>
                 Dislikes: <span class="brown-thumb">${comment.dislikes} 👎</span>
+                <button class="reaction-btn">React 😊</button>
+                <div class="reactions" style="display:none;"></div>
             `;
-            
+
             // Click to like comment
             const likeCommentSpan = commentDiv.querySelector('.red-heart');
             likeCommentSpan.onclick = function () {
@@ -155,6 +157,43 @@ function loadFeed() {
                 localStorage.setItem('posts', JSON.stringify(posts));
                 loadFeed();
             };
+
+            // Reaction button logic
+            const reactionBtn = commentDiv.querySelector('.reaction-btn');
+            const reactionsDiv = commentDiv.querySelector('.reactions');
+
+            reactionBtn.onclick = function () {
+                reactionsDiv.style.display = reactionsDiv.style.display === 'none' ? 'block' : 'none';
+            };
+
+            const emojiList = ['😊', '😂', '😢', '❤️', '😮'];
+            emojiList.forEach(emoji => {
+                const emojiButton = document.createElement('span');
+                emojiButton.textContent = emoji;
+                emojiButton.style.cursor = 'pointer';
+                emojiButton.style.margin = '0 5px';
+                emojiButton.onclick = function () {
+                    const reaction = {
+                        emoji: emoji,
+                        author: currentUser.username,
+                        timestamp: new Date().toLocaleString(),
+                    };
+                    comment.reactions = comment.reactions || [];
+                    comment.reactions.push(reaction);
+                    localStorage.setItem('posts', JSON.stringify(posts));
+                    loadFeed();
+                };
+                reactionsDiv.appendChild(emojiButton);
+            });
+
+            // Display existing reactions
+            if (comment.reactions) {
+                comment.reactions.forEach(reaction => {
+                    const reactionDiv = document.createElement('div');
+                    reactionDiv.innerHTML = `<strong>${reaction.author}</strong> reacted with ${reaction.emoji} <span class="timestamp">${reaction.timestamp}</span>`;
+                    reactionsDiv.appendChild(reactionDiv);
+                });
+            }
 
             postDiv.appendChild(commentDiv);
         });
