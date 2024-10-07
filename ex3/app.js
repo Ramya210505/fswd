@@ -71,12 +71,12 @@ function loadFeed() {
     followedPosts.forEach((post) => {
         const postDiv = document.createElement('div');
         postDiv.classList.add('post', 'feed-item');
-        
+
         postDiv.innerHTML = `
             <div class="feed-content">
                 <strong>${post.author}</strong><br>
-                <span>${post.content}</span><br>
                 <span class="timestamp">${post.timestamp}</span><br>
+                <span>${post.content}</span><br>
             </div>
             <span>Likes: <span class="red-heart">${post.likes} ❤️</span></span><br>
             <span>Dislikes: <span class="brown-thumb">${post.dislikes} 👎</span></span><br>
