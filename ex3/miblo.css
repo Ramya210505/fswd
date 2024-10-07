@@ -13,7 +13,7 @@ body {
 }
 
 #user-section {
-    width: 800px; /* Increased width for the user section */
+    width: 800px;
     margin: 20px auto;
     padding: 20px;
     border: 1px solid #ccc;
@@ -83,7 +83,23 @@ button:hover {
 }
 
 .comment strong {
-    color: #007bff; /* Change color for comment authors */
+    color: #007bff;
+}
+
+.reactions {
+    margin-top: 10px;
+    padding-left: 20px;
+    font-size: 0.9em;
+}
+
+.reactions span {
+    margin-right: 5px;
+    cursor: pointer;
+    transition: transform 0.2s;
+}
+
+.reactions span:hover {
+    transform: scale(1.2);
 }
 
 .follow-btn {
@@ -104,13 +120,8 @@ button:hover {
     margin-bottom: 20px;
 }
 
-#feed-container {
-    margin-bottom: 20px;
-}
-
-/* Add colorful font styles */
 h2, h3 {
-    color: #ff6347; /* Tomato color for headings */
+    color: #ff6347;
 }
 
 h2 {
@@ -122,9 +133,9 @@ h3 {
 }
 
 button {
-    background-color: #6a5acd; /* Slate Blue for buttons */
+    background-color: #6a5acd;
 }
 
 button:hover {
-    background-color: #483d8b; /* Dark Slate Blue for button hover */
+    background-color: #483d8b;
 }
