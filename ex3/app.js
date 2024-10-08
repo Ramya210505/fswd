@@ -18,6 +18,7 @@ function registerOrLogin() {
     }
 
     currentUser = user;
+    localStorage.setItem('currentUser', currentUser.username); // Store current user
     document.getElementById('current-user').textContent = currentUser.username;
     document.getElementById('auth-section').style.display = 'none';
     document.getElementById('user-section').style.display = 'block';
@@ -29,6 +30,7 @@ function registerOrLogin() {
 // Log out the current user
 function logout() {
     currentUser = null;
+    localStorage.removeItem('currentUser'); // Remove current user from localStorage
     document.getElementById('auth-section').style.display = 'block';
     document.getElementById('user-section').style.display = 'none';
 }
@@ -246,6 +248,9 @@ window.onload = function() {
             document.getElementById('user-section').style.display = 'block';
             loadUserList();
             loadFeed();
+        } else {
+            document.getElementById('auth-section').style.display = 'block';
+            document.getElementById('user-section').style.display = 'none';
         }
     }
 };
