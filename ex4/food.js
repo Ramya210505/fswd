@@ -1,35 +1,35 @@
 let cart = [];
 let totalPrice = 0;
 
-// Dish data for each shop
+// Dish data for each themed shop
 const shops = {
     burger: [
-        { name: 'Classic Burger', price: 10, rating: 4.5, userRating: 0 },
-        { name: 'Cheeseburger', price: 12, rating: 4.0, userRating: 0 },
-        { name: 'Bacon Burger', price: 13, rating: 4.8, userRating: 0 },
-        { name: 'Veggie Burger', price: 9, rating: 4.2, userRating: 0 },
-        { name: 'Spicy Burger', price: 11, rating: 4.7, userRating: 0 }
+        { name: 'The Classic Burger', price: 10, rating: 4.5, userRating: 0 },
+        { name: 'Cheesy Delight Burger', price: 12, rating: 4.0, userRating: 0 },
+        { name: 'Bacon Explosion Burger', price: 13, rating: 4.8, userRating: 0 },
+        { name: 'Garden Fresh Veggie Burger', price: 9, rating: 4.2, userRating: 0 },
+        { name: 'Spicy Jalapeño Burger', price: 11, rating: 4.7, userRating: 0 }
     ],
     pizza: [
-        { name: 'Margherita Pizza', price: 15, rating: 4.6, userRating: 0 },
-        { name: 'Pepperoni Pizza', price: 16, rating: 4.9, userRating: 0 },
-        { name: 'BBQ Chicken Pizza', price: 17, rating: 4.4, userRating: 0 },
-        { name: 'Veggie Pizza', price: 14, rating: 4.3, userRating: 0 },
-        { name: 'Four Cheese Pizza', price: 18, rating: 4.1, userRating: 0 }
+        { name: 'Margherita Masterpiece', price: 15, rating: 4.6, userRating: 0 },
+        { name: 'Pepperoni Paradise', price: 16, rating: 4.9, userRating: 0 },
+        { name: 'BBQ Chicken Feast', price: 17, rating: 4.4, userRating: 0 },
+        { name: 'Veggie Lover’s Delight', price: 14, rating: 4.3, userRating: 0 },
+        { name: 'Four Cheese Indulgence', price: 18, rating: 4.1, userRating: 0 }
     ],
     pasta: [
-        { name: 'Spaghetti Bolognese', price: 12, rating: 4.5, userRating: 0 },
-        { name: 'Fettuccine Alfredo', price: 14, rating: 4.7, userRating: 0 },
-        { name: 'Penne Arrabbiata', price: 11, rating: 4.2, userRating: 0 },
-        { name: 'Lasagna', price: 15, rating: 4.6, userRating: 0 },
-        { name: 'Seafood Pasta', price: 18, rating: 4.8, userRating: 0 }
+        { name: 'Spaghetti Bolognese Bliss', price: 12, rating: 4.5, userRating: 0 },
+        { name: 'Fettuccine Alfredo Delight', price: 14, rating: 4.7, userRating: 0 },
+        { name: 'Penne Arrabbiata Adventure', price: 11, rating: 4.2, userRating: 0 },
+        { name: 'Lasagna Layers of Love', price: 15, rating: 4.6, userRating: 0 },
+        { name: 'Seafood Pasta Sensation', price: 18, rating: 4.8, userRating: 0 }
     ],
     noodles: [
-        { name: 'Chicken Noodle Soup', price: 9, rating: 4.3, userRating: 0 },
-        { name: 'Pad Thai', price: 13, rating: 4.7, userRating: 0 },
-        { name: 'Chow Mein', price: 10, rating: 4.5, userRating: 0 },
-        { name: 'Ramen', price: 12, rating: 4.8, userRating: 0 },
-        { name: 'Spicy Noodles', price: 11, rating: 4.4, userRating: 0 }
+        { name: 'Hearty Chicken Noodle Soup', price: 9, rating: 4.3, userRating: 0 },
+        { name: 'Pad Thai Paradise', price: 13, rating: 4.7, userRating: 0 },
+        { name: 'Chow Mein Charm', price: 10, rating: 4.5, userRating: 0 },
+        { name: 'Authentic Ramen Retreat', price: 12, rating: 4.8, userRating: 0 },
+        { name: 'Spicy Noodle Challenge', price: 11, rating: 4.4, userRating: 0 }
     ]
 };
 
@@ -37,7 +37,7 @@ function showShop(shop) {
     const shopDishes = document.getElementById('shopDishes');
     shopDishes.innerHTML = ''; // Clear previous dishes
     const dishes = shops[shop];
-    document.getElementById('shopTitle').textContent = `${shop.charAt(0).toUpperCase() + shop.slice(1)} Shop`;
+    document.getElementById('shopTitle').textContent = `${shop.charAt(0).toUpperCase() + shop.slice(1)} Restaurant`;
 
     dishes.forEach((dish, index) => {
         const dishDiv = document.createElement('div');
@@ -47,7 +47,7 @@ function showShop(shop) {
         }
         dishDiv.innerHTML = `
             <h4>${dish.name}</h4>
-            <p>$${dish.price}</p>
+            <p>Price: $${dish.price}</p>
             <p>Rating: ${'★'.repeat(Math.floor(dish.rating))}${'☆'.repeat(5 - Math.floor(dish.rating))}</p>
             <div class="rating">
                 ${[1, 2, 3, 4, 5].map(i => 
