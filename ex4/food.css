@@ -3,6 +3,12 @@ body {
     margin: 0;
     padding: 0;
     background-color: #f0f8ff; /* Light background color */
+    transition: background-color 0.3s, color 0.3s; /* Transition for dark mode */
+}
+
+body.dark-mode {
+    background-color: #1c1c1c; /* Dark background */
+    color: #ffffff; /* Light text */
 }
 
 header {
@@ -10,10 +16,6 @@ header {
     color: white;
     text-align: center;
     padding: 1.5rem 0;
-}
-
-nav {
-    margin: 20px 0;
 }
 
 nav button {
@@ -29,6 +31,16 @@ nav button {
 
 nav button:hover {
     background-color: #d03b66; /* Darker pink on hover */
+}
+
+#toggleMode {
+    margin: 10px;
+    padding: 10px 15px;
+    background-color: #28a745; /* Green color */
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
 }
 
 .modal {
@@ -74,11 +86,16 @@ nav button:hover {
     margin: 10px;
     padding: 15px;
     text-align: center;
-    transition: transform 0.2s;
+    transition: transform 0.2s, box-shadow 0.3s; /* Smooth animations */
+}
+
+.dish.dark-mode {
+    background-color: #333; /* Dark background for dishes in dark mode */
 }
 
 .dish:hover {
     transform: scale(1.05); /* Slight zoom on hover */
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2); /* Shadow on hover */
 }
 
 button.add-to-cart {
@@ -108,7 +125,32 @@ button.add-to-cart:hover {
     padding: 0;
 }
 
+#cartItems li {
+    color: #333; /* Default text color */
+}
+
+body.dark-mode #cart {
+    background-color: #444; /* Darker background for cart in dark mode */
+}
+
+body.dark-mode #cartItems li {
+    color: #ffffff; /* Light text color for cart items in dark mode */
+}
+
 #totalPrice {
     font-weight: bold;
     color: #e94e77; /* Pink color for total price */
+}
+
+body.dark-mode #totalPrice {
+    color: #ffcc00; /* Yellow color for total price in dark mode */
+}
+
+.star {
+    color: #FFD700; /* Gold color for stars */
+    cursor: pointer;
+}
+
+.star:hover {
+    color: #FFB700; /* Lighter gold on hover */
 }
