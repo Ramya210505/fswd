@@ -3,22 +3,25 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Food Delivery App</title>
+    <title>Food Delivery Website</title>
     <link rel="stylesheet" href="food.css">
 </head>
 <body>
     <header>
-        <h1>Food Delivery App</h1>
+        <h1>Food Delivery Website</h1>
         <nav>
-            <button onclick="showShop('burger')">Burger</button>
-            <button onclick="showShop('pizza')">Pizza</button>
-            <button onclick="showShop('pasta')">Pasta</button>
-            <button onclick="showShop('noodles')">Noodle</button>
             <button id="toggleMode" onclick="toggleDarkMode()">Toggle Dark Mode</button>
         </nav>
     </header>
 
     <main>
+        <section id="foodOptions">
+            <button onclick="showShop('burger')">Burger</button>
+            <button onclick="showShop('pizza')">Pizza</button>
+            <button onclick="showShop('pasta')">Pasta</button>
+            <button onclick="showShop('noodles')">Noodle</button>
+        </section>
+
         <div id="modal" class="modal">
             <div class="modal-content">
                 <span class="close" onclick="closeModal()">&times;</span>
@@ -32,6 +35,7 @@
             <ul id="cartItems"></ul>
             <p>Total: $<span id="totalPrice">0.00</span></p>
             <button onclick="checkout()">Checkout</button>
+            <button onclick="clearCart()">Clear Cart</button>
         </section>
     </main>
 
