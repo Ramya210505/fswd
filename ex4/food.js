@@ -37,7 +37,7 @@ function showShop(shop) {
     const shopDishes = document.getElementById('shopDishes');
     shopDishes.innerHTML = ''; // Clear previous dishes
     const dishes = shops[shop];
-    document.getElementById('shopTitle').textContent = `${shop.charAt(0).toUpperCase() + shop.slice(1)} Restaurant`;
+    document.getElementById('shopTitle').textContent = `${shop.charAt(0).toUpperCase() + shop.slice(1)} Restaurant Menu`;
 
     dishes.forEach((dish, index) => {
         const dishDiv = document.createElement('div');
