@@ -1,5 +1,5 @@
 body {
-    font-family: 'Arial', sans-serif;
+    font-family: 'Verdana', sans-serif; /* Changed font style */
     margin: 0;
     padding: 0;
     background-color: #f0f8ff; /* Light background color */
@@ -12,15 +12,21 @@ body.dark-mode {
 }
 
 header {
-    background-color: #4a90e2; /* Blue color */
+    background-color: #6c757d; /* Dark gray color */
     color: white;
     text-align: center;
     padding: 1.5rem 0;
+    position: relative;
+}
+
+nav {
+    position: absolute;
+    right: 20px;
+    top: 20px;
 }
 
 nav button {
-    margin: 0 10px;
-    padding: 10px 20px;
+    padding: 10px 15px;
     background-color: #e94e77; /* Pink color */
     color: white;
     border: none;
@@ -33,14 +39,25 @@ nav button:hover {
     background-color: #d03b66; /* Darker pink on hover */
 }
 
-#toggleMode {
-    margin: 10px;
-    padding: 10px 15px;
-    background-color: #28a745; /* Green color */
+#foodOptions {
+    display: flex;
+    justify-content: center;
+    margin: 20px 0;
+}
+
+#foodOptions button {
+    margin: 0 10px;
+    padding: 10px 20px;
+    background-color: #007bff; /* Light blue color */
     color: white;
     border: none;
     border-radius: 5px;
     cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+#foodOptions button:hover {
+    background-color: #0056b3; /* Darker blue on hover */
 }
 
 .modal {
@@ -57,10 +74,11 @@ nav button:hover {
 }
 
 .modal-content {
-    background-color: #ffffff;
+    background-color: #f8f9fa; /* Light background for modal content */
+    color: #333; /* Dark text for modal content */
+    border: 1px solid #ccc; /* Light border */
     margin: 5% auto;
     padding: 20px;
-    border: 1px solid #888;
     width: 80%;
     border-radius: 10px;
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
@@ -91,6 +109,7 @@ nav button:hover {
 
 .dish.dark-mode {
     background-color: #333; /* Dark background for dishes in dark mode */
+    color: #ffffff; /* Light text color for dishes in dark mode */
 }
 
 .dish:hover {
@@ -120,6 +139,10 @@ button.add-to-cart:hover {
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
 
+body.dark-mode #cart {
+    background-color: #555; /* Darker background for cart in dark mode */
+}
+
 #cartItems {
     list-style-type: none;
     padding: 0;
@@ -127,10 +150,6 @@ button.add-to-cart:hover {
 
 #cartItems li {
     color: #333; /* Default text color */
-}
-
-body.dark-mode #cart {
-    background-color: #444; /* Darker background for cart in dark mode */
 }
 
 body.dark-mode #cartItems li {
