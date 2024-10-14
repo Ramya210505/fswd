@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Food Delivery Website</title>
     <link rel="stylesheet" href="food.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&family=Sacramento&display=swap" rel="stylesheet">
 </head>
 <body>
     <header>
@@ -15,18 +16,44 @@
     </header>
 
     <main>
-        <section id="foodOptions">
-            <button onclick="showShop('burger')">Burger</button>
-            <button onclick="showShop('pizza')">Pizza</button>
-            <button onclick="showShop('pasta')">Pasta</button>
-            <button onclick="showShop('noodles')">Noodle</button>
+        <section id="restaurantOptions">
+            <div class="restaurant">
+                <h3 class="restaurant-name">Italian Bistro</h3>
+                <p>Location: Downtown LA</p>
+                <button onclick="showRestaurant('italianBistro')">View Menu</button>
+            </div>
+            <div class="restaurant">
+                <h3 class="restaurant-name">Sushi Place</h3>
+                <p>Location: Chinatown, LA</p>
+                <button onclick="showRestaurant('sushiPlace')">View Menu</button>
+            </div>
+            <div class="restaurant">
+                <h3 class="restaurant-name">Vegan Delights</h3>
+                <p>Location: Silver Lake, LA</p>
+                <button onclick="showRestaurant('veganDelights')">View Menu</button>
+            </div>
+            <div class="restaurant">
+                <h3 class="restaurant-name">Steakhouse</h3>
+                <p>Location: West Hollywood</p>
+                <button onclick="showRestaurant('steakhouse')">View Menu</button>
+            </div>
+            <div class="restaurant">
+                <h3 class="restaurant-name">Mexican Fiesta</h3>
+                <p>Location: East LA</p>
+                <button onclick="showRestaurant('mexicanFiesta')">View Menu</button>
+            </div>
+            <div class="restaurant">
+                <h3 class="restaurant-name">Asian Fusion</h3>
+                <p>Location: Little Tokyo, LA</p>
+                <button onclick="showRestaurant('asianFusion')">View Menu</button>
+            </div>
         </section>
 
         <div id="modal" class="modal">
             <div class="modal-content">
                 <span class="close" onclick="closeModal()">&times;</span>
-                <h2 id="shopTitle"></h2>
-                <div id="shopDishes"></div>
+                <h2 id="restaurantTitle"></h2>
+                <div id="restaurantDishes"></div>
             </div>
         </div>
 
