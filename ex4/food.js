@@ -1,53 +1,79 @@
 let cart = JSON.parse(localStorage.getItem('cart')) || [];
 let totalPrice = parseFloat(localStorage.getItem('totalPrice')) || 0;
-let currentShop = 'burger'; // Default shop
+let currentRestaurant = 'italianBistro'; // Default restaurant
 
-// Dish data for each themed shop
-const shops = {
-    burger: [
-        { name: 'The Classic Burger', price: 10, rating: 4.5, userRating: 0 },
-        { name: 'Cheesy Delight Burger', price: 12, rating: 4.0, userRating: 0 },
-        { name: 'Bacon Explosion Burger', price: 13, rating: 4.8, userRating: 0 },
-        { name: 'Garden Fresh Veggie Burger', price: 9, rating: 4.2, userRating: 0 },
-        { name: 'Spicy Jalapeño Burger', price: 11, rating: 4.7, userRating: 0 }
+// Dish data for each restaurant
+const restaurants = {
+    italianBistro: [
+        { name: 'Spaghetti Carbonara', price: 12, rating: 4.6 },
+        { name: 'Margherita Pizza', price: 10, rating: 4.8 },
+        { name: 'Lasagna', price: 15, rating: 4.5 },
+        { name: 'Penne Arrabbiata', price: 11, rating: 4.2 },
+        { name: 'Caprese Salad', price: 8, rating: 4.3 },
+        { name: 'Tiramisu', price: 6, rating: 4.9 },
+        { name: 'Bruschetta', price: 7, rating: 4.4 },
     ],
-    pizza: [
-        { name: 'Margherita Masterpiece', price: 15, rating: 4.6, userRating: 0 },
-        { name: 'Pepperoni Paradise', price: 16, rating: 4.9, userRating: 0 },
-        { name: 'BBQ Chicken Feast', price: 17, rating: 4.4, userRating: 0 },
-        { name: 'Veggie Lover’s Delight', price: 14, rating: 4.3, userRating: 0 },
-        { name: 'Four Cheese Indulgence', price: 18, rating: 4.1, userRating: 0 }
+    sushiPlace: [
+        { name: 'California Roll', price: 8, rating: 4.5 },
+        { name: 'Spicy Tuna Roll', price: 10, rating: 4.7 },
+        { name: 'Dragon Roll', price: 12, rating: 4.6 },
+        { name: 'Tempura Roll', price: 11, rating: 4.3 },
+        { name: 'Rainbow Roll', price: 14, rating: 4.8 },
+        { name: 'Sashimi Platter', price: 20, rating: 4.9 },
+        { name: 'Miso Soup', price: 5, rating: 4.2 },
     ],
-    pasta: [
-        { name: 'Spaghetti Bolognese Bliss', price: 12, rating: 4.5, userRating: 0 },
-        { name: 'Fettuccine Alfredo Delight', price: 14, rating: 4.7, userRating: 0 },
-        { name: 'Penne Arrabbiata Adventure', price: 11, rating: 4.2, userRating: 0 },
-        { name: 'Lasagna Layers of Love', price: 15, rating: 4.6, userRating: 0 },
-        { name: 'Seafood Pasta Sensation', price: 18, rating: 4.8, userRating: 0 }
+    veganDelights: [
+        { name: 'Quinoa Salad', price: 11, rating: 4.5 },
+        { name: 'Vegan Tacos', price: 8, rating: 4.4 },
+        { name: 'Chickpea Curry', price: 10, rating: 4.6 },
+        { name: 'Vegan Burger', price: 12, rating: 4.5 },
+        { name: 'Stuffed Peppers', price: 9, rating: 4.2 },
+        { name: 'Coconut Chia Pudding', price: 6, rating: 4.3 },
+        { name: 'Smoothie Bowl', price: 7, rating: 4.8 },
     ],
-    noodles: [
-        { name: 'Hearty Chicken Noodle Soup', price: 9, rating: 4.3, userRating: 0 },
-        { name: 'Pad Thai Paradise', price: 13, rating: 4.7, userRating: 0 },
-        { name: 'Chow Mein Charm', price: 10, rating: 4.5, userRating: 0 },
-        { name: 'Authentic Ramen Retreat', price: 12, rating: 4.8, userRating: 0 },
-        { name: 'Spicy Noodle Challenge', price: 11, rating: 4.4, userRating: 0 }
-    ]
+    steakhouse: [
+        { name: 'Ribeye Steak', price: 25, rating: 4.8 },
+        { name: 'Filet Mignon', price: 30, rating: 4.7 },
+        { name: 'Grilled Salmon', price: 22, rating: 4.6 },
+        { name: 'Beef Tenderloin', price: 28, rating: 4.5 },
+        { name: 'Steak Frites', price: 20, rating: 4.4 },
+        { name: 'Caesar Salad', price: 8, rating: 4.2 },
+        { name: 'Chocolate Cake', price: 6, rating: 4.9 },
+    ],
+    mexicanFiesta: [
+        { name: 'Tacos al Pastor', price: 9, rating: 4.6 },
+        { name: 'Burrito Bowl', price: 11, rating: 4.5 },
+        { name: 'Chilaquiles', price: 10, rating: 4.3 },
+        { name: 'Quesadilla', price: 8, rating: 4.4 },
+        { name: 'Tamales', price: 7, rating: 4.2 },
+        { name: 'Guacamole with Chips', price: 5, rating: 4.8 },
+        { name: 'Flan', price: 6, rating: 4.5 },
+    ],
+    asianFusion: [
+        { name: 'Pad Thai', price: 13, rating: 4.7 },
+        { name: 'Sushi Platter', price: 25, rating: 4.9 },
+        { name: 'Kung Pao Chicken', price: 12, rating: 4.6 },
+        { name: 'Beef Teriyaki', price: 14, rating: 4.4 },
+        { name: 'Vegetable Fried Rice', price: 9, rating: 4.5 },
+        { name: 'Mango Sticky Rice', price: 7, rating: 4.8 },
+        { name: 'Spring Rolls', price: 5, rating: 4.3 },
+    ],
 };
 
-function showShop(shop) {
-    currentShop = shop;
-    displayDishes(shops[shop]);
+function showRestaurant(restaurant) {
+    currentRestaurant = restaurant;
+    displayDishes(restaurants[restaurant]);
     document.getElementById('modal').style.display = "block";
 }
 
 function displayDishes(dishes) {
-    const shopDishes = document.getElementById('shopDishes');
-    shopDishes.innerHTML = ''; // Clear previous dishes
-    document.getElementById('shopTitle').textContent = `${currentShop.charAt(0).toUpperCase() + currentShop.slice(1)} Restaurant Menu`;
+    const restaurantDishes = document.getElementById('restaurantDishes');
+    restaurantDishes.innerHTML = ''; // Clear previous dishes
+    document.getElementById('restaurantTitle').textContent = `${currentRestaurant.charAt(0).toUpperCase() + currentRestaurant.slice(1).replace(/([A-Z])/g, ' $1')} Menu`;
 
     dishes.forEach((dish, index) => {
         const dishDiv = createDishElement(dish, index);
-        shopDishes.appendChild(dishDiv);
+        restaurantDishes.appendChild(dishDiv);
     });
 }
 
@@ -57,12 +83,7 @@ function createDishElement(dish, index) {
     dishDiv.innerHTML = `
         <h4>${dish.name}</h4>
         <p>Price: $${dish.price}</p>
-        <p>Rating: ${'★'.repeat(Math.floor(dish.rating))}${'☆'.repeat(5 - Math.floor(dish.rating))}</p>
-        <div class="rating">
-            ${[1, 2, 3, 4, 5].map(i => 
-                `<span class="star" onclick="rateDish(${index}, '${currentShop}', ${i})">${i <= dish.userRating ? '★' : '☆'}</span>`
-            ).join('')}
-        </div>
+        <p>Rating: ${'★'.repeat(Math.floor(dish.rating))}${'☆'.repeat(5 - Math.floor(dish.rating))} (${dish.rating})</p>
         <button class="add-to-cart" onclick="addToCart('${dish.name}', ${dish.price})">Add to Cart</button>
     `;
     return dishDiv;
@@ -76,54 +97,42 @@ function addToCart(itemName, itemPrice) {
     cart.push({ name: itemName, price: itemPrice });
     totalPrice += itemPrice;
     updateCart();
-    saveCart();
 }
 
 function updateCart() {
-    const cartItems = document.getElementById('cartItems');
-    cartItems.innerHTML = ''; // Clear current items
+    localStorage.setItem('cart', JSON.stringify(cart));
+    localStorage.setItem('totalPrice', totalPrice);
+    document.getElementById('totalPrice').textContent = totalPrice.toFixed(2);
+    displayCartItems();
+}
 
+function displayCartItems() {
+    const cartItems = document.getElementById('cartItems');
+    cartItems.innerHTML = '';
     cart.forEach(item => {
         const li = document.createElement('li');
-        li.textContent = `${item.name} - $${item.price}`;
+        li.textContent = `${item.name} - $${item.price.toFixed(2)}`;
         cartItems.appendChild(li);
     });
-
-    document.getElementById('totalPrice').textContent = totalPrice.toFixed(2);
 }
 
 function checkout() {
-    if (cart.length === 0) {
-        alert("Your cart is empty!");
-        return;
-    }
-    alert(`Thank you for your order! Total: $${totalPrice.toFixed(2)}`);
-    clearCart();
+    alert('Checkout not implemented yet!');
 }
 
 function clearCart() {
     cart = [];
     totalPrice = 0;
     updateCart();
-    localStorage.removeItem('cart');
-    localStorage.removeItem('totalPrice');
 }
-
-function saveCart() {
-    localStorage.setItem('cart', JSON.stringify(cart));
-    localStorage.setItem('totalPrice', totalPrice);
-}
-
-// Load cart on page load
-window.onload = function() {
-    updateCart();
-};
 
 function toggleDarkMode() {
     document.body.classList.toggle('dark-mode');
+    const restaurantNames = document.querySelectorAll('.restaurant-name');
+    restaurantNames.forEach(name => {
+        name.style.color = document.body.classList.contains('dark-mode') ? 'lightgray' : '#333';
+    });
 }
 
-function rateDish(index, shop, rating) {
-    shops[shop][index].userRating = rating; // Update the user's rating
-    showShop(shop); // Refresh the dish display to show updated ratings
-}
+// Initial load
+displayCartItems();
