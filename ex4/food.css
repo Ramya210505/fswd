@@ -4,8 +4,6 @@ body {
     color: #333;
     margin: 0;
     padding: 20px;
-    max-width: 600px; /* Set a maximum width for a narrower frame */
-    margin: auto; /* Center the body in the middle of the page */
 }
 
 header {
@@ -20,27 +18,60 @@ h1 {
     font-family: 'Sacramento', cursive;
 }
 
-button {
-    padding: 10px 15px;
-    border: none;
-    background-color: #28A745;
-    color: white;
-    cursor: pointer;
-    display: block; /* Make buttons block-level elements */
-    margin: 10px auto; /* Center the buttons and add space between them */
+main {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
-button:hover {
-    background-color: #218838;
+#restaurantOptions {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 20px;
 }
 
 .restaurant {
-    margin: 15px 0;
+    margin: 15px;
     padding: 15px;
     background: white;
     border-radius: 5px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    text-align: center; /* Center text within the restaurant div */
+    text-align: center;
+    width: 250px;
+    transition: transform 0.2s;
+}
+
+.restaurant:hover {
+    transform: scale(1.05);
+}
+
+.restaurant-name {
+    font-weight: bold;
+    font-size: 1.5em;
+    margin-bottom: 10px;
+}
+
+.dish {
+    margin: 10px 0;
+    padding: 10px;
+    background: #e9ecef;
+    border-radius: 5px;
+    text-align: center;
+}
+
+.rating {
+    margin: 10px 0;
+}
+
+.star {
+    cursor: pointer;
+    font-size: 20px;
+    color: #ccc;
+}
+
+.star.rated {
+    color: #FFD700;
 }
 
 .modal {
@@ -77,18 +108,28 @@ button:hover {
     cursor: pointer;
 }
 
-.dish {
-    margin: 10px 0;
-    padding: 10px;
-    background: #e9ecef;
-    border-radius: 5px;
-    text-align: center; /* Center text within dish */
-}
-
 #cart {
     margin-top: 30px;
     background: white;
     padding: 15px;
     border-radius: 5px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    text-align: center;
+}
+
+button {
+    padding: 10px 15px;
+    border: none;
+    background-color: #28A745;
+    color: white;
+    cursor: pointer;
+    margin: 5px;
+}
+
+button:hover {
+    background-color: #218838;
+}
+
+.remove-item {
+    background-color: #dc3545; /* Red color for remove button */
 }
