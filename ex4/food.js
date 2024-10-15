@@ -45,68 +45,53 @@ const restaurants = {
         { name: 'Burrito Bowl', price: 11, rating: 4.5 },
         { name: 'Chilaquiles', price: 10, rating: 4.3 },
         { name: 'Quesadilla', price: 8, rating: 4.4 },
-        { name: 'Tamales', price: 7, rating: 4.2 },
-        { name: 'Guacamole with Chips', price: 5, rating: 4.8 },
-        { name: 'Flan', price: 6, rating: 4.5 },
+        { name: 'Enchiladas', price: 12, rating: 4.7 },
+        { name: 'Guacamole & Chips', price: 5, rating: 4.9 },
+        { name: 'Flan', price: 6, rating: 4.2 },
     ],
     asianFusion: [
-        { name: 'Pad Thai', price: 13, rating: 4.7 },
-        { name: 'Sushi Platter', price: 25, rating: 4.9 },
-        { name: 'Kung Pao Chicken', price: 12, rating: 4.6 },
-        { name: 'Beef Teriyaki', price: 14, rating: 4.4 },
-        { name: 'Vegetable Fried Rice', price: 9, rating: 4.5 },
-        { name: 'Mango Sticky Rice', price: 7, rating: 4.8 },
-        { name: 'Spring Rolls', price: 5, rating: 4.3 },
+        { name: 'Pad Thai', price: 10, rating: 4.5 },
+        { name: 'General Tso\'s Chicken', price: 12, rating: 4.6 },
+        { name: 'Dumplings', price: 8, rating: 4.4 },
+        { name: 'Fried Rice', price: 9, rating: 4.3 },
+        { name: 'Spring Rolls', price: 7, rating: 4.2 },
+        { name: 'Mango Sticky Rice', price: 6, rating: 4.8 },
+        { name: 'Wonton Soup', price: 5, rating: 4.5 },
     ],
 };
 
+// Show the restaurant menu in the modal
 function showRestaurant(restaurant) {
     currentRestaurant = restaurant;
-    displayDishes(restaurants[restaurant]);
-    document.getElementById('modal').style.display = "block";
-}
-
-function displayDishes(dishes) {
-    const restaurantDishes = document.getElementById('restaurantDishes');
-    restaurantDishes.innerHTML = ''; // Clear previous dishes
-    document.getElementById('restaurantTitle').textContent = `${currentRestaurant.charAt(0).toUpperCase() + currentRestaurant.slice(1).replace(/([A-Z])/g, ' $1')} Menu`;
-
-    dishes.forEach((dish, index) => {
-        const dishDiv = createDishElement(dish, index);
-        restaurantDishes.appendChild(dishDiv);
+    const dishes = restaurants[restaurant];
+    let dishHtml = '';
+    dishes.forEach(dish => {
+        dishHtml += `<div class="dish">
+            <span>${dish.name} - $${dish.price.toFixed(2)}</span>
+            <button onclick="addToCart('${dish.name}', ${dish.price})">Add to Cart</button>
+        </div>`;
     });
+    document.getElementById('restaurantTitle').innerText = restaurant.replace(/([A-Z])/g, ' $1').trim();
+    document.getElementById('restaurantDishes').innerHTML = dishHtml;
+    document.getElementById('modal').style.display = 'block';
 }
 
-function createDishElement(dish, index) {
-    const dishDiv = document.createElement('div');
-    dishDiv.className = 'dish';
-    dishDiv.innerHTML = `
-        <h4>${dish.name}</h4>
-        <p>Price: $${dish.price}</p>
-        <p>Rating: ${'★'.repeat(Math.floor(dish.rating))}${'☆'.repeat(5 - Math.floor(dish.rating))} (${dish.rating})</p>
-        <button class="add-to-cart" onclick="addToCart('${dish.name}', ${dish.price})">Add to Cart</button>
-    `;
-    return dishDiv;
-}
-
+// Close the modal
 function closeModal() {
-    document.getElementById('modal').style.display = "none";
+    document.getElementById('modal').style.display = 'none';
 }
 
-function addToCart(itemName, itemPrice) {
-    cart.push({ name: itemName, price: itemPrice });
-    totalPrice += itemPrice;
+// Add a dish to the cart
+function addToCart(dishName, dishPrice) {
+    cart.push({ name: dishName, price: dishPrice });
+    totalPrice += dishPrice;
+    localStorage.setItem('cart', JSON.stringify(cart));
+    localStorage.setItem('totalPrice', totalPrice);
     updateCart();
 }
 
+// Update the cart display
 function updateCart() {
-    localStorage.setItem('cart', JSON.stringify(cart));
-    localStorage.setItem('totalPrice', totalPrice);
-    document.getElementById('totalPrice').textContent = totalPrice.toFixed(2);
-    displayCartItems();
-}
-
-function displayCartItems() {
     const cartItems = document.getElementById('cartItems');
     cartItems.innerHTML = '';
     cart.forEach(item => {
@@ -114,25 +99,23 @@ function displayCartItems() {
         li.textContent = `${item.name} - $${item.price.toFixed(2)}`;
         cartItems.appendChild(li);
     });
+    document.getElementById('totalPrice').innerText = totalPrice.toFixed(2);
 }
 
+// Checkout function
 function checkout() {
-    alert('Checkout not implemented yet!');
+    alert(`Thank you for your order! Your total is $${totalPrice.toFixed(2)}`);
+    clearCart();
 }
 
+// Clear the cart
 function clearCart() {
     cart = [];
     totalPrice = 0;
+    localStorage.removeItem('cart');
+    localStorage.removeItem('totalPrice');
     updateCart();
 }
 
-function toggleDarkMode() {
-    document.body.classList.toggle('dark-mode');
-    const restaurantNames = document.querySelectorAll('.restaurant-name');
-    restaurantNames.forEach(name => {
-        name.style.color = document.body.classList.contains('dark-mode') ? 'lightgray' : '#333';
-    });
-}
-
-// Initial load
-displayCartItems();
+// Initial cart update
+updateCart();
