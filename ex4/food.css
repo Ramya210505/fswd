@@ -4,6 +4,8 @@ body {
     color: #333;
     margin: 0;
     padding: 20px;
+    max-width: 600px; /* Set a maximum width for a narrower frame */
+    margin: auto; /* Center the body in the middle of the page */
 }
 
 header {
@@ -18,16 +20,14 @@ h1 {
     font-family: 'Sacramento', cursive;
 }
 
-nav {
-    margin-top: 10px;
-}
-
 button {
     padding: 10px 15px;
     border: none;
     background-color: #28A745;
     color: white;
     cursor: pointer;
+    display: block; /* Make buttons block-level elements */
+    margin: 10px auto; /* Center the buttons and add space between them */
 }
 
 button:hover {
@@ -40,6 +40,7 @@ button:hover {
     background: white;
     border-radius: 5px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    text-align: center; /* Center text within the restaurant div */
 }
 
 .modal {
@@ -51,7 +52,6 @@ button:hover {
     width: 100%;
     height: 100%;
     overflow: auto;
-    background-color: rgb(0,0,0);
     background-color: rgba(0,0,0,0.4);
 }
 
@@ -82,19 +82,7 @@ button:hover {
     padding: 10px;
     background: #e9ecef;
     border-radius: 5px;
-}
-
-.dark-mode {
-    background-color: #343a40;
-    color: white;
-}
-
-.dark-mode .dish {
-    background: #495057;
-}
-
-.dark-mode .restaurant-name {
-    color: lightgray; /* Light color for dark mode */
+    text-align: center; /* Center text within dish */
 }
 
 #cart {
