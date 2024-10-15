@@ -44,13 +44,43 @@
                 <p>Location: Little Tokyo, LA</p>
                 <button onclick="showRestaurant('asianFusion')">View Menu</button>
             </div>
+            <div class="restaurant">
+                <h3 class="restaurant-name">Mediterranean Grill</h3>
+                <p>Location: Santa Monica</p>
+                <button onclick="showRestaurant('mediterraneanGrill')">View Menu</button>
+            </div>
+            <div class="restaurant">
+                <h3 class="restaurant-name">BBQ Haven</h3>
+                <p>Location: Culver City</p>
+                <button onclick="showRestaurant('bbqHaven')">View Menu</button>
+            </div>
+            <div class="restaurant">
+                <h3 class="restaurant-name">Dessert Paradise</h3>
+                <p>Location: Hollywood</p>
+                <button onclick="showRestaurant('dessertParadise')">View Menu</button>
+            </div>
+            <div class="restaurant">
+                <h3 class="restaurant-name">Pasta House</h3>
+                <p>Location: Glendale</p>
+                <button onclick="showRestaurant('pastaHouse')">View Menu</button>
+            </div>
+            <div class="restaurant">
+                <h3 class="restaurant-name">Burger Joint</h3>
+                <p>Location: Westwood</p>
+                <button onclick="showRestaurant('burgerJoint')">View Menu</button>
+            </div>
+            <div class="restaurant">
+                <h3 class="restaurant-name">Taco Truck</h3>
+                <p>Location: Downtown</p>
+                <button onclick="showRestaurant('tacoTruck')">View Menu</button>
+            </div>
         </section>
 
         <div id="modal" class="modal">
             <div class="modal-content">
                 <span class="close" onclick="closeModal()">&times;</span>
                 <h2 id="restaurantTitle"></h2>
-                <div id="restaurantDishes"></div>
+                <div id="restaurantDishes" class="dishes-container"></div>
             </div>
         </div>
 
