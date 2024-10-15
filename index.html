@@ -6,8 +6,8 @@
     <title>Welcome to My Page</title>
     <style>
         body {
-            font-family: Arial, sans-serif;
-            background-color: #f9f9f9;
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(to right, #74ebd5, #ACB6E5); /* Gradient background */
             color: #333;
             margin: 0;
             padding: 20px;
@@ -17,44 +17,63 @@
             height: 100vh;
         }
         .container {
-            background-color: #ffffff; /* White background for the frame */
-            border-radius: 8px; /* Rounded corners */
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1); /* Subtle shadow */
-            padding: 30px;
+            background-color: rgba(255, 255, 255, 0.9); /* Slightly transparent white */
+            border-radius: 12px; /* More rounded corners */
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2); /* Deeper shadow */
+            padding: 40px;
             text-align: center;
-            width: 80%;
-            max-width: 600px; /* Maximum width */
+            width: 90%;
+            max-width: 700px; /* Increased maximum width */
         }
         h1 {
             color: #2c3e50; /* Dark blue */
+            font-size: 2.5em; /* Larger font size */
+            margin-bottom: 10px; /* Space below */
         }
         h2 {
             color: #34495e; /* Medium blue */
+            font-size: 1.8em; /* Larger font size */
+            margin-bottom: 20px; /* Space below */
         }
         h3 {
             margin-top: 20px;
-            color: #2980b9; /* Lighter blue */
+            font-weight: bold; /* Bold font */
+            font-size: 1.2em; /* Slightly larger */
         }
         a {
             display: block;
-            margin: 10px 0;
+            margin: 15px 0;
             text-decoration: none;
             color: #3498db; /* Bright blue */
             font-weight: bold;
+            transition: color 0.3s, transform 0.3s; /* Smooth transition */
         }
         a:hover {
             color: #2980b9; /* Darker blue on hover */
+            transform: scale(1.05); /* Slight zoom effect */
         }
         .exercise {
-            font-weight: bold;
             color: #e74c3c; /* Red for exercise titles */
+        }
+        .purple-text {
+            color: #8e44ad; /* Purple for "Name" and "Reg No" */
+        }
+        .yellow-text { 
+            color: #f1c40f; /* Yellow for "Ramya" and reg number */
+            font-size: 1.5em; /* Increased font size */
         }
     </style>
 </head>
 <body>
     <div class="container">
         <h1>WELCOME TO MY PAGE</h1>
-        <h2>Full Stack Web Development by Ramya</h2>
+        <h2>Full Stack Web Development</h2>
+        <h3>
+            <span class="purple-text">Name:</span> <span class="yellow-text">Ramya</span>
+        </h3>
+        <h3>
+            <span class="purple-text">Reg No:</span> <span class="yellow-text">810022205094</span>
+        </h3>
         <h3 class="exercise">Exercise 1:</h3>
         <a href="https://ramya210505.github.io/fswd/ex1/port.html" alt="port">PORTFOLIO</a>
         <h3 class="exercise">Exercise 2:</h3>
