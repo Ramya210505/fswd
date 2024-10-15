@@ -1,13 +1,13 @@
 body {
     font-family: 'Roboto', sans-serif;
-    background-color: #f4f4f4;
+    background-color: #f0f4f8; /* Light blue background */
     color: #333;
     margin: 0;
     padding: 20px;
 }
 
 header {
-    background: #007BFF;
+    background: #2c3e50; /* Darker blue header */
     color: white;
     padding: 20px;
     text-align: center;
@@ -25,20 +25,21 @@ main {
 }
 
 #restaurantOptions {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr); /* Three columns */
+    gap: 20px; /* Space between items */
     margin-bottom: 20px;
+    width: 100%; /* Full width */
 }
 
 .restaurant {
     margin: 15px;
     padding: 15px;
-    background: white;
-    border-radius: 5px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    background: #ffffff; /* White background for restaurants */
+    border-radius: 8px; /* Slightly rounded corners */
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2); /* Softer shadow */
     text-align: center;
-    width: 250px;
+    width: 100%; /* Full width */
     transition: transform 0.2s;
 }
 
@@ -52,12 +53,19 @@ main {
     margin-bottom: 10px;
 }
 
+.dishes-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
 .dish {
     margin: 10px 0;
     padding: 10px;
-    background: #e9ecef;
-    border-radius: 5px;
+    background: #e8f5e9; /* Light green for dishes */
+    border-radius: 8px;
     text-align: center;
+    width: 400px; /* Increased width */
 }
 
 .rating {
@@ -71,7 +79,7 @@ main {
 }
 
 .star.rated {
-    color: #FFD700;
+    color: #FFD700; /* Gold color for rated stars */
 }
 
 .modal {
@@ -83,12 +91,12 @@ main {
     width: 100%;
     height: 100%;
     overflow: auto;
-    background-color: rgba(0,0,0,0.4);
+    background-color: rgba(0, 0, 0, 0.7); /* Darker background for modal */
 }
 
 .modal-content {
-    background-color: #fefefe;
-    margin: 15% auto;
+    background-color: #ffffff; /* White modal background */
+    margin: 10% auto;
     padding: 20px;
     border: 1px solid #888;
     width: 80%;
@@ -110,26 +118,27 @@ main {
 
 #cart {
     margin-top: 30px;
-    background: white;
+    background: #ffffff; /* White background for cart */
     padding: 15px;
-    border-radius: 5px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
     text-align: center;
 }
 
 button {
     padding: 10px 15px;
     border: none;
-    background-color: #28A745;
+    background-color: #3498db; /* Blue for buttons */
     color: white;
     cursor: pointer;
     margin: 5px;
+    border-radius: 5px; /* Rounded corners for buttons */
 }
 
 button:hover {
-    background-color: #218838;
+    background-color: #2980b9; /* Darker blue on hover */
 }
 
 .remove-item {
-    background-color: #dc3545; /* Red color for remove button */
+    background-color: #e74c3c; /* Red color for remove button */
 }
