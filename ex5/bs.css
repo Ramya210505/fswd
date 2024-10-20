@@ -1,0 +1,173 @@
+/* General Styles */
+body {
+    font-family: 'Arial', sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #e9ecef;
+}
+
+header {
+    background: #007bff;
+    color: #fff;
+    padding: 15px 0;
+    text-align: center;
+}
+
+main {
+    padding: 20px;
+}
+
+section {
+    margin-bottom: 20px;
+    padding: 15px;
+    background: #ffffff;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    max-width: 700px;
+    margin: auto;
+}
+
+form {
+    width: 70%;
+    margin: auto;
+}
+
+form input, form textarea {
+    width: 100%;
+    padding: 10px;
+    margin: 5px 0;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+form button {
+    padding: 10px;
+    background: #28a745;
+    color: #fff;
+    border: none;
+    cursor: pointer;
+    border-radius: 4px;
+}
+
+form button:hover {
+    background: #218838;
+}
+
+/* Search Container Styles */
+.search-container {
+    margin: 20px 0;
+}
+
+.search-container h2 {
+    margin-bottom: 10px;
+}
+
+/* Items List Styles */
+#items {
+    list-style-type: none;
+    padding: 0;
+}
+
+.item {
+    border-bottom: 1px solid #ddd;
+    padding: 10px 0;
+}
+
+.item h3 {
+    font-weight: bold; /* Bold for item name and price */
+}
+
+.item p strong {
+    font-weight: bold; /* Bold for brand and posted by */
+}
+
+.item img {
+    max-width: 100%; /* Responsive image */
+    height: auto;
+}
+
+/* Rating Styles */
+.rating {
+    display: inline-block;
+}
+
+.star {
+    font-size: 20px;
+    color: lightgray; /* Default color */
+    cursor: pointer;
+}
+
+.star.selected {
+    color: gold; /* Selected color */
+}
+
+/* Button Styles */
+.buy-button, .cart-button, .remove-button {
+    background: #007bff;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    cursor: pointer;
+    border-radius: 4px;
+    margin-right: 5px;
+}
+
+.buy-button:hover, .cart-button:hover, .remove-button:hover {
+    background: #0056b3;
+}
+
+#logout-btn {
+    margin-top: 20px;
+    padding: 10px;
+    background: #dc3545;
+    color: white;
+    border: none;
+    cursor: pointer;
+    border-radius: 4px;
+}
+
+#logout-btn:hover {
+    background: #c82333;
+}
+
+/* Hidden Class */
+.hidden {
+    display: none;
+}
+
+/* New styles for buttons */
+.button-group {
+    margin-top: 10px;
+}
+
+/* Item details last child style */
+.item p:last-child {
+    margin-top: 10px;
+}
+
+/* Styling for Average Rating */
+.average-rating {
+    font-weight: bold;
+}
+
+input[type="text"], input[type="file"] {
+    transition: border-color 0.3s ease;
+}
+
+input[type="text"]:focus, input[type="file"]:focus {
+    border-color: #007bff;
+}
+
+button {
+    transition: background-color 0.3s ease;
+}
+
+button:hover {
+    background-color: #0056b3; /* Darker shade on hover */
+}
+
+.img-preview {
+    max-width: 100%; /* Ensure the preview is responsive */
+    height: auto;
+    margin-top: 10px;
+}
