@@ -13,264 +13,41 @@
     <main>
         <section class="login-section" id="login-section">
             <h2>Login</h2>
-            <form id="login">
+            <form id="login-form">
                 <input type="text" id="username" placeholder="Username" required>
                 <button type="submit">Login</button>
             </form>
         </section>
 
-        <section class="app-section" id="app-section" style="display:none;">
+        <section class="app-section hidden" id="app-section">
             <h2>Post an Item</h2>
             <form id="item-form">
                 <input type="text" id="item-name" placeholder="Item Name" required>
                 <input type="text" id="item-brand" placeholder="Brand Name" required>
                 <input type="text" id="item-price" placeholder="Item Price" required>
+                <input type="text" id="item-category" placeholder="Category" required>
+                <input type="file" id="item-image" accept="image/*" required>
+                <img id="image-preview" src="#" alt="Image Preview" style="display:none;" />
                 <textarea id="item-description" placeholder="Item Description" required></textarea>
                 <button type="submit">Post Item</button>
             </form>
+            <div class="search-container">
+                <h2>Search Items</h2>
+                <input type="text" id="search" placeholder="Search items..." />
+            </div>
             <section id="items-list">
                 <h2>Items for Sale</h2>
                 <ul id="items"></ul>
             </section>
-            <button id="logout-button">Logout</button> <!-- Moved Logout button to the bottom -->
+            <button id="logout-btn">Logout</button>
+        </section>
+
+        <section id="profile-section" class="hidden">
+            <h2>Your Profile</h2>
+            <h3>Your Items:</h3>
+            <ul id="user-items"></ul>
         </section>
     </main>
     <script src="bs.js"></script>
 </body>
 </html>
-body {
-    font-family: 'Arial', sans-serif;
-    margin: 0;
-    padding: 0;
-    background-color: #e9ecef;
-}
-
-header {
-    background: #007bff;
-    color: #fff;
-    padding: 15px 0;
-    text-align: center;
-}
-
-main {
-    padding: 20px;
-}
-
-section {
-    margin-bottom: 20px;
-    padding: 15px;
-    background: #ffffff;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    max-width: 700px;
-    margin: auto;
-}
-
-form {
-    width: 70%;
-    margin: auto;
-}
-
-form input, form textarea {
-    width: 100%;
-    padding: 10px;
-    margin: 5px 0;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-}
-
-form button {
-    padding: 10px;
-    background: #28a745;
-    color: #fff;
-    border: none;
-    cursor: pointer;
-    border-radius: 4px;
-}
-
-form button:hover {
-    background: #218838;
-}
-
-#items {
-    list-style-type: none;
-    padding: 0;
-}
-
-.item {
-    border-bottom: 1px solid #ddd;
-    padding: 10px 0;
-}
-
-.rating {
-    display: inline-block;
-}
-
-.star {
-    font-size: 20px;
-    color: lightgray;
-    cursor: pointer;
-}
-
-.star.selected {
-    color: gold;
-}
-
-.buy-button {
-    background: #007bff;
-    color: white;
-    border: none;
-    padding: 5px 10px;
-    cursor: pointer;
-    border-radius: 4px;
-}
-
-.buy-button:hover {
-    background: #0056b3;
-}
-
-#logout-button {
-    margin-top: 20px;
-    padding: 10px;
-    background: #dc3545;
-    color: white;
-    border: none;
-    cursor: pointer;
-    border-radius: 4px;
-}
-
-#logout-button:hover {
-    background: #c82333;
-}
-
-.item p:last-child {
-    margin-top: 10px;
-}
-
-/* New styles for bold text */
-.item h3 {
-    font-weight: bold; /* Bold for item name and price */
-}
-
-.item p strong {
-    font-weight: bold; /* Bold for brand and posted by */
-}
-// Show login section on page load
-document.getElementById('login-section').style.display = 'block';
-
-// Load items from localStorage on page load
-document.addEventListener('DOMContentLoaded', loadItems);
-
-// Handle login
-document.getElementById('login').addEventListener('submit', function(e) {
-    e.preventDefault();
-
-    const username = document.getElementById('username').value;
-
-    // Basic validation (for demo purposes)
-    if (username) {
-        document.getElementById('login-section').style.display = 'none';
-        document.getElementById('app-section').style.display = 'block';
-    } else {
-        alert('Please enter a username');
-    }
-});
-
-// Handle item posting
-document.getElementById('item-form').addEventListener('submit', function(e) {
-    e.preventDefault();
-
-    const itemName = document.getElementById('item-name').value;
-    const itemBrand = document.getElementById('item-brand').value;
-    const itemPrice = document.getElementById('item-price').value;
-    const itemDescription = document.getElementById('item-description').value;
-
-    const username = document.getElementById('username').value; // Get username for display
-    const timestamp = new Date().toLocaleString(); // Get current date and time
-
-    const newItem = {
-        username,
-        itemName,
-        itemBrand,
-        itemPrice,
-        itemDescription,
-        timestamp,
-    };
-
-    // Save new item to local storage
-    saveItem(newItem);
-
-    // Clear the form after posting the item
-    document.getElementById('item-form').reset();
-
-    // Display items
-    displayItem(newItem);
-});
-
-// Function to save item to local storage
-function saveItem(item) {
-    let items = JSON.parse(localStorage.getItem('items')) || [];
-    items.push(item);
-    localStorage.setItem('items', JSON.stringify(items));
-}
-
-// Function to load items from local storage
-function loadItems() {
-    const items = JSON.parse(localStorage.getItem('items')) || [];
-    items.forEach(displayItem);
-}
-
-// Function to display an item in the UI
-function displayItem(item) {
-    const itemList = document.getElementById('items');
-    const listItem = document.createElement('li');
-
-    listItem.classList.add('item');
-    listItem.innerHTML = `
-        <p><strong>Posted by:</strong> ${item.username}</p>
-        <p><small>Posted on: ${item.timestamp}</small></p> <!-- Moved Posted on to the next line -->
-        <h3>${item.itemName} - $${item.itemPrice}</h3>
-        <p><strong>Brand:</strong> ${item.itemBrand}</p>
-        <p>${item.itemDescription}</p>
-        <div class="rating" data-item-name="${item.itemName}">
-            <span class="star" data-value="1">★</span>
-            <span class="star" data-value="2">★</span>
-            <span class="star" data-value="3">★</span>
-            <span class="star" data-value="4">★</span>
-            <span class="star" data-value="5">★</span>
-        </div>
-        <button class="buy-button">Buy</button>
-    `;
-
-    itemList.appendChild(listItem);
-
-    // Add star rating functionality
-    const stars = listItem.querySelectorAll('.star');
-    stars.forEach(star => {
-        star.addEventListener('click', function() {
-            const ratingValue = this.getAttribute('data-value');
-            stars.forEach(s => {
-                s.classList.remove('selected');
-            });
-            for (let i = 0; i < ratingValue; i++) {
-                stars[i].classList.add('selected');
-            }
-        });
-    });
-
-    // Add Buy button functionality
-    const buyButton = listItem.querySelector('.buy-button');
-    buyButton.addEventListener('click', function() {
-        alert(`You bought: ${item.itemName} for $${item.itemPrice}`);
-    });
-}
-
-// Handle logout
-document.getElementById('logout-button').addEventListener('click', function() {
-    // Clear local storage
-    localStorage.removeItem('items');
-    
-    // Show login section and hide app section
-    document.getElementById('app-section').style.display = 'none';
-    document.getElementById('login-section').style.display = 'block';
-});
