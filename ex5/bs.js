@@ -1,159 +1,258 @@
 document.addEventListener('DOMContentLoaded', () => {
-    const loginSection = document.getElementById('login-section');
-    const appSection = document.getElementById('app-section');
-    const profileSection = document.getElementById('profile-section');
-    const itemsList = document.getElementById('items');
+    const loginForm = document.getElementById('login-form');
+    const signupForm = document.getElementById('signup-form');
+    const productForm = document.getElementById('product-form');
+    const productList = document.getElementById('products');
+    const searchInput = document.getElementById('search');
+    const brandSelector = document.getElementById('brand-selector');
+    const productCategory = document.getElementById('product-category');
+    const logoutButton = document.getElementById('logout-button');
 
-    // Show login section on page load
-    document.getElementById('login-form').addEventListener('submit', function(e) {
-        e.preventDefault();
-        const username = document.getElementById('username').value;
-        localStorage.setItem('username', username);
-        showAppSection();
+    let currentUser = JSON.parse(localStorage.getItem('currentUser')) || null;
+    const users = [
+        { name: "John Doe", email: "john@example.com", password: "password123" },
+        { name: "Jane Smith", email: "jane@example.com", password: "mypassword" }
+    ];
+
+    // Default products
+    const defaultProducts = [
+        {
+            name: "HP Pavilion Laptop",
+            description: "14-inch laptop with Intel Core i5, 8GB RAM, and 512GB SSD.",
+            price: 550,
+            brand: "HP",
+            category: "electronics",
+            image: "https://via.placeholder.com/100?text=HP+Laptop",
+            ratings: [],
+            averageRating: 0
+        },
+        {
+            name: "Nike Air Max 270",
+            description: "Stylish running shoes with breathable fabric and cushioned sole.",
+            price: 120,
+            brand: "Nike",
+            category: "clothes",
+            image: "https://via.placeholder.com/100?text=Nike+Shoes",
+            ratings: [],
+            averageRating: 0
+        },
+        {
+            name: "IKEA Billy Bookcase",
+            description: "Classic bookcase with adjustable shelves, perfect for any room.",
+            price: 80,
+            brand: "IKEA",
+            category: "furniture",
+            image: "https://via.placeholder.com/100?text=IKEA+Bookcase",
+            ratings: [],
+            averageRating: 0
+        },
+        {
+            name: "LEGO Star Wars Millennium Falcon",
+            description: "Join the Resistance with this detailed LEGO model.",
+            price: 150,
+            brand: "LEGO",
+            category: "toys",
+            image: "https://via.placeholder.com/100?text=LEGO+Millennium+Falcon",
+            ratings: [],
+            averageRating: 0
+        },
+        {
+            name: "Crayola 64 Count Crayon Box",
+            description: "A classic box of crayons with a wide range of colors.",
+            price: 10,
+            brand: "Crayola",
+            category: "stationery",
+            image: "https://via.placeholder.com/100?text=Crayola+Crayons",
+            ratings: [],
+            averageRating: 0
+        }
+    ];
+
+    // Load products from local storage, or use default if none exist
+    const products = JSON.parse(localStorage.getItem('products')) || defaultProducts;
+
+    const categoryBrands = {
+        stationery: ["PaperMate", "Sharpie", "Staedtler", "Crayola", "Moleskine"],
+        clothes: ["H&M", "Zara", "Levi's", "Nike", "Adidas"],
+        electronics: ["Samsung", "Apple", "Sony", "LG", "Dell"],
+        furniture: ["IKEA", "Ashley Furniture", "La-Z-Boy", "Wayfair", "Herman Miller"],
+        toys: ["LEGO", "Mattel", "Hasbro", "Fisher-Price", "Playmobil"]
+    };
+
+    // Show product form and logout button if user is logged in
+    if (currentUser) {
+        loginForm.classList.add('hidden');
+        productForm.classList.remove('hidden');
+        logoutButton.classList.remove('hidden');
+        displayProducts();
+    }
+
+    document.getElementById('login-link').addEventListener('click', () => {
+        loginForm.classList.remove('hidden');
+        signupForm.classList.add('hidden');
+        productForm.classList.add('hidden');
+        logoutButton.classList.add('hidden');
     });
 
-    document.getElementById('logout-btn').addEventListener('click', function() {
-        localStorage.removeItem('username');
-        showLoginSection();
+    document.getElementById('signup-link').addEventListener('click', () => {
+        signupForm.classList.remove('hidden');
+        loginForm.classList.add('hidden');
+        productForm.classList.add('hidden');
+        logoutButton.classList.add('hidden');
     });
 
-    document.getElementById('item-form').addEventListener('submit', function(e) {
-        e.preventDefault();
-        const itemName = document.getElementById('item-name').value;
-        const itemBrand = document.getElementById('item-brand').value;
-        const itemPrice = document.getElementById('item-price').value;
-        const itemCategory = document.getElementById('item-category').value;
-        const itemImage = document.getElementById('item-image').files[0];
-        const itemDescription = document.getElementById('item-description').value;
+    signupForm.addEventListener('submit', (event) => {
+        event.preventDefault();
+        const name = document.getElementById('signup-name').value;
+        const email = document.getElementById('signup-email').value;
+        const password = document.getElementById('signup-password').value;
 
-        const reader = new FileReader();
-        reader.onloadend = function () {
-            const item = {
-                username: localStorage.getItem('username'),
-                itemName,
-                itemBrand,
-                itemPrice,
-                itemCategory,
-                image: reader.result,
-                itemDescription,
-                timestamp: new Date().toLocaleString(),
-                rating: 0,
-                ratingCount: 0,
-            };
+        const userExists = users.some(user => user.email === email);
+        if (userExists) {
+            alert('User already exists. Please use a different email.');
+            return;
+        }
 
-            saveItem(item);
-            displayItem(item);
-            document.getElementById('item-form').reset();
-            document.getElementById('image-preview').style.display = 'none';
-        };
-        if (itemImage) {
-            reader.readAsDataURL(itemImage);
+        users.push({ name, email, password });
+        signupForm.reset();
+        document.getElementById('signup-success').classList.remove('hidden');
+    });
+
+    loginForm.addEventListener('submit', (event) => {
+        event.preventDefault();
+        const email = document.getElementById('login-email').value;
+        const password = document.getElementById('login-password').value;
+
+        const user = users.find(u => u.email === email && u.password === password);
+        if (user) {
+            currentUser = user;
+            localStorage.setItem('currentUser', JSON.stringify(currentUser));
+            loginForm.classList.add('hidden');
+            productForm.classList.remove('hidden');
+            logoutButton.classList.remove('hidden');
+            document.getElementById('login-error').classList.add('hidden');
+            displayProducts();
+        } else {
+            document.getElementById('login-error').textContent = 'Invalid email or password';
+            document.getElementById('login-error').classList.remove('hidden');
         }
     });
 
-    document.getElementById('search').addEventListener('input', function() {
-        const searchTerm = this.value.toLowerCase();
-        const items = document.querySelectorAll('.item');
-        items.forEach(item => {
-            const itemName = item.querySelector('h3').textContent.toLowerCase();
-            item.style.display = itemName.includes(searchTerm) ? '' : 'none';
-        });
+    logoutButton.addEventListener('click', () => {
+        currentUser = null;
+        localStorage.removeItem('currentUser');
+        loginForm.classList.remove('hidden');
+        productForm.classList.add('hidden');
+        logoutButton.classList.add('hidden');
     });
 
-    function saveItem(item) {
-        let items = JSON.parse(localStorage.getItem('items')) || [];
-        items.push(item);
-        localStorage.setItem('items', JSON.stringify(items));
-    }
+    productCategory.addEventListener('change', () => {
+        const selectedCategory = productCategory.value;
+        brandSelector.innerHTML = '';
+        if (selectedCategory) {
+            const brands = categoryBrands[selectedCategory];
+            brands.forEach(brand => {
+                const option = document.createElement('option');
+                option.value = brand;
+                option.textContent = brand;
+                brandSelector.appendChild(option);
+            });
+            brandSelector.classList.remove('hidden');
+        } else {
+            brandSelector.classList.add('hidden');
+        }
+    });
 
-    function loadItems() {
-        const items = JSON.parse(localStorage.getItem('items')) || [];
-        items.forEach(displayItem);
-    }
+    document.getElementById('add-product-form').addEventListener('submit', (event) => {
+        event.preventDefault();
 
-    function showAppSection() {
-        loginSection.classList.add('hidden');
-        appSection.classList.remove('hidden');
-        profileSection.classList.add('hidden');
-        loadItems();
-    }
+        if (!currentUser) {
+            alert('Please log in to add products.');
+            return;
+        }
 
-    function showLoginSection() {
-        loginSection.classList.remove('hidden');
-        appSection.classList.add('hidden');
-        profileSection.classList.add('hidden');
-    }
+        const productName = document.getElementById('product-name').value;
+        const productDescription = document.getElementById('product-description').value;
+        const productPrice = document.getElementById('product-price').value;
+        const productBrand = brandSelector.value;
+        const productCategoryValue = productCategory.value;
+        const productImage = document.getElementById('product-image').files[0];
 
-    function displayItem(item) {
-        const listItem = document.createElement('li');
-        listItem.classList.add('item');
-        listItem.innerHTML = `
-            <p><strong>Posted by:</strong> ${item.username} <br><small>Posted on: ${item.timestamp}</small></p>
-            <img src="${item.image}" alt="${item.itemName}" />
-            <h3>${item.itemName} - $${item.itemPrice}</h3>
-            <p><strong>Brand:</strong> ${item.itemBrand}</p>
-            <p><strong>Category:</strong> ${item.itemCategory}</p>
-            <p>${item.itemDescription}</p>
-            <div class="rating">
-                <span class="star" data-value="1">★</span>
-                <span class="star" data-value="2">★</span>
-                <span class="star" data-value="3">★</span>
-                <span class="star" data-value="4">★</span>
-                <span class="star" data-value="5">★</span>
-            </div>
-            <div class="average-rating">Average Rating: <span class="average">${item.rating}</span></div>
-            <div class="button-group">
-                <button class="buy-button">Buy</button>
-                <button class="cart-button">Add to Cart</button>
-                <button class="remove-button">Remove</button>
-            </div>
-        `;
+        const product = {
+            name: productName,
+            description: productDescription,
+            price: productPrice,
+            brand: productBrand,
+            category: productCategoryValue,
+            image: URL.createObjectURL(productImage),
+            ratings: [],
+            averageRating: 0
+        };
+        products.push(product);
+        localStorage.setItem('products', JSON.stringify(products)); // Save to local storage
+        displayProducts();
+        document.getElementById('add-product-form').reset();
+        brandSelector.classList.add('hidden');
+    });
 
-        itemsList.appendChild(listItem);
-        setupRating(listItem, item);
-        setupRemove(listItem, item);
-        setupBuy(listItem, item);
-    }
+    function displayProducts() {
+        productList.innerHTML = '';
+        products.forEach((product, index) => {
+            const li = document.createElement('li');
+            li.innerHTML = `
+                <strong>${product.name}</strong><br>
+                <em>Brand: ${product.brand} | Category: ${product.category}</em><br>
+                ${product.description}<br>
+                <em>Price: $${product.price}</em><br>
+                <img src="${product.image}" alt="${product.name}" style="width:100px;height:auto;"><br>
+                <strong>Average Rating: ${product.averageRating.toFixed(1)} / 5</strong><br>
+                <div class="stars" data-index="${index}">
+                    ${[1, 2, 3, 4, 5].map(i => `<span class="star" data-value="${i}">&#9733;</span>`).join('')}
+                </div>
+                <button onclick="buyProduct(${index})">Buy</button>
+                <button onclick="removeProduct(${index})">Remove</button>
+                <button onclick="addToCart(${index})">Add to Cart</button>
+            `;
+            productList.appendChild(li);
+        });
 
-    function setupRating(listItem, item) {
-        const stars = listItem.querySelectorAll('.star');
-        stars.forEach(star => {
-            star.addEventListener('click', function() {
-                const ratingValue = parseInt(this.getAttribute('data-value'));
-                item.ratingCount += 1;
-                item.rating += ratingValue;
-                const average = (item.rating / item.ratingCount).toFixed(1);
-                listItem.querySelector('.average').textContent = average;
-                stars.forEach(s => {
-                    s.classList.remove('selected');
-                });
-                for (let i = 0; i < ratingValue; i++) {
-                    stars[i].classList.add('selected');
+        // Attach event listeners to stars for rating
+        document.querySelectorAll('.stars').forEach(starContainer => {
+            starContainer.addEventListener('click', (event) => {
+                const index = event.currentTarget.dataset.index;
+                const ratingValue = event.target.dataset.value;
+                if (ratingValue) {
+                    products[index].ratings.push(Number(ratingValue));
+                    const sum = products[index].ratings.reduce((a, b) => a + b, 0);
+                    products[index].averageRating = sum / products[index].ratings.length;
+                    localStorage.setItem('products', JSON.stringify(products)); // Update local storage
+                    displayProducts();
                 }
             });
         });
     }
 
-    function setupRemove(listItem, item) {
-        const removeButton = listItem.querySelector('.remove-button');
-        removeButton.addEventListener('click', function() {
-            listItem.remove();
-            removeItemFromStorage(item);
-        });
-    }
+    window.buyProduct = function(index) {
+        alert(`You have bought ${products[index].name}`);
+    };
 
-    function removeItemFromStorage(item) {
-        let items = JSON.parse(localStorage.getItem('items')) || [];
-        items = items.filter(i => i.timestamp !== item.timestamp);
-        localStorage.setItem('items', JSON.stringify(items));
-    }
+    window.removeProduct = function(index) {
+        products.splice(index, 1);
+        localStorage.setItem('products', JSON.stringify(products)); // Update local storage
+        displayProducts();
+    };
 
-    function setupBuy(listItem, item) {
-        const buyButton = listItem.querySelector('.buy-button');
-        buyButton.addEventListener('click', function() {
-            alert(`You bought: ${item.itemName} for $${item.itemPrice}`);
-        });
-    }
+    window.addToCart = function(index) {
+        alert(`${products[index].name} has been added to your cart.`);
+    };
 
-    loadItems();
+    searchInput.addEventListener('input', () => {
+        const query = searchInput.value.toLowerCase();
+        const items = productList.getElementsByTagName('li');
+
+        for (let item of items) {
+            const text = item.textContent.toLowerCase();
+            item.style.display = text.includes(query) ? '' : 'none';
+        }
+    });
 });
