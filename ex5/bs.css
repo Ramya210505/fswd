@@ -1,16 +1,16 @@
 body {
     font-family: 'Arial', sans-serif;
-    background-color: #f0f4f8; /* Light gray background for a softer look */
+    background-color: #f0f4f8;
     margin: 0;
     padding: 0;
 }
 
 header {
-    background: #2C3E50; /* Dark blue header */
-    color: #ecf0f1; /* Light text color */
+    background: #2C3E50;
+    color: #ecf0f1;
     padding: 1.5rem;
     text-align: center;
-    font-size: 2rem; /* Increased font size */
+    font-size: 2rem;
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
 }
 
@@ -19,7 +19,7 @@ header {
     max-width: 600px;
     margin: 20px auto;
     padding: 20px;
-    background: #ffffff; /* White background for content */
+    background: #ffffff;
     border-radius: 10px;
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
 }
@@ -31,69 +31,58 @@ header {
 }
 
 .category div {
-    background: #3498db; /* Bright blue for categories */
+    background: #3498db;
     color: white;
     padding: 12px;
     margin: 5px 0;
     border-radius: 8px;
     cursor: pointer;
     text-align: center;
-    font-size: 1.5rem; /* Increased font size */
+    font-size: 1.5rem;
     transition: background 0.3s, transform 0.2s;
 }
 
 .category div:hover {
-    background: #2980b9; /* Darker blue on hover */
-    transform: scale(1.05); /* Slightly enlarge on hover */
+    background: #2980b9;
+    transform: scale(1.05);
 }
 
 .product-card {
-    border: 1px solid #ddd;
+    border: 2px solid black;
     border-radius: 8px;
     margin: 15px 0;
     padding: 15px;
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
     position: relative;
-    background: #ecf0f1; /* Light gray background for cards */
 }
 
 .product-card h2 {
-    font-size: 1.8em; /* Increased font size for product titles */
+    font-size: 1.8em;
     margin: 0;
-    color: #2C3E50; /* Darker color for better readability */
+    color: #2C3E50;
 }
 
 .product-card p {
     margin: 8px 0;
-    color: #34495e; /* Darker gray for description text */
+    color: #34495e;
 }
 
 .button {
-    background: #e67e22; /* Orange button */
+    background: #e67e22;
     color: white;
-    padding: 12px 18px;
+    padding: 15px 30px;
     border: none;
     border-radius: 5px;
     cursor: pointer;
-    margin-top: 10px;
-    font-size: 1.2rem; /* Increased font size */
+    margin: 10px 0; /* Adjusted margin for spacing */
+    font-size: 1.5rem;
+    font-weight: bold;
     transition: background 0.3s, transform 0.2s;
 }
 
 .button:hover {
-    background: #d35400; /* Darker orange on hover */
+    background: #d35400;
     transform: scale(1.05);
-}
-
-.notification {
-    position: fixed;
-    bottom: 20px;
-    right: 20px;
-    background: #ffcc00; /* Notification background color */
-    padding: 10px;
-    border-radius: 5px;
-    display: none;
-    font-size: 1.2rem; /* Increased font size for notifications */
 }
 
 form {
@@ -101,31 +90,21 @@ form {
     flex-direction: column;
 }
 
-form input {
+form input, form select {
     margin-bottom: 10px;
     padding: 12px;
     border: 1px solid #ddd;
     border-radius: 5px;
-    font-size: 1.2rem; /* Increased font size for inputs */
+    font-size: 1.2rem;
 }
 
 form button {
-    background: #27ae60; /* Green button for adding products */
-    color: white;
-    border: none;
-    padding: 12px;
-    border-radius: 5px;
-    cursor: pointer;
-    font-size: 1.2rem; /* Increased font size */
-    transition: background 0.3s, transform 0.2s;
+    font-weight: bold;
+    font-size: 1.5rem;
+    padding: 15px 30px;
 }
 
-form button:hover {
-    background: #219653; /* Darker green on hover */
-    transform: scale(1.05);
-}
-
-.cart-icon {
+.heart-icon {
     position: absolute;
     top: 10px;
     right: 10px;
@@ -133,9 +112,46 @@ form button:hover {
     height: 30px;
     cursor: pointer;
     fill: red;
+    stroke: black;
+    stroke-width: 2;
     transition: transform 0.2s;
 }
 
-.cart-icon:hover {
+.heart-icon:hover {
     transform: scale(1.1);
+}
+
+/* New styles for buttons on home page */
+.home-button {
+    display: inline-block;
+    width: calc(100% - 20px); /* Ensure it fits nicely */
+    margin: 5px 0; /* Vertical spacing */
+    padding: 15px;
+    text-align: center;
+    border-radius: 5px;
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: white;
+    transition: background 0.3s, transform 0.2s;
+}
+
+.add-to-cart {
+    border: 2px solid black; /* Outer stroke */
+    background-color: transparent; /* Transparent background */
+    color: red; /* Text color */
+    margin-top: 10px;
+}
+
+.buy-button {
+    background-color: #28a745; /* Green background for buy button */
+}
+
+.add-to-cart:hover {
+    background-color: rgba(255, 0, 0, 0.2); /* Light red on hover */
+    transform: scale(1.05);
+}
+
+.buy-button:hover {
+    background-color: #218838; /* Darker green on hover */
+    transform: scale(1.05);
 }
