@@ -1,193 +1,141 @@
-/* General Styles */
 body {
     font-family: 'Arial', sans-serif;
+    background-color: #f0f4f8; /* Light gray background for a softer look */
     margin: 0;
     padding: 0;
-    background-color: #e9ecef;
 }
 
 header {
-    background: #007bff;
-    color: #fff;
-    padding: 15px 0;
+    background: #2C3E50; /* Dark blue header */
+    color: #ecf0f1; /* Light text color */
+    padding: 1.5rem;
     text-align: center;
+    font-size: 2rem; /* Increased font size */
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
 }
 
-main {
+.container {
+    width: 90%;
+    max-width: 600px;
+    margin: 20px auto;
     padding: 20px;
+    background: #ffffff; /* White background for content */
+    border-radius: 10px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
 }
 
-section {
+.category {
+    display: flex;
+    flex-direction: column;
     margin-bottom: 20px;
+}
+
+.category div {
+    background: #3498db; /* Bright blue for categories */
+    color: white;
+    padding: 12px;
+    margin: 5px 0;
+    border-radius: 8px;
+    cursor: pointer;
+    text-align: center;
+    font-size: 1.5rem; /* Increased font size */
+    transition: background 0.3s, transform 0.2s;
+}
+
+.category div:hover {
+    background: #2980b9; /* Darker blue on hover */
+    transform: scale(1.05); /* Slightly enlarge on hover */
+}
+
+.product-card {
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    margin: 15px 0;
     padding: 15px;
-    background: #ffffff;
-    border: 1px solid #ccc;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    position: relative;
+    background: #ecf0f1; /* Light gray background for cards */
+}
+
+.product-card h2 {
+    font-size: 1.8em; /* Increased font size for product titles */
+    margin: 0;
+    color: #2C3E50; /* Darker color for better readability */
+}
+
+.product-card p {
+    margin: 8px 0;
+    color: #34495e; /* Darker gray for description text */
+}
+
+.button {
+    background: #e67e22; /* Orange button */
+    color: white;
+    padding: 12px 18px;
+    border: none;
     border-radius: 5px;
-    max-width: 700px;
-    margin: auto;
+    cursor: pointer;
+    margin-top: 10px;
+    font-size: 1.2rem; /* Increased font size */
+    transition: background 0.3s, transform 0.2s;
+}
+
+.button:hover {
+    background: #d35400; /* Darker orange on hover */
+    transform: scale(1.05);
+}
+
+.notification {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background: #ffcc00; /* Notification background color */
+    padding: 10px;
+    border-radius: 5px;
+    display: none;
+    font-size: 1.2rem; /* Increased font size for notifications */
 }
 
 form {
-    width: 70%;
-    margin: auto;
+    display: flex;
+    flex-direction: column;
 }
 
-form input, form textarea {
-    width: 100%;
-    padding: 10px;
-    margin: 5px 0;
-    border: 1px solid #ccc;
-    border-radius: 4px;
+form input {
+    margin-bottom: 10px;
+    padding: 12px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 1.2rem; /* Increased font size for inputs */
 }
 
 form button {
-    padding: 10px;
-    background: #28a745;
-    color: #fff;
+    background: #27ae60; /* Green button for adding products */
+    color: white;
     border: none;
+    padding: 12px;
+    border-radius: 5px;
     cursor: pointer;
-    border-radius: 4px;
+    font-size: 1.2rem; /* Increased font size */
+    transition: background 0.3s, transform 0.2s;
 }
 
 form button:hover {
-    background: #218838;
+    background: #219653; /* Darker green on hover */
+    transform: scale(1.05);
 }
 
-/* Search Container Styles */
-.search-container {
-    margin: 20px 0;
-}
-
-.search-container h2 {
-    margin-bottom: 10px;
-}
-
-/* Items List Styles */
-#items {
-    list-style-type: none;
-    padding: 0;
-}
-
-.item {
-    border-bottom: 1px solid #ddd;
-    padding: 10px 0;
-}
-
-.item h3 {
-    font-weight: bold; /* Bold for item name and price */
-}
-
-.item p strong {
-    font-weight: bold; /* Bold for brand and posted by */
-}
-
-.item img {
-    max-width: 100%; /* Responsive image */
-    height: auto;
-}
-
-/* Rating Styles */
-.rating {
-    display: inline-block;
-}
-
-.star {
-    font-size: 20px;
-    color: lightgray; /* Default color */
+.cart-icon {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    width: 30px;
+    height: 30px;
     cursor: pointer;
+    fill: red;
+    transition: transform 0.2s;
 }
 
-.star.selected {
-    color: gold; /* Selected color */
-}
-
-/* Button Styles */
-.buy-button, .cart-button, .remove-button {
-    background: #007bff;
-    color: white;
-    border: none;
-    padding: 5px 10px;
-    cursor: pointer;
-    border-radius: 4px;
-    margin-right: 5px;
-}
-
-.buy-button:hover, .cart-button:hover, .remove-button:hover {
-    background: #0056b3;
-}
-
-#logout-btn {
-    margin-top: 20px;
-    padding: 10px;
-    background: #dc3545;
-    color: white;
-    border: none;
-    cursor: pointer;
-    border-radius: 4px;
-}
-
-#logout-btn:hover {
-    background: #c82333;
-}
-
-/* Hidden Class */
-.hidden {
-    display: none;
-}
-
-/* New styles for buttons */
-.button-group {
-    margin-top: 10px;
-}
-
-/* Item details last child style */
-.item p:last-child {
-    margin-top: 10px;
-}
-
-/* Styling for Average Rating */
-.average-rating {
-    font-weight: bold;
-}
-
-input[type="text"], input[type="file"] {
-    transition: border-color 0.3s ease;
-}
-
-input[type="text"]:focus, input[type="file"]:focus {
-    border-color: #007bff;
-}
-
-button {
-    transition: background-color 0.3s ease;
-}
-
-button:hover {
-    background-color: #0056b3; /* Darker shade on hover */
-}
-
-.img-preview {
-    max-width: 100%; /* Ensure the preview is responsive */
-    height: auto;
-    margin-top: 10px;
-}
-
-/* Media Queries for Responsiveness */
-@media (max-width: 768px) {
-    form {
-        width: 90%; /* Adjust form width on smaller screens */
-    }
-
-    section {
-        padding: 10px; /* Reduce padding for smaller screens */
-    }
-
-    .button-group {
-        display: flex;
-        flex-direction: column; /* Stack buttons on small screens */
-    }
-
-    .button-group button {
-        margin-bottom: 5px; /* Spacing between stacked buttons */
-    }
+.cart-icon:hover {
+    transform: scale(1.1);
 }
