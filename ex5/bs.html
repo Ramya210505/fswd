@@ -3,51 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Classified Ads Marketplace</title>
     <link rel="stylesheet" href="bs.css">
-    <title>Buy and Sell App</title>
 </head>
 <body>
     <header>
-        <h1>Buy and Sell App</h1>
+        <h1>Classified Ads Marketplace</h1>
     </header>
-    <main>
-        <section class="login-section" id="login-section">
-            <h2>Login</h2>
-            <form id="login-form">
-                <input type="text" id="username" placeholder="Username" required>
-                <button type="submit">Login</button>
-            </form>
-        </section>
-
-        <section class="app-section hidden" id="app-section">
-            <h2>Post an Item</h2>
-            <form id="item-form">
-                <input type="text" id="item-name" placeholder="Item Name" required>
-                <input type="text" id="item-brand" placeholder="Brand Name" required>
-                <input type="text" id="item-price" placeholder="Item Price" required>
-                <input type="text" id="item-category" placeholder="Category" required>
-                <input type="file" id="item-image" accept="image/*" required>
-                <img id="image-preview" src="#" alt="Image Preview" style="display:none;" />
-                <textarea id="item-description" placeholder="Item Description" required></textarea>
-                <button type="submit">Post Item</button>
-            </form>
-            <div class="search-container">
-                <h2>Search Items</h2>
-                <input type="text" id="search" placeholder="Search items..." />
-            </div>
-            <section id="items-list">
-                <h2>Items for Sale</h2>
-                <ul id="items"></ul>
-            </section>
-            <button id="logout-btn">Logout</button>
-        </section>
-
-        <section id="profile-section" class="hidden">
-            <h2>Your Profile</h2>
-            <h3>Your Items:</h3>
-            <ul id="user-items"></ul>
-        </section>
-    </main>
+    <div id="app"></div>
+    <div id="notification" class="notification"></div>
     <script src="bs.js"></script>
 </body>
 </html>
