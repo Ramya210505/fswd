@@ -1,228 +1,197 @@
-document.addEventListener('DOMContentLoaded', () => {
-    const loginSection = document.getElementById('login-section');
-    const appSection = document.getElementById('app-section');
-    const profileSection = document.getElementById('profile-section');
-    const itemsList = document.getElementById('items');
+const categories = ['Cars', 'Mobiles', 'Bikes', 'Electronics Accessories', 'Furniture'];
+const products = {
+    Cars: [
+        { id: 1, title: "Honda Civic", description: "Compact car.", price: 20000, location: "Los Angeles" },
+        { id: 2, title: "Ford Mustang", description: "Sports car.", price: 30000, location: "Miami" },
+        { id: 3, title: "Toyota Corolla", description: "Reliable sedan.", price: 18000, location: "Chicago" },
+        { id: 4, title: "Chevrolet Malibu", description: "Comfortable family car.", price: 22000, location: "Houston" },
+        { id: 5, title: "Nissan Altima", description: "Stylish sedan.", price: 24000, location: "Phoenix" },
+    ],
+    Mobiles: [
+        { id: 1, title: "Samsung Galaxy S21", description: "Latest smartphone from Samsung.", price: 799, location: "New York" },
+        { id: 2, title: "Apple iPhone 12", description: "Latest iPhone model.", price: 999, location: "San Francisco" },
+        { id: 3, title: "OnePlus 9", description: "High-performance phone.", price: 729, location: "Seattle" },
+        { id: 4, title: "Google Pixel 5", description: "Great camera phone.", price: 699, location: "Denver" },
+        { id: 5, title: "Xiaomi Mi 11", description: "Feature-rich smartphone.", price: 749, location: "Atlanta" },
+    ],
+    Bikes: [
+        { id: 1, title: "Yamaha YZF-R3", description: "Sport bike.", price: 5500, location: "Orlando" },
+        { id: 2, title: "Kawasaki Ninja 400", description: "Lightweight and powerful.", price: 6000, location: "Austin" },
+        { id: 3, title: "Honda CB500F", description: "Versatile commuter bike.", price: 6500, location: "Philadelphia" },
+        { id: 4, title: "Suzuki SV650", description: "V-twin engine, great for beginners.", price: 7000, location: "Boston" },
+        { id: 5, title: "Ducati Monster 821", description: "Iconic naked bike.", price: 10000, location: "San Diego" },
+    ],
+    "Electronics Accessories": [
+        { id: 1, title: "Wireless Headphones", description: "Noise-cancelling feature.", price: 199, location: "Miami" },
+        { id: 2, title: "Bluetooth Speaker", description: "Portable and waterproof.", price: 99, location: "Houston" },
+        { id: 3, title: "USB-C Charging Cable", description: "Fast charging.", price: 19, location: "Dallas" },
+        { id: 4, title: "Laptop Stand", description: "Adjustable height.", price: 49, location: "Austin" },
+        { id: 5, title: "Portable SSD", description: "1TB storage capacity.", price: 129, location: "Seattle" },
+    ],
+    Furniture: [
+        { id: 1, title: "Sofa Set", description: "Comfortable 3-seater.", price: 499, location: "New York" },
+        { id: 2, title: "Dining Table", description: "Seats 6 people.", price: 299, location: "Los Angeles" },
+        { id: 3, title: "Queen Bed Frame", description: "Stylish and sturdy.", price: 399, location: "Chicago" },
+        { id: 4, title: "Office Chair", description: "Ergonomic design.", price: 149, location: "Houston" },
+        { id: 5, title: "Bookshelf", description: "5-tier adjustable shelf.", price: 199, location: "Atlanta" },
+    ],
+};
 
-    // Show login section on page load
-    document.getElementById('login-form').addEventListener('submit', function(e) {
+let loggedIn = false;
+
+function render(page) {
+    const app = document.getElementById('app');
+    app.innerHTML = '';
+
+    if (page === 'login') {
+        loginPage();
+    } else if (page === 'home') {
+        homePage();
+    } else if (page.startsWith('category_')) {
+        const category = page.split('_')[1];
+        categoryPage(category);
+    } else if (page === 'add-product') {
+        addProductPage();
+    }
+}
+
+function loginPage() {
+    const container = document.createElement('div');
+    container.classList.add('container');
+
+    const form = document.createElement('form');
+    form.onsubmit = (e) => {
         e.preventDefault();
-        const username = document.getElementById('username').value;
-        localStorage.setItem('username', username);
-        showAppSection();
+        loggedIn = true;
+        alert('Logged in successfully!');
+        render('home');
+    };
+
+    form.innerHTML = `
+        <h2>Login</h2>
+        <input type="text" placeholder="Username" required>
+        <input type="password" placeholder="Password" required>
+        <button type="submit">Login</button>
+    `;
+
+    container.appendChild(form);
+    app.appendChild(container);
+}
+
+function homePage() {
+    const container = document.createElement('div');
+    container.classList.add('container');
+
+    const categoryContainer = document.createElement('div');
+    categoryContainer.classList.add('category');
+
+    categories.forEach(category => {
+        const categoryDiv = document.createElement('div');
+        categoryDiv.innerHTML = `<h3>${category}</h3>`;
+        categoryDiv.onclick = () => render(`category_${category}`);
+        categoryContainer.appendChild(categoryDiv);
     });
 
-    document.getElementById('logout-btn').addEventListener('click', function() {
-        localStorage.removeItem('username');
-        showLoginSection();
-    });
-
-    document.getElementById('item-form').addEventListener('submit', function(e) {
-        e.preventDefault();
-        const itemName = document.getElementById('item-name').value;
-        const itemBrand = document.getElementById('item-brand').value;
-        const itemPrice = document.getElementById('item-price').value;
-        const itemCategory = document.getElementById('item-category').value;
-        const itemImage = document.getElementById('item-image').files[0];
-        const itemDescription = document.getElementById('item-description').value;
-
-        const reader = new FileReader();
-        reader.onloadend = function () {
-            const item = {
-                username: localStorage.getItem('username'),
-                itemName,
-                itemBrand,
-                itemPrice,
-                itemCategory,
-                image: reader.result,
-                itemDescription,
-                timestamp: new Date().toLocaleString(),
-                rating: 0,
-                ratingCount: 0,
-            };
-
-            saveItem(item);
-            displayItem(item);
-            document.getElementById('item-form').reset();
-            document.getElementById('image-preview').style.display = 'none';
-        };
-        if (itemImage) {
-            reader.readAsDataURL(itemImage);
+    container.appendChild(categoryContainer);
+    
+    // Add Product button
+    const addProductButton = document.createElement('button');
+    addProductButton.className = 'button';
+    addProductButton.innerText = 'Add Product';
+    addProductButton.onclick = () => {
+        if (loggedIn) {
+            render('add-product');
+        } else {
+            alert('Please log in to add products.');
         }
-    });
+    };
+    container.appendChild(addProductButton);
 
-    document.getElementById('search').addEventListener('input', function() {
-        const searchTerm = this.value.toLowerCase();
-        const items = document.querySelectorAll('.item');
-        items.forEach(item => {
-            const itemName = item.querySelector('h3').textContent.toLowerCase();
-            item.style.display = itemName.includes(searchTerm) ? '' : 'none';
-        });
-    });
+    app.appendChild(container);
+}
 
-    function saveItem(item) {
-        let items = JSON.parse(localStorage.getItem('items')) || [];
-        items.push(item);
-        localStorage.setItem('items', JSON.stringify(items));
-    }
+function categoryPage(category) {
+    const container = document.createElement('div');
+    container.classList.add('container');
 
-    function loadItems() {
-        const items = JSON.parse(localStorage.getItem('items')) || [];
-        
-        // If there are no items, add default items
-        if (items.length === 0) {
-            const defaultItems = [
-                {
-                    username: 'Admin',
-                    itemName: 'Camera',
-                    itemBrand: 'Canon',
-                    itemPrice: '499.99',
-                    itemCategory: 'Electronics',
-                    image: 'camera.jpg', // Replace with actual image path
-                    itemDescription: 'High quality DSLR camera.',
-                    timestamp: new Date().toLocaleString(),
-                    rating: 0,
-                    ratingCount: 0,
-                },
-                {
-                    username: 'Admin',
-                    itemName: 'Laptop',
-                    itemBrand: 'Dell',
-                    itemPrice: '899.99',
-                    itemCategory: 'Electronics',
-                    image: 'laptop.jpg', // Replace with actual image path
-                    itemDescription: 'Powerful laptop for work and play.',
-                    timestamp: new Date().toLocaleString(),
-                    rating: 0,
-                    ratingCount: 0,
-                },
-                {
-                    username: 'Admin',
-                    itemName: 'Bike',
-                    itemBrand: 'Trek',
-                    itemPrice: '299.99',
-                    itemCategory: 'Vehicles',
-                    image: 'bike.jpg', // Replace with actual image path
-                    itemDescription: 'Mountain bike for adventurous rides.',
-                    timestamp: new Date().toLocaleString(),
-                    rating: 0,
-                    ratingCount: 0,
-                },
-                {
-                    username: 'Admin',
-                    itemName: 'Phone',
-                    itemBrand: 'Apple',
-                    itemPrice: '999.99',
-                    itemCategory: 'Electronics',
-                    image: 'phone.jpg', // Replace with actual image path
-                    itemDescription: 'Latest smartphone with all features.',
-                    timestamp: new Date().toLocaleString(),
-                    rating: 0,
-                    ratingCount: 0,
-                },
-                {
-                    username: 'Admin',
-                    itemName: 'Headphones',
-                    itemBrand: 'Sony',
-                    itemPrice: '199.99',
-                    itemCategory: 'Electronics',
-                    image: 'headphones.jpg', // Replace with actual image path
-                    itemDescription: 'Noise-canceling headphones for music lovers.',
-                    timestamp: new Date().toLocaleString(),
-                    rating: 0,
-                    ratingCount: 0,
-                }
-            ];
-            items = items.concat(defaultItems);
-            localStorage.setItem('items', JSON.stringify(items));
-        }
-
-        items.forEach(displayItem);
-    }
-
-    function showAppSection() {
-        loginSection.classList.add('hidden');
-        appSection.classList.remove('hidden');
-        profileSection.classList.add('hidden');
-        loadItems();
-    }
-
-    function showLoginSection() {
-        loginSection.classList.remove('hidden');
-        appSection.classList.add('hidden');
-        profileSection.classList.add('hidden');
-    }
-
-    function displayItem(item) {
-        const listItem = document.createElement('li');
-        listItem.classList.add('item');
-        listItem.innerHTML = `
-            <p><strong>Posted by:</strong> ${item.username} <br><small>Posted on: ${item.timestamp}</small></p>
-            <img src="${item.image}" alt="${item.itemName}" />
-            <h3>${item.itemName} - $${item.itemPrice}</h3>
-            <p><strong>Brand:</strong> ${item.itemBrand}</p>
-            <p><strong>Category:</strong> ${item.itemCategory}</p>
-            <p>${item.itemDescription}</p>
-            <div class="rating">
-                <span class="star" data-value="1">★</span>
-                <span class="star" data-value="2">★</span>
-                <span class="star" data-value="3">★</span>
-                <span class="star" data-value="4">★</span>
-                <span class="star" data-value="5">★</span>
-            </div>
-            <div class="average-rating">Average Rating: <span class="average">${item.rating}</span></div>
-            <div class="button-group">
-                <button class="buy-button">Buy</button>
-                <button class="cart-button">Add to Cart</button>
-                <button class="remove-button">Remove</button>
-            </div>
+    const productList = products[category] || [];
+    
+    productList.forEach(product => {
+        const card = document.createElement('div');
+        card.className = 'product-card';
+        card.innerHTML = `
+            <h2>${product.title}</h2>
+            <p>Description: ${product.description}</p>
+            <p>Price: $${product.price}</p>
+            <p>Location: ${product.location}</p>
+            <svg class="cart-icon" onclick="addToCart(${product.id})" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" fill="red"/>
+            </svg>
         `;
+        container.appendChild(card);
+    });
 
-        itemsList.appendChild(listItem);
-        setupRating(listItem, item);
-        setupRemove(listItem, item);
-        setupBuy(listItem, item);
-    }
+    // Back Button
+    const backButton = document.createElement('button');
+    backButton.className = 'button';
+    backButton.innerText = 'Back to Home';
+    backButton.onclick = () => render('home');
+    container.appendChild(backButton);
 
-    function setupRating(listItem, item) {
-        const stars = listItem.querySelectorAll('.star');
-        stars.forEach(star => {
-            star.addEventListener('click', function() {
-                const ratingValue = parseInt(this.getAttribute('data-value'));
-                item.ratingCount += 1;
-                item.rating += ratingValue;
-                const average = (item.rating / item.ratingCount).toFixed(1);
-                listItem.querySelector('.average').textContent = average;
-                stars.forEach(s => {
-                    s.classList.remove('selected');
-                });
-                for (let i = 0; i < ratingValue; i++) {
-                    stars[i].classList.add('selected');
-                }
-            });
-        });
-    }
+    app.appendChild(container);
+}
 
-    function setupRemove(listItem, item) {
-        const removeButton = listItem.querySelector('.remove-button');
-        removeButton.addEventListener('click', function() {
-            listItem.remove();
-            removeItemFromStorage(item);
-        });
-    }
+function addToCart(productId) {
+    alert(`Product ID ${productId} added to cart!`);
+    // Here you can implement further cart functionality
+}
 
-    function removeItemFromStorage(item) {
-        let items = JSON.parse(localStorage.getItem('items')) || [];
-        items = items.filter(i => i.timestamp !== item.timestamp);
-        localStorage.setItem('items', JSON.stringify(items));
-    }
+function addProductPage() {
+    const container = document.createElement('div');
+    container.classList.add('container');
 
-    function setupBuy(listItem, item) {
-        const buyButton = listItem.querySelector('.buy-button');
-        buyButton.addEventListener('click', function() {
-            alert(`You bought: ${item.itemName} for $${item.itemPrice}`);
-        });
-    }
+    const form = document.createElement('form');
+    form.onsubmit = (e) => {
+        e.preventDefault();
+        const title = form.elements[0].value;
+        const description = form.elements[1].value;
+        const price = form.elements[2].value;
+        const location = form.elements[3].value;
+        const category = form.elements[4].value;
 
-    loadItems();
-});
+        const newProduct = {
+            id: Date.now(),
+            title,
+            description,
+            price,
+            location,
+        };
+
+        if (!products[category]) {
+            products[category] = [];
+        }
+        products[category].push(newProduct);
+        
+        alert('Product added successfully!');
+        render('home');
+    };
+
+    form.innerHTML = `
+        <h2>Add Product</h2>
+        <input type="text" placeholder="Product Title" required>
+        <input type="text" placeholder="Description" required>
+        <input type="number" placeholder="Price" required>
+        <input type="text" placeholder="Location" required>
+        <select required>
+            <option value="" disabled selected>Select Category</option>
+            ${categories.map(cat => `<option value="${cat}">${cat}</option>`).join('')}
+        </select>
+        <button type="submit">Add Product</button>
+    `;
+
+    container.appendChild(form);
+    app.appendChild(container);
+}
+
+// Initial Render
+render('login');
