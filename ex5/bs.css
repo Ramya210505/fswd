@@ -68,7 +68,7 @@ header {
 }
 
 .button {
-    background: #e67e22;
+    background: linear-gradient(90deg, #e67e22, #d35400);
     color: white;
     padding: 15px 30px;
     border: none;
@@ -77,12 +77,14 @@ header {
     margin: 10px 0;
     font-size: 1.2rem;
     font-weight: bold;
-    transition: background 0.3s, transform 0.2s;
+    transition: background 0.3s, transform 0.2s, box-shadow 0.2s;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
 }
 
 .button:hover {
-    background: #d35400;
+    background: linear-gradient(90deg, #d35400, #c0392b);
     transform: scale(1.05);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
 }
 
 form {
@@ -131,6 +133,3 @@ form button {
 .back-button:hover {
     background: #d5d5d5;
 }
-    
-
-
