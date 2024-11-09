@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Leave Management System</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&family=Montserrat:wght@500&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Leave Management System</h1>
+        </header>
+
+        <!-- Leave Details Section -->
+        <div class="leave-details">
+            <h3>Your Leave Balance</h3>
+            <p><strong>Annual Leave:</strong> <span id="annual-leave">10</span> days</p>
+            <p><strong>Sick Leave:</strong> <span id="sick-leave">5</span> days</p>
+            <p><strong>Medical Leave:</strong> <span id="medical-leave">0</span> days (unlimited)</p>
+        </div>
+
+        <!-- Leave Application Form Section -->
+        <div class="leave-application-form">
+            <h3>Apply for Leave</h3>
+            <form id="leave-form">
+                <label for="leave-type">Leave Type:</label>
+                <select id="leave-type" required>
+                    <option value="annual">Annual Leave</option>
+                    <option value="sick">Sick Leave</option>
+                    <option value="medical">Medical Leave</option>
+                </select><br><br>
+
+                <label for="leave-start-date">Start Date:</label>
+                <input type="date" id="leave-start-date" required><br><br>
+
+                <label for="leave-end-date">End Date:</label>
+                <input type="date" id="leave-end-date" required><br><br>
+
+                <button type="submit">Apply for Leave</button>
+            </form>
+        </div>
+
+        <!-- Leave Policy Section -->
+        <div class="leave-policy">
+            <h3>Leave Policy</h3>
+            <p>Our leave policy includes a variety of leave options:</p>
+            <ul>
+                <li><strong>Annual Leave</strong>: 10 days per year, carry forward up to 5 days.</li>
+                <li><strong>Sick Leave</strong>: 5 days per year, non-carry forward.</li>
+                <li><strong>Medical Leave</strong>: Unlimited days for medical emergencies with proper documentation.</li>
+            </ul>
+        </div>
+
+        <!-- Leave Status Section -->
+        <div class="leave-status">
+            <h3>Your Leave Application History</h3>
+            <ul id="leave-status-list"></ul>
+        </div>
+
+        <!-- Confirmation Modal -->
+        <div id="confirmation-modal" class="modal">
+            <div class="modal-content">
+                <span id="close-modal" class="close-btn">&times;</span>
+                <h3>Leave Application Successful</h3>
+                <p id="confirmation-text"></p>
+                <p><strong>Start Date:</strong> <span id="modal-start-date"></span></p>
+                <p><strong>End Date:</strong> <span id="modal-end-date"></span></p>
+            </div>
+        </div>
+
+        <!-- Footer Section -->
+        <footer>
+            <p>&copy; 2024 Leave Management System. All rights reserved.</p>
+        </footer>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
