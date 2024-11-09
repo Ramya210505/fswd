@@ -11,10 +11,14 @@ function updateLeaveDetails() {
 }
 
 // Function to show the modal with confirmation text
-function showConfirmationModal(leaveType, leaveDays) {
+function showConfirmationModal(leaveType, leaveDays, startDate, endDate) {
     const modal = document.getElementById('confirmation-modal');
     const confirmationText = document.getElementById('confirmation-text');
     confirmationText.textContent = `${leaveDays} day(s) of ${leaveType} applied successfully.`;
+
+    // Set the start and end date in the modal
+    document.getElementById('modal-start-date').textContent = startDate.toDateString();
+    document.getElementById('modal-end-date').textContent = endDate.toDateString();
 
     modal.style.display = "flex";
 }
@@ -37,15 +41,15 @@ document.getElementById('leave-form').addEventListener('submit', function(event)
     // Check if there are enough leave days
     if (leaveType === 'annual' && availableAnnualLeave >= leaveDays) {
         availableAnnualLeave -= leaveDays;
-        addLeaveToStatus('Annual Leave', leaveDays);
-        showConfirmationModal('Annual Leave', leaveDays);
+        addLeaveToStatus('Annual Leave', leaveDays, startDate, endDate);
+        showConfirmationModal('Annual Leave', leaveDays, startDate, endDate);
     } else if (leaveType === 'sick' && availableSickLeave >= leaveDays) {
         availableSickLeave -= leaveDays;
-        addLeaveToStatus('Sick Leave', leaveDays);
-        showConfirmationModal('Sick Leave', leaveDays);
+        addLeaveToStatus('Sick Leave', leaveDays, startDate, endDate);
+        showConfirmationModal('Sick Leave', leaveDays, startDate, endDate);
     } else if (leaveType === 'medical') {
-        addLeaveToStatus('Medical Leave', leaveDays); // Medical leave has no limit
-        showConfirmationModal('Medical Leave', leaveDays);
+        addLeaveToStatus('Medical Leave', leaveDays, startDate, endDate); // Medical leave has no limit
+        showConfirmationModal('Medical Leave', leaveDays, startDate, endDate);
     } else {
         alert('Insufficient leave balance.');
         return;
@@ -56,10 +60,10 @@ document.getElementById('leave-form').addEventListener('submit', function(event)
 });
 
 // Function to add the leave status to the list
-function addLeaveToStatus(leaveType, leaveDays) {
+function addLeaveToStatus(leaveType, leaveDays, startDate, endDate) {
     const leaveStatusList = document.getElementById('leave-status-list');
     const listItem = document.createElement('li');
-    listItem.textContent = `${leaveType}: ${leaveDays} day(s) applied.`;
+    listItem.textContent = `${leaveType}: ${leaveDays} day(s) applied from ${startDate.toDateString()} to ${endDate.toDateString()}.`;
     leaveStatusList.appendChild(listItem);
 }
 
