@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Patient Details Registration</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .container {
+            width: 400px; /* Increased width for a wider form */
+            padding: 25px; /* Slightly increased padding for balance */
+            background-color: #fff;
+            border-radius: 5px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+        .container h2 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        .form-group label {
+            display: block;
+            font-weight: bold;
+        }
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 10px; /* Added more padding for comfort */
+            box-sizing: border-box;
+            border: 1px solid #ccc;
+            border-radius: 3px;
+        }
+        .form-group button {
+            width: 100%;
+            padding: 12px; /* Increased padding for the button */
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 3px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        .form-group button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>Patient Details</h2>
+    <div class="form-group">
+        <label for="patientName">Patient Name</label>
+        <input type="text" id="patientName" name="patientName" required>
+    </div>
+    <div class="form-group">
+        <label for="phoneNumber">Patient Phone Number</label>
+        <input type="tel" id="phoneNumber" name="phoneNumber" required>
+    </div>
+    <div class="form-group">
+        <label for="gender">Patient Gender</label>
+        <select id="gender" name="gender" required>
+            <option value="male">Male</option>
+            <option value="female">Female</option>
+            <option value="other">Other</option>
+        </select>
+    </div>
+    <div class="form-group">
+        <label for="age">Patient Age</label>
+        <input type="number" id="age" name="age" required>
+    </div>
+    <div class="form-group">
+        <label for="diseaseDescription">Disease Description</label>
+        <textarea id="diseaseDescription" name="diseaseDescription" rows="4" required></textarea>
+    </div>
+    <div class="form-group">
+        <button type="button" onclick="submitForm()">Submit</button>
+    </div>
+</div>
+
+<script>
+    function submitForm() {
+        const patientData = {
+            patientName: document.getElementById('patientName').value,
+            phoneNumber: document.getElementById('phoneNumber').value,
+            gender: document.getElementById('gender').value,
+            age: document.getElementById('age').value,
+            diseaseDescription: document.getElementById('diseaseDescription').value
+        };
+
+        console.log("Patient Data Submitted:", patientData);
+        alert("Patient data submitted successfully!");
+    }
+</script>
+
+</body>
+</html>
