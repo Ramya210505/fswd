@@ -1,0 +1,97 @@
+body {
+    background-color: rgb(255, 250, 249);
+    font-size: 1rem;
+    font-weight: 400;
+}
+
+form section {
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.response {
+    color: rgb(34, 34, 34);
+    padding: 0;
+    position: relative;
+}
+
+.response {
+    padding: 12px 25px;
+    width: 312px;
+    max-width: 425px;
+    height: 100%;
+    background-color: rgb(255, 255, 255);
+    border-radius: 7px;
+    border-color: rgb(255, 255, 255);
+    border-width: 0.1rem;
+    border-style: solid;
+    margin-bottom: 1rem;
+    box-shadow: rgb(255 0 0 / 5%) 0px 6px 13px 0px, rgb(0 0 0 / 8%) 1px 1px 4px 0px;
+}
+
+input[type="radio"] {
+    display: none;
+}
+
+.response:hover {
+    box-shadow: rgb(255 0 0 / 5%) 0px 13px 22px 0px, rgb(0 0 0 / 3%) 0px 6px 24px 0px;
+}
+
+.btn-check:checked + .response {
+    outline-width: 2px;
+    outline-color: blue;
+    outline-style: solid;
+}
+
+#steps-container {
+    margin: auto;
+    width: 375px;
+    max-width: 500px;
+    min-height: 420px;
+    display: flex;
+    vertical-align: middle;
+    align-items: center;
+}
+
+.step {
+    display: none;
+}
+
+.step h4 {
+    margin: 0 0 26px 0;
+    padding: 0;
+    position: relative;
+    font-weight: 500;
+    font-size: 23px;
+    font-size: 1.4375rem;
+    line-height: 1.6;
+}
+
+.progress {
+    border-radius: 0px !important;
+    height: 0.5rem;
+}
+
+#q-box__buttons {
+    width: 300px;
+}
+
+.final-step {
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.last-part {
+    width: 300px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.last-part label {
+    font-weight: bold;
+}
+
+.modal-content {
+    text-align: center;
+    padding: 20px;
+}
