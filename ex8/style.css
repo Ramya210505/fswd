@@ -1,97 +1,136 @@
+/* Body styles */
 body {
-    background-color: rgb(255, 250, 249);
-    font-size: 1rem;
-    font-weight: 400;
+  background-color: rgb(255, 250, 249);
+  font-size: 1rem;
+  font-weight: 400;
 }
 
 form section {
-    margin-left: auto;
-    margin-right: auto;
+  margin-left: auto;
+  margin-right: auto;
 }
 
+/* Style the questions and options */
 .response {
-    color: rgb(34, 34, 34);
-    padding: 0;
-    position: relative;
-}
-
-.response {
-    padding: 12px 25px;
-    width: 312px;
-    max-width: 425px;
-    height: 100%;
-    background-color: rgb(255, 255, 255);
-    border-radius: 7px;
-    border-color: rgb(255, 255, 255);
-    border-width: 0.1rem;
-    border-style: solid;
-    margin-bottom: 1rem;
-    box-shadow: rgb(255 0 0 / 5%) 0px 6px 13px 0px, rgb(0 0 0 / 8%) 1px 1px 4px 0px;
+  color: rgb(34, 34, 34);
+  padding: 12px 25px;
+  width: 312px;
+  max-width: 425px;
+  height: 100%;
+  background-color: rgb(255, 255, 255);
+  border-radius: 7px;
+  border-color: rgb(255, 255, 255);
+  border-width: 0.1rem;
+  border-style: solid;
+  margin-bottom: 1rem;
+  box-shadow: rgb(255 0 0 / 5%) 0px 6px 13px 0px, rgb(0 0 0 / 8%) 1px 1px 4px 0px;
 }
 
 input[type="radio"] {
-    display: none;
+  display: none;
 }
 
 .response:hover {
-    box-shadow: rgb(255 0 0 / 5%) 0px 13px 22px 0px, rgb(0 0 0 / 3%) 0px 6px 24px 0px;
+  box-shadow: rgb(255 0 0 / 5%) 0px 13px 22px 0px, rgb(0 0 0 / 3%) 0px 6px 24px 0px;
 }
 
 .btn-check:checked + .response {
-    outline-width: 2px;
-    outline-color: blue;
-    outline-style: solid;
+  outline-width: 2px;
+  outline-color: blue;
+  outline-style: solid;
 }
 
+/* Question container styling */
 #steps-container {
-    margin: auto;
-    width: 375px;
-    max-width: 500px;
-    min-height: 420px;
-    display: flex;
-    vertical-align: middle;
-    align-items: center;
+  margin: auto;
+  width: 375px;
+  max-width: 500px;
+  min-height: 420px;
+  display: flex;
+  vertical-align: middle;
+  align-items: center;
 }
 
 .step {
-    display: none;
+  display: none;
 }
 
 .step h4 {
-    margin: 0 0 26px 0;
-    padding: 0;
-    position: relative;
-    font-weight: 500;
-    font-size: 23px;
-    font-size: 1.4375rem;
-    line-height: 1.6;
+  margin: 0 0 26px 0;
+  padding: 0;
+  position: relative;
+  font-weight: 500;
+  font-size: 1.4375rem;
+  line-height: 1.6;
 }
 
+/* Progress bar styling */
 .progress {
-    border-radius: 0px !important;
-    height: 0.5rem;
+  border-radius: 0px !important;
+  height: 0.5rem;
 }
 
+/* Buttons container styling */
 #q-box__buttons {
-    width: 300px;
+  width: 300px;
+  position: absolute;
+  bottom: 30px; /* Move button lower */
+  left: 50%;
+  transform: translateX(-50%);
 }
 
-.final-step {
-    margin-left: auto;
-    margin-right: auto;
+/* Style the Continue button */
+#next-btn {
+  background-color: #ff5c8d; /* Attractive pink color */
+  border: none;
+  color: white;
+  padding: 15px 30px;
+  font-size: 18px;
+  font-weight: bold;
+  border-radius: 50px; /* Rounded button */
+  transition: all 0.3s ease; /* Smooth transition */
+  width: 100%;
+  box-shadow: 0px 6px 20px rgba(255, 92, 141, 0.4); /* Shadow effect */
 }
 
-.last-part {
-    width: 300px;
-    margin-left: auto;
-    margin-right: auto;
+#next-btn:hover {
+  background-color: #ff4786; /* Slightly darker pink on hover */
+  transform: scale(1.05); /* Slightly increase size on hover */
+  box-shadow: 0px 12px 30px rgba(255, 92, 141, 0.6); /* Stronger shadow on hover */
 }
 
-.last-part label {
-    font-weight: bold;
+#next-btn:active {
+  background-color: #ff3272; /* Darker color when clicked */
+  transform: scale(0.98); /* Shrink effect when clicked */
 }
 
+/* Style the Submit button */
+#submit-btn {
+  background-color: #28a745; /* Green color */
+  border: none;
+  color: white;
+  padding: 15px 30px;
+  font-size: 18px;
+  font-weight: bold;
+  border-radius: 50px;
+  transition: all 0.3s ease;
+  width: 100%;
+  display: none;
+}
+
+#submit-btn:hover {
+  background-color: #218838; /* Darker green on hover */
+  transform: scale(1.05);
+  box-shadow: 0px 6px 20px rgba(40, 167, 69, 0.4);
+}
+
+#submit-btn:active {
+  background-color: #1e7e34; /* Darker color when clicked */
+  transform: scale(0.98); /* Shrink effect when clicked */
+}
+
+/* Modal Content */
 .modal-content {
-    text-align: center;
-    padding: 20px;
+  text-align: center;
+  padding: 20px;
 }
