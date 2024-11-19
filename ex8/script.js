@@ -26,15 +26,10 @@ const questions = [
   }
 ];
 
-// Function to select 5 random questions (for this case, we use all available questions)
-function getSurveyQuestions() {
-  return questions;
-}
-
 // Function to generate survey questions dynamically
 function generateSurveyQuestions() {
   const questionsContainer = document.getElementById('steps-container');
-  const selectedQuestions = getSurveyQuestions();
+  const selectedQuestions = questions;
 
   selectedQuestions.forEach((q, idx) => {
     const step = document.createElement('section');
