@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Remote Work Productivity App</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f7f7f7;
+            display: flex;
+        }
+
+        header {
+            background-color: #00796b;
+            padding: 15px;
+            color: white;
+            font-size: 1.5em;
+            width: 100%;
+            text-align: center;
+        }
+
+        #login-page {
+            padding: 50px;
+            text-align: center;
+            background-color: #ffffff;
+            margin-top: 10%;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        #login-page input {
+            padding: 12px;
+            margin: 10px 0;
+            width: 80%;
+            font-size: 1rem;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+        }
+
+        #login-page button {
+            background-color: #00796b;
+            color: white;
+            padding: 12px;
+            width: 80%;
+            font-size: 1.1rem;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        #login-page button:hover {
+            background-color: #004d40;
+        }
+
+        #main-app {
+            display: flex;
+            flex-direction: row;
+            padding: 20px;
+            width: 100%;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        /* Sidebar */
+        .side-nav {
+            width: 220px;
+            background-color: #00796b;
+            color: white;
+            padding: 15px;
+            box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .side-nav .nav-btn {
+            display: block;
+            width: 100%;
+            background-color: #00796b;
+            color: white;
+            padding: 12px;
+            font-size: 1.1rem;
+            margin: 5px 0;
+            cursor: pointer;
+            text-align: left;
+            border: none;
+            border-radius: 5px;
+        }
+
+        .side-nav .nav-btn:hover {
+            background-color: #004d40;
+        }
+
+        /* Main Content */
+        .main-content {
+            flex-grow: 1;
+            padding: 20px;
+            overflow-y: auto;
+        }
+
+        /* Section */
+        .content-section {
+            display: none;
+            margin-top: 20px;
+            padding: 20px;
+            background-color: #ffffff;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        button {
+            background-color: #00796b;
+            color: white;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1.1rem;
+        }
+
+        button:hover {
+            background-color: #004d40;
+        }
+
+        #progress-bar {
+            height: 10px;
+            background-color: #00796b;
+            width: 0;
+            border-radius: 5px;
+        }
+
+        .timer-progress {
+            width: 100%;
+            background-color: #ddd;
+            border-radius: 5px;
+        }
+
+        .resource-item {
+            margin-bottom: 20px;
+        }
+
+        .expand-btn {
+            background-color: #00796b;
+            color: white;
+            padding: 12px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .expand-btn:hover {
+            background-color: #004d40;
+        }
+
+        .resource-content {
+            display: none;
+            padding: 15px;
+            background-color: #e0f2f1;
+            border-radius: 5px;
+        }
+
+        #status {
+            font-size: 1.5rem;
+            margin: 10px 0;
+        }
+
+        #time-display {
+            font-size: 2rem;
+            margin-top: 20px;
+            font-weight: bold;
+        }
+
+        #stop-btn {
+            margin-top: 20px;
+        }
+
+        #logout-btn {
+            background-color: #d32f2f;
+            color: white;
+            padding: 12px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1.1rem;
+            margin-top: 20px;
+        }
+
+        #logout-btn:hover {
+            background-color: #c62828;
+        }
+
+        /* Flex for the layout */
+        .nav-bar {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header span {
+            font-size: 1.2rem;
+            font-weight: bold;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Login Page -->
+    <div id="login-page">
+        <h2>Login</h2>
+        <form id="login-form">
+            <input type="text" id="username" placeholder="Username" required>
+            <input type="password" id="password" placeholder="Password" required>
+            <button type="submit">Login</button>
+            <p id="login-error" style="color: red; display: none;">Invalid username or password</p>
+        </form>
+    </div>
+
+    <!-- Main App Page (after login) -->
+    <div id="main-app" style="display: none;">
+        <!-- Sidebar -->
+        <div class="side-nav">
+            <button class="nav-btn" id="work-timer-btn">Work Timer</button>
+            <button class="nav-btn" id="distractions-btn">Distraction Management</button>
+            <button class="nav-btn" id="progress-btn">Progress Tracker</button>
+            <button class="nav-btn" id="settings-btn">Settings</button>
+            <button class="nav-btn" id="resources-btn">Resources</button>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <div class="header">
+                <span id="username-display"></span>
+                <button id="logout-btn">Logout</button>
+            </div>
+
+            <!-- Sections -->
+            <div id="work-timer" class="content-section">
+                <h2>Work Timer</h2>
+                <p id="status">Ready to focus?</p>
+                <div id="time-display">25:00</div>
+                <div class="timer-progress">
+                    <div id="progress-bar"></div>
+                </div>
+                <button id="start-btn">Start Work</button>
+                <button id="stop-btn" disabled>Stop Timer</button>
+                <button id="reset-btn" disabled>Reset</button>
+            </div>
+
+            <div id="distractions" class="content-section" style="display: none;">
+                <h2>Distraction Management</h2>
+                <p>Stay focused with these tips:</p>
+                <ul>
+                    <li>Create a dedicated workspace</li>
+                    <li>Block distracting websites</li>
+                    <li>Set a work schedule</li>
+                    <li>Minimize notifications on your phone</li>
+                    <li>Take regular breaks to recharge</li>
+                </ul>
+            </div>
+
+            <div id="progress" class="content-section" style="display: none;">
+                <h2>Progress Tracker</h2>
+                <p>Track your work and break time to evaluate your productivity:</p>
+                <div>
+                    <h3>Work Time: <span id="work-time-tracked">0</span> minutes</h3>
+                    <h3>Break Time: <span id="break-time-tracked">0</span> minutes</h3>
+                </div>
+            </div>
+
+            <div id="settings" class="content-section" style="display: none;">
+                <h2>Settings</h2>
+                <form id="settings-form">
+                    <label>Work Time (minutes): </label>
+                    <input type="number" id="work-time-input" value="25" required>
+                    <label>Break Time (minutes): </label>
+                    <input type="number" id="break-time-input" value="5" required>
+                    <button type="submit">Save Settings</button>
+                </form>
+            </div>
+
+            <div id="resources" class="content-section" style="display: none;">
+                <h2>Resources</h2>
+                <div class="resource-item">
+                    <button class="expand-btn">Time Management Tips</button>
+                    <div class="resource-content">
+                        <p>Prioritize your tasks and use time-blocking methods to stay organized.</p>
+                    </div>
+                </div>
+                <div class="resource-item">
+                    <button class="expand-btn">Motivational Quotes</button>
+                    <div class="resource-content">
+                        <p>"Success is the sum of small efforts, repeated day in and day out." - Robert Collier</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const loginForm = document.getElementById('login-form');
+        const loginError = document.getElementById('login-error');
+        const loginPage = document.getElementById('login-page');
+        const mainApp = document.getElementById('main-app');
+        const usernameDisplay = document.getElementById('username-display');
+        const logoutBtn = document.getElementById('logout-btn');
+        const workTimerBtn = document.getElementById('work-timer-btn');
+        const distractionsBtn = document.getElementById('distractions-btn');
+        const progressBtn = document.getElementById('progress-btn');
+        const settingsBtn = document.getElementById('settings-btn');
+        const resourcesBtn = document.getElementById('resources-btn');
+        
+        const sections = {
+            workTimer: document.getElementById('work-timer'),
+            distractions: document.getElementById('distractions'),
+            progress: document.getElementById('progress'),
+            settings: document.getElementById('settings'),
+            resources: document.getElementById('resources'),
+        };
+
+        // Sample login credentials
+        const validUsername = "user";
+        const validPassword = "password123";
+
+        // Login event
+        loginForm.addEventListener('submit', function (e) {
+            e.preventDefault();
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+
+            if (username === validUsername && password === validPassword) {
+                loginPage.style.display = 'none';
+                mainApp.style.display = 'flex';
+                usernameDisplay.textContent = `Hello, ${username}`;
+            } else {
+                loginError.style.display = 'block';
+            }
+        });
+
+        // Logout functionality
+        logoutBtn.addEventListener('click', function () {
+            loginPage.style.display = 'block';
+            mainApp.style.display = 'none';
+        });
+
+        // Section Navigation
+        function switchSection(section) {
+            Object.values(sections).forEach(s => s.style.display = 'none');
+            sections[section].style.display = 'block';
+        }
+
+        workTimerBtn.addEventListener('click', () => switchSection('workTimer'));
+        distractionsBtn.addEventListener('click', () => switchSection('distractions'));
+        progressBtn.addEventListener('click', () => switchSection('progress'));
+        settingsBtn.addEventListener('click', () => switchSection('settings'));
+        resourcesBtn.addEventListener('click', () => switchSection('resources'));
+        
+        // Toggle resource content visibility
+        const expandBtns = document.querySelectorAll('.expand-btn');
+        expandBtns.forEach(btn => {
+            btn.addEventListener('click', function () {
+                const content = this.nextElementSibling;
+                content.style.display = content.style.display === 'block' ? 'none' : 'block';
+            });
+        });
+    </script>
+</body>
+</html>
