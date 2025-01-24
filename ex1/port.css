@@ -298,12 +298,15 @@ section {
     max-width: 830px;
 }
 
-.home-content .btn:hover {
-        background: var(--white-color);
-        color: var(--main-color);
-        border: 1px solid var(--main-color);
-        transform: scale(1.05);
-      }
+.contact .btn {
+    padding: 0.8rem 2rem;
+    background: var(--main-color);
+    color: var(--white-color);
+    text-decoration: none;
+    border-radius: 5px;
+    font-weight: 500;
+    transition: 0.3s ease;
+}
 
 .contact .btn:hover {
     background: var(--white-color);
@@ -334,6 +337,24 @@ section {
 }
 
 /* Responsive Design */
+@media (max-width: 1024px) {
+    .header .navbar {
+        font-size: 0.9rem;
+    }
+    
+    .projects-container {
+        flex-direction: column;
+    }
+    
+    .project-box {
+        flex: 1 1 100%;
+    }
+
+    .social-media a {
+        font-size: 1.2rem;
+    }
+}
+
 @media (max-width: 768px) {
     .hamburger {
         display: block;
@@ -356,6 +377,10 @@ section {
 
     .projects-container {
         flex-direction: column;
+    }
+
+    .project-box {
+        flex: 1 1 100%;
     }
 
     .input-box {
