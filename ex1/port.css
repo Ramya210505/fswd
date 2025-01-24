@@ -24,6 +24,58 @@ body {
     overflow-x: hidden;
 }
 
+/* Header Section - Mobile */
+@media (max-width: 768px) {
+    .header {
+        position: absolute; /* Remove fixed position */
+        top: 0;
+        left: 0;
+        width: 100%;
+        padding: 1.5rem 9%;
+        background: rgba(31, 36, 45, 0.95);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        z-index: 1000;
+        box-shadow: 0 2px 15px rgba(0, 0, 0, 0.1);
+        backdrop-filter: blur(10px);
+        transition: top 0.3s ease-in-out; /* Smooth transition */
+    }
+
+    /* Initially hide the header when the menu is open */
+    .navbar.active + .header {
+        top: -100px; /* Move header out of view */
+    }
+
+    .hamburger {
+        display: block;
+    }
+
+    .navbar {
+        display: none;
+        flex-direction: column;
+        position: fixed;
+        top: 100%;
+        left: 0;
+        width: 100%;
+        background: rgba(31, 36, 45, 0.95);
+        padding: 1rem 0;
+    }
+
+    .navbar.active {
+        display: flex;
+    }
+
+    .projects-container {
+        flex-direction: column;
+    }
+
+    .input-box {
+        flex-direction: column;
+    }
+}
+
+
 /* Header Section */
 .header {
     position: fixed;
