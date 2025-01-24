@@ -1,73 +1,189 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Ramya | Full Stack Developer Portfolio</title>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="port.css">
-</head>
-<body>
-  <!-- Navbar -->
-  <nav id="navbar">
-    <ul>
-      <li><a href="#about">About</a></li>
-      <li><a href="#projects">Projects</a></li>
-      <li><a href="#contact">Contact</a></li>
-    </ul>
-  </nav>
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Responsive Personal Portfolio Website</title>
+    <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="port.css" />
+  </head>
+  <body>
+    <!-- Header Section -->
+    <header class="header">
+      <a href="#" class="logo">Portfolio</a>
+      <i class="bx bx-menu hamburger" id="menu-icon"></i>
+      <nav class="navbar">
+        <a href="#home" class="active">Home</a>
+        <a href="#about">About</a>
+        <a href="#education">Education</a>
+        <a href="#projects">Projects</a>
+        <a href="#certifications">Certifications</a>
+        <a href="#contact">Contact</a>
+      </nav>
+    </header>
 
-  <!-- Hero Section -->
-  <section id="hero">
-    <div class="hero-content">
-      <h1>Hi, I'm <span class="highlight">Ramya</span></h1>
-      <p>A Passionate Full Stack Developer</p>
-      <a href="#projects" class="cta-btn">View My Work</a>
-    </div>
-  </section>
-
-  <!-- About Section -->
-  <section id="about">
-    <div class="about-container">
-      <h2>About Me</h2>
-      <p>Hello! I'm Ramya, a full-stack web developer with a passion for building scalable, user-friendly web applications. I love working with JavaScript and modern frameworks like React, Node.js, and Express. When I'm not coding, I enjoy reading, exploring new technologies, and learning new things.</p>
-    </div>
-  </section>
-
-  <!-- Projects Section -->
-  <section id="projects">
-    <h2>Featured Projects</h2>
-    <div class="project-cards">
-      <div class="project-card">
-        <h3>Project 1: Task Manager</h3>
-        <p>A task management app built with React, Node.js, and MongoDB. Manage your tasks, set deadlines, and track progress.</p>
-        <a href="#" class="btn">View Project</a>
+    <!-- Home Section -->
+    <section class="home" id="home">
+      <div class="home-content">
+        <h3>Hello, It's Me</h3>
+        <h1>Ramya Sathyam</h1>
+        <h3>And I'm an <span class="multiple-text"></span></h3>
+        <div class="social-media">
+          <a href="https://github.com/ramya210505" target="_blank">
+            <i class="bx bxl-github"></i>
+          </a>
+          <a href="mailto:ramyasathiam@gmail.com">
+            <i class="bx bxs-envelope"></i>
+          </a>
+          <a
+            href="https://www.linkedin.com/in/ramya-s-4b04a928a"
+            target="_blank"
+          >
+            <i class="bx bxl-linkedin"></i>
+          </a>
+        </div>
+        <a href="https://drive.google.com/file/d/1KOI2GWh3Ob-3y7eRcyDPKviG4chSaQFt/view?usp=drivesdk" class="btn" download
+          >Download CV</a
+        >
       </div>
-      <div class="project-card">
-        <h3>Project 2: E-Commerce Website</h3>
-        <p>An e-commerce platform with React, Node.js, and Stripe for secure payments. Full functionality with an admin dashboard.</p>
-        <a href="#" class="btn">View Project</a>
-      </div>
-      <div class="project-card">
-        <h3>Project 3: Social Media App</h3>
-        <p>A social media app built with React and Socket.io for real-time messaging and interactions.</p>
-        <a href="#" class="btn">View Project</a>
-      </div>
-    </div>
-  </section>
+    </section>
 
-  <!-- Contact Section -->
-  <section id="contact">
-    <h2>Contact Me</h2>
-    <form id="contact-form">
-      <input type="text" id="name" placeholder="Your Name" required>
-      <input type="email" id="email" placeholder="Your Email" required>
-      <textarea id="message" placeholder="Your Message" required></textarea>
-      <button type="submit" class="cta-btn">Send Message</button>
-    </form>
-    <div id="message-success" class="success-message">Message sent successfully!</div>
-  </section>
+    <!-- About Section -->
+    <section class="about" id="about">
+      <div class="about-content">
+        <h2 class="heading">About<span> Me</span></h2>
+        <h3>Aspiring Tech Innovator | Student (Information Technology)</h3>
+        <p>
+          I am an ambitious and detail-driven IT enthusiast with a strong flair
+          for coding, web design, and innovation. Proficient in Python, Java,
+          and C, I have expertise in data structures and object-oriented
+          programming. Skilled in web development using HTML and CSS, and
+          experienced in UI/UX design using Figma. I’m passionate about
+          harnessing technology to drive innovation and creativity.
+        </p>
+        <a href="#projects" class="btn">Explore Projects</a>
+      </div>
+    </section>
 
-  <script src="port.js"></script>
-</body>
+    <!-- Education Section -->
+    <section class="education" id="education">
+      <h2 class="heading">My<span> Education</span></h2>
+      <div class="education-content">
+        <h3>B.Tech in Information Technology</h3>
+        <p>University College of Engineering, BIT Campus, Tiruchirappalli</p>
+        <p><strong>Duration:</strong> October 2022 - July 2026</p>
+
+        <h3>HSC (Higher Secondary School Certificate)</h3>
+        <p>Sri Venkateshwara Matric. Hr. Sec. School, Pudukkottai</p>
+        <p><strong>Year:</strong> 2022 | <strong>GPA:</strong> 83.5/100</p>
+
+        <h3>SSLC (Secondary School Leaving Certificate)</h3>
+        <p>Sri Venkateshwara Matric. Hr. Sec. School, Pudukkottai</p>
+        <p><strong>Year:</strong> 2020 | <strong>GPA:</strong> 81.6/100</p>
+      </div>
+    </section>
+
+    <!-- Projects Section -->
+    <section class="projects" id="projects">
+      <h2 class="heading">Latest<span> Projects</span></h2>
+      <div class="projects-container">
+        <div class="project-box">
+          <h4>Comprehensive Web Development
+Project Suite</h4>
+          <p>
+           I developed a diverse collection of responsive and interactive websites, showcasing my expertise in front-end development. This project suite includes a portfolio, to-do list app, microblogging platform, and food delivery website,etc... all built using HTML, CSS, and JavaScript.
+          </p>
+          <a href="https://ramya210505.github.io/fswd/" target="_blank"
+            ><i class="bx bx-link-external"></i> View Project</a
+          >
+        </div>
+        <div class="project-box">
+          <h4>Tollgate Entry App UI Design</h4>
+          <p>
+            Designed an intuitive interface for a tollgate entry application, streamlining the payment process for drivers. The app features user registration, vehicle selection, toll calculation, secure payment gateway, and QR code generation. I focused on creating a seamless user experience with a clean layout, responsive design, and soothing blue color scheme using Figma.
+          </p>
+          <a
+            href="https://www.figma.com/file/BjxaxsycLx7tiU2XsT2lUi/WIREFRAMING"
+            target="_blank"
+            ><i class="bx bx-link-external"></i> View Project</a
+          >
+        </div>
+      </div>
+    </section>
+
+    <!-- Certifications Section -->
+    <section class="certifications" id="certifications">
+      <h2 class="heading">Certifications & <span>Achievements</span></h2>
+      <div class="certifications-container">
+        <h3>Key Achievements</h3>
+        <ul>
+          <li>Third Prize in District-Level Carrom Competitions.</li>
+          <li>
+            Third Prize in Vina Vidai Vettai (Season-1) organized by Puthiya Thalaimurai.
+          </li>
+          <li>
+            Participant in the State-Level Talent Examination conducted by Sri Sai Foundation.
+          </li>
+        </ul>
+
+        <h3>Certifications</h3>
+        <ul>
+          <li>
+            Figma Design Course - Your Website From Start to Finish (Udemy)
+          </li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section class="contact" id="contact">
+      <h2 class="heading">Contact<span> Me</span></h2>
+      <form name="submit-to-google-sheet">
+        <div class="input-box">
+          <input type="text" name="Name" placeholder="Full Name" required />
+          <input
+            type="email"
+            name="Email"
+            placeholder="Email Address"
+            required
+          />
+        </div>
+        <div class="input-box">
+          <input
+            type="number"
+            name="Mobile"
+            placeholder="Mobile Number"
+            required
+          />
+          <input
+            type="text"
+            name="Subject"
+            placeholder="Email Subject"
+            required
+          />
+        </div>
+        <textarea
+          name="Message"
+          cols="30"
+          rows="10"
+          placeholder="Your Message"
+          required
+        ></textarea>
+        <input type="submit" value="Send Message" class="btn" />
+      </form>
+      <span id="msg"></span>
+    </section>
+
+    <footer class="footer">
+      <div class="footer-text">
+        <p>&copy; 2023 by Ramya Sathyam | All Rights Reserved.</p>
+      </div>
+      <div class="footer-iconTop">
+        <a href="#home"><i class="bx bx-up-arrow-alt"></i></a>
+      </div>
+    </footer>
+
+    <script src="port.js"></script>
+  </body>
 </html>
