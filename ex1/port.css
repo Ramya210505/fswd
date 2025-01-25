@@ -97,27 +97,40 @@ a {
 
 /* Home Section */
 .home {
-  height: 80vh; /* Reduced height for a more compact home screen */
+  height: 60vh; /* Keep the height as is */
   background: linear-gradient(135deg, #4e6e82, #aac4d3); /* Soft Blue to Soft Green gradient */
   color: white;
   text-align: center;
-  padding: 120px 20px;
-  margin-bottom: 30px; /* Add some space after the home section */
+  padding: 60px 20px; /* Keep the padding on top and sides */
+  padding-bottom: calc(60px + 12cm); /* Decrease bottom padding to 12cm (previously 16cm) */
+  margin-bottom: 30px; /* Maintain some space after the home section */
 }
 
+
+
 .home h1 {
-  font-size: 50px;
-  margin: 20px 0;
+  font-size: 50px; /* Increase font size for better impact */
+  margin: 20px 0; /* Add some spacing above and below */
   text-transform: uppercase;
-  font-size: 3rem;
   color: #6a5acd; /* Mild light purple */
+  background: linear-gradient(135deg, #6a5acd, #3498db); /* Gradient color effect */
+  -webkit-background-clip: text; /* Apply the gradient to the text */
+  color: transparent; /* Make the default color transparent so the gradient shows */
+  font-weight: bold; /* Make the text bold */
+  text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.2); /* Add a subtle shadow for depth */
+  letter-spacing: 2px; /* Slightly increased letter spacing for a modern look */
 }
 
 .home h3 {
+  font-size: 35px; /* Larger font size for better visibility */
+  color: #fff; /* White color for contrast against the background */
+  margin: 2.5rem 0 1.5rem; /* Proper margin for spacing */
+}
+
+.home h4 {
   font-size: 30px;
-  margin: 10px 0;
-  font-size: 1.5rem;
-  color: #333;
+  margin: 20px 0; /* Add margin above and below */
+  color: #fff; /* White color to complement the background */
 }
 
 .home .social-media a {
@@ -164,6 +177,7 @@ a {
 .about-content h3 {
   font-size: 30px;
   margin-bottom: 20px;
+  color: #2980b9; /* Soft Blue for better readability */
 }
 
 .about-content p {
