@@ -1,52 +1,40 @@
-// Hamburger Menu Toggle
+// Add smooth scrolling for desktop view
+document.querySelectorAll('.navbar a').forEach(anchor => {
+    anchor.addEventListener('click', function (e) {
+        e.preventDefault();
+        document.querySelector(this.getAttribute('href')).scrollIntoView({
+            behavior: 'smooth'
+        });
+    });
+});
+
+// Toggle Hamburger Menu in Mobile View
 const menuIcon = document.getElementById('menu-icon');
 const navbar = document.querySelector('.navbar');
 
 menuIcon.addEventListener('click', () => {
-  navbar.classList.toggle('active');
+    navbar.classList.toggle('active');
 });
 
-// Typewriting effect for Home Section
-const multipleText = document.querySelector('.multiple-text');
-const textArray = ['Web Developer', 'Tech Enthusiast', 'UI/UX Designer'];
-let textIndex = 0;
-let charIndex = 0;
+// Highlight Active Section on Scroll (Desktop)
+const sections = document.querySelectorAll('section');
+const navLinks = document.querySelectorAll('.navbar a');
 
-function typeText() {
-  if (charIndex < textArray[textIndex].length) {
-    multipleText.innerHTML += textArray[textIndex].charAt(charIndex);
-    charIndex++;
-    setTimeout(typeText, 150);
-  } else {
-    setTimeout(deleteText, 2000);
-  }
-}
+window.addEventListener('scroll', () => {
+    let current = '';
+    sections.forEach(section => {
+        const sectionTop = section.offsetTop;
+        const sectionHeight = section.clientHeight;
 
-function deleteText() {
-  if (charIndex > 0) {
-    multipleText.innerHTML = textArray[textIndex].substring(0, charIndex - 1);
-    charIndex--;
-    setTimeout(deleteText, 100);
-  } else {
-    textIndex = (textIndex + 1) % textArray.length;
-    setTimeout(typeText, 1000);
-  }
-}
-
-typeText();
-
-// Smooth Scroll for Navigation Links
-const links = document.querySelectorAll('.navbar a');
-
-links.forEach(link => {
-  link.addEventListener('click', (e) => {
-    e.preventDefault();
-    const targetId = link.getAttribute('href').substring(1);
-    const targetSection = document.getElementById(targetId);
-
-    window.scrollTo({
-      top: targetSection.offsetTop - 80, // Offset for header
-      behavior: 'smooth',
+        if (pageYOffset >= sectionTop - sectionHeight / 3) {
+            current = section.getAttribute('id');
+        }
     });
-  });
+
+    navLinks.forEach(link => {
+        link.classList.remove('active');
+        if (link.getAttribute('href') === `#${current}`) {
+            link.classList.add('active');
+        }
+    });
 });
