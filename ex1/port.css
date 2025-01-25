@@ -95,6 +95,47 @@ a {
   }
 }
 
+/* Side Menu (Hidden by default) */
+.side-menu {
+  position: fixed;
+  top: 0;
+  right: -250px; /* Hidden off-screen initially */
+  width: 250px;
+  height: 100%;
+  background-color: #2c3e50; /* Dark background */
+  padding-top: 60px; /* Space for the header */
+  transition: right 0.3s ease; /* Smooth transition */
+  z-index: 1001;
+}
+
+.side-menu .navbar {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+}
+
+.side-menu .navbar a {
+  color: #bdc3c7;
+  font-size: 18px;
+  font-weight: 500;
+  padding: 10px 20px;
+  text-align: center;
+  width: 100%;
+  transition: 0.3s ease;
+}
+
+.side-menu .navbar a:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+  color: #3498db;
+}
+
+#menu-icon {
+  font-size: 28px;
+  color: #ecf0f1;
+  cursor: pointer;
+}
+
 /* Home Section */
 .home {
   height: 60vh; /* Keep the height as is */
@@ -102,9 +143,8 @@ a {
   color: white;
   text-align: center;
   padding: 60px 20px; /* Keep the padding on top and sides */
-  padding-bottom: calc(60px + 8cm); /* Adjusted bottom padding to 8cm */
+  padding-bottom: calc(60px + 12cm); /* Decrease bottom padding to 12cm (previously 16cm) */
   margin-bottom: 30px; /* Maintain some space after the home section */
-  box-sizing: border-box; /* Ensures padding is included in height calculation */
 }
 
 .home h1 {
@@ -317,26 +357,114 @@ a {
   color: #7f8c8d;
 }
 
-/* Footer */
-footer {
-  background-color: #2c3e50;
-  color: white;
-  text-align: center;
-  padding: 40px 20px;
+/* Contact Section */
+.contact {
+  background-color: #ecf0f1;
+  padding: 80px 20px;
 }
 
-footer .footer-iconTop {
-  position: fixed;
-  bottom: 20px;
-  right: 20px;
-  background-color: #3498db;
-  padding: 12px 15px;
-  border-radius: 50%;
+.contact .heading {
+  font-size: 40px;
+  text-align: center;
+  margin-bottom: 50px;
+  color: #34495e;
+}
+
+.contact-container {
+  display: flex;
+  gap: 30px;
+  justify-content: space-between;
+}
+
+.contact-info {
+  width: 45%;
+}
+
+.contact-info h3 {
+  font-size: 24px;
+  color: #34495e;
+  margin-bottom: 20px;
+}
+
+.contact-info .info-item {
+  display: flex;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.contact-info .info-item i {
+  font-size: 28px;
+  color: #2980b9; /* Soft Blue */
+  margin-right: 15px;
+}
+
+.contact-info .info-item p {
+  font-size: 18px;
+  color: #7f8c8d;
+}
+
+.contact-info .social-media a {
+  font-size: 28px;
+  color: #34495e;
+  margin-right: 15px;
+  transition: color 0.3s ease;
+}
+
+.contact-info .social-media a:hover {
+  color: #2980b9;
+}
+
+.contact-form {
+  width: 45%;
+}
+
+.contact-form input,
+.contact-form textarea {
+  width: 100%;
+  padding: 15px;
+  border-radius: 5px;
+  border: 1px solid #ddd;
+  margin-bottom: 20px;
+  font-size: 16px;
+  background-color: #f4f4f4;
+}
+
+.contact-form button {
+  width: 100%;
+  padding: 15px;
+  background-color: #2980b9; /* Soft Blue */
+  color: white;
+  font-size: 18px;
+  border: none;
+  border-radius: 25px;
   cursor: pointer;
-  display: none;
   transition: background-color 0.3s ease;
 }
 
-footer .footer-iconTop:hover {
-  background-color: #2980b9;
+.contact-form button:hover {
+  background-color: #3498db;
+}
+
+/* Footer */
+.footer {
+  background-color: #2c3e50; /* Soft Dark Blue */
+  color: white;
+  text-align: center;
+  padding: 20px;
+}
+
+.footer .footer-text p {
+  font-size: 16px;
+}
+
+.footer-iconTop a {
+  font-size: 30px;
+  color: white;
+  display: inline-block;
+  margin-top: 20px;
+  transition: color 0.3s ease;
+}
+
+.footer-iconTop a:hover {
+  color: #3498db;
 }
