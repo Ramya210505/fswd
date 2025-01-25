@@ -1,3 +1,15 @@
+// Toggle Hamburger Menu in Mobile View
+const menuIcon = document.getElementById('menu-icon');
+const sideMenu = document.getElementById('side-menu');
+const navbar = document.querySelector('.navbar');
+
+// Open/close the side menu on hamburger click (Mobile)
+menuIcon.addEventListener('click', () => {
+    const isOpen = sideMenu.style.right === '0px';
+    sideMenu.style.right = isOpen ? '-250px' : '0px'; // Slide out/in
+    navbar.classList.toggle('active'); // Toggle navbar active class for mobile view
+});
+
 // Add smooth scrolling for desktop view
 document.querySelectorAll('.navbar a').forEach(anchor => {
     anchor.addEventListener('click', function (e) {
@@ -6,14 +18,6 @@ document.querySelectorAll('.navbar a').forEach(anchor => {
             behavior: 'smooth'
         });
     });
-});
-
-// Toggle Hamburger Menu in Mobile View
-const menuIcon = document.getElementById('menu-icon');
-const navbar = document.querySelector('.navbar');
-
-menuIcon.addEventListener('click', () => {
-    navbar.classList.toggle('active');
 });
 
 // Highlight Active Section on Scroll (Desktop)
