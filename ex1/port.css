@@ -1,30 +1,330 @@
-/* Reset & Base */
-:root {
-    --bg-main: #09090b;
-    --primary: #8b5cf6;
-    --primary-glow: rgba(139, 92, 246, 0.5);
-    --secondary: #3b82f6;
-    --text-primary: #f8fafc;
-    --text-muted: #94a3b8;
-    --glass-border: rgba(255, 255, 255, 0.08);
-    --glass-bg: rgba(255, 255, 255, 0.03);
-}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Ramya S — Data Analyst &amp; UI/UX Designer</title>
+<meta name="description" content="Portfolio of Ramya S — Information Technology graduate, Data Analyst and UI/UX Design intern." />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="port.css" />
+</head>
+<body>
 
-* { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Space Grotesk', sans-serif; cursor: none; }
-html { scroll-behavior: smooth; }
-body { background: var(--bg-main); color: var(--text-primary); overflow-x: hidden; line-height: 1.6; }
+<!-- ===== Skip link ===== -->
+<a class="skip-link" href="#main">Skip to content</a>
 
-/* Custom Cursor */
-.cursor-dot { width: 8px; height: 8px; background: var(--primary); border-radius: 50%; position: fixed; pointer-events: none; z-index: 9999; transform: translate(-50%, -50%); transition: width 0.2s, height 0.2s; }
-.cursor-outline { width: 40px; height: 40px; border: 2px solid var(--primary-glow); border-radius: 50%; position: fixed; pointer-events: none; z-index: 9998; transform: translate(-50%, -50%); transition: 0.1s ease-out; }
-a:hover ~ .cursor-dot, button:hover ~ .cursor-dot { width: 40px; height: 40px; background: var(--primary-glow); mix-blend-mode: screen; }
+<!-- ===== Nav ===== -->
+<header class="nav" id="nav">
+  <div class="nav-inner">
+    <a href="#top" class="nav-brand">RS<span class="dot">.</span></a>
 
-/* Glitch Effect */
-.glitch { font-size: 5rem; font-weight: 700; margin-bottom: 10px; position: relative; }
-.glitch::before, .glitch::after { content: attr(data-text); position: absolute; top: 0; left: 0; width: 100%; height: 100%; opacity: 0.8; }
-.glitch::before { left: 2px; text-shadow: -2px 0 #ff00c1; animation: glitch-anim 5s infinite linear alternate-reverse; }
-.glitch::after { left: -2px; text-shadow: -2px 0 #00fff9; animation: glitch-anim2 5s infinite linear alternate-reverse; }
+    <nav class="nav-links" id="navLinks">
+      <a href="#about">About</a>
+      <a href="#experience">Experience</a>
+      <a href="#projects">Projects</a>
+      <a href="#skills">Skills</a>
+      <a href="#education">Education</a>
+      <a href="#contact">Contact</a>
+    </nav>
 
-/* Glassmorphism Cards */
-.glass-card { background: var(--glass-bg); backdrop-filter: blur(12px); border: 1px solid var(--glass-border); border-radius: 20px; padding: 40px; transition: 0.3s; }
-.glass-card:hover { border-color: rgba(255,255,255,0.15); box-shadow: 0 20px 40px rgba(0,0,0,0.4); }
+    <div class="nav-actions">
+      <a class="resume-link" href="assets/Ramya-S-Resume.pdf" download>Résumé ↓</a>
+      <button class="nav-toggle" id="navToggle" aria-label="Open menu" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </div>
+</header>
+
+<main id="main">
+
+  <!-- ===== Hero ===== -->
+  <section class="hero" id="top">
+    <div class="hero-inner">
+      <p class="eyebrow">Portfolio / 2026</p>
+      <h1 class="hero-title">
+        Ramya S reads data<br>
+        <span class="mode-word" id="modeWord">and designs</span> what it means.
+      </h1>
+
+      <p class="hero-sub" id="heroSub">
+        Information Technology graduate who moves fluidly between the spreadsheet and the sketchpad —
+        analysing datasets to find the pattern, then designing the interface that makes it usable.
+      </p>
+
+      <!-- Signature interaction: mode toggle -->
+      <div class="mode-toggle" role="group" aria-label="View portfolio as">
+        <button class="mode-btn is-active" data-mode="analyst" id="btnAnalyst">
+          <span class="mode-icon">▤</span> Analyst mode
+        </button>
+        <button class="mode-btn" data-mode="designer" id="btnDesigner">
+          <span class="mode-icon">◐</span> Designer mode
+        </button>
+      </div>
+
+      <div class="hero-stats">
+        <div class="stat">
+          <span class="stat-num">8.02</span>
+          <span class="stat-label">CGPA · B.Tech IT</span>
+        </div>
+        <div class="stat">
+          <span class="stat-num">2</span>
+          <span class="stat-label">Internships completed</span>
+        </div>
+        <div class="stat">
+          <span class="stat-num">2</span>
+          <span class="stat-label">Applied data &amp; design projects</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="hero-meta">
+      <span>Pudukkottai, Tamil Nadu</span>
+      <span class="sep">·</span>
+      <a href="mailto:ramyasathiam@gmail.com">ramyasathiam@gmail.com</a>
+      <span class="sep">·</span>
+      <a href="tel:+916383493479">+91 63834 93479</a>
+    </div>
+  </section>
+
+  <!-- ===== About ===== -->
+  <section class="section" id="about">
+    <div class="section-head">
+      <p class="eyebrow">About</p>
+      <h2>Two lenses, one graduate</h2>
+    </div>
+    <div class="about-grid">
+      <p class="about-copy">
+        I'm an Information Technology graduate from University College of Engineering (BIT Campus), Tiruchirappalli,
+        with hands-on exposure to both sides of a product: the numbers that describe it, and the interface people
+        actually touch. As a Data Analyst intern I cleaned and interrogated live datasets to support real decisions;
+        as a UI/UX Design intern I turned user requirements into wireframes and prototypes in Figma. I like problems
+        that need both — where a pattern in the data should quietly become a better screen.
+      </p>
+      <div class="about-cards">
+        <div class="about-card">
+          <span class="about-card-tag">Core concepts</span>
+          <p>Data Structures · OOP · Machine Learning · Data Analytics</p>
+        </div>
+        <div class="about-card">
+          <span class="about-card-tag">Soft skills</span>
+          <p>Communication · Teamwork · Ownership · Adaptability · Attention to detail</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== Experience ===== -->
+  <section class="section" id="experience">
+    <div class="section-head">
+      <p class="eyebrow">Experience</p>
+      <h2>Where I've worked</h2>
+    </div>
+
+    <ol class="timeline">
+      <li class="timeline-item">
+        <div class="timeline-date"><span>Jan – Feb 2025</span></div>
+        <div class="timeline-body">
+          <h3>Data Analyst Intern</h3>
+          <p class="timeline-org">Winzone Softech · Karaikudi, Tamil Nadu</p>
+          <ul>
+            <li>Analysed datasets and supported data-driven decision making in live projects</li>
+            <li>Applied data analysis techniques in Excel to identify patterns and insights</li>
+            <li>Collaborated with the team to resolve data-related queries and improve accuracy</li>
+            <li>Practised problem-solving, punctuality and adaptability in a professional setting</li>
+          </ul>
+        </div>
+      </li>
+
+      <li class="timeline-item">
+        <div class="timeline-date"><span>Jun – Jul 2025</span></div>
+        <div class="timeline-body">
+          <h3>UI/UX Design Intern</h3>
+          <p class="timeline-org">Fantasy Solution · Tiruchirappalli, Tamil Nadu</p>
+          <ul>
+            <li>Analysed user requirements and improved workflow efficiency through structured design</li>
+            <li>Created wireframes and prototypes using Figma</li>
+            <li>Applied user-centred design principles to enhance usability</li>
+          </ul>
+        </div>
+      </li>
+    </ol>
+  </section>
+
+  <!-- ===== Projects ===== -->
+  <section class="section" id="projects">
+    <div class="section-head">
+      <p class="eyebrow">Selected work</p>
+      <h2>Projects</h2>
+    </div>
+
+    <div class="project-grid">
+      <article class="project-card">
+        <div class="project-top">
+          <span class="project-year">2026</span>
+          <span class="project-tag" data-mode-tag="analyst">Data / ML</span>
+        </div>
+        <h3>Chronic Kidney Disease (CKD) Prediction System</h3>
+        <p>A data-driven classifier that analyses medical records to flag disease risk, with a full
+          preprocessing and validation pipeline built for accuracy on messy real-world health data.</p>
+        <div class="project-stack">
+          <span>Python</span><span>Machine Learning</span><span>Data Preprocessing</span>
+        </div>
+        <div class="project-links">
+          <a href="#" class="proj-link">Code ↗</a>
+          <a href="#" class="proj-link">Case study ↗</a>
+        </div>
+      </article>
+
+      <article class="project-card">
+        <div class="project-top">
+          <span class="project-year">2025</span>
+          <span class="project-tag" data-mode-tag="analyst">System design</span>
+        </div>
+        <h3>Tollgate Management System</h3>
+        <p>A structured system for transaction tracking, record maintenance and reporting — built to make
+          toll operations auditable and easy to reconcile.</p>
+        <div class="project-stack">
+          <span>Java</span><span>SQL</span><span>Reporting</span>
+        </div>
+        <div class="project-links">
+          <a href="#" class="proj-link">Code ↗</a>
+        </div>
+      </article>
+
+      <article class="project-card project-card--placeholder">
+        <div class="project-top">
+          <span class="project-year">In progress</span>
+          <span class="project-tag" data-mode-tag="designer">Web / UI</span>
+        </div>
+        <h3>Frontend build-out (this series)</h3>
+        <p>Todo List · Microblogging · Food Delivery · Buy &amp; Sell · Leave Management ·
+          Project Dashboard · Online Survey — eight standalone HTML/CSS/JS apps, shipped one at a time,
+          each linked here as it goes live.</p>
+        <div class="project-stack">
+          <span>HTML</span><span>CSS</span><span>JavaScript</span>
+        </div>
+        <div class="project-links">
+          <span class="proj-link proj-link--muted">Coming up next ↓</span>
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <!-- ===== Skills ===== -->
+  <section class="section" id="skills">
+    <div class="section-head">
+      <p class="eyebrow">Toolkit</p>
+      <h2>Skills</h2>
+    </div>
+
+    <div class="skills-grid">
+      <div class="skill-group" data-mode-tag="analyst">
+        <h3>Programming &amp; data</h3>
+        <div class="pill-row">
+          <span class="pill">Python</span><span class="pill">Java</span><span class="pill">SQL</span>
+          <span class="pill">Data Analytics</span><span class="pill">Machine Learning</span>
+        </div>
+      </div>
+      <div class="skill-group" data-mode-tag="designer">
+        <h3>Design &amp; prototyping</h3>
+        <div class="pill-row">
+          <span class="pill">Figma</span><span class="pill">Miro</span><span class="pill">Whimsical</span>
+          <span class="pill">Wireframing</span><span class="pill">Prototyping</span>
+        </div>
+      </div>
+      <div class="skill-group">
+        <h3>Web development</h3>
+        <div class="pill-row">
+          <span class="pill">HTML</span><span class="pill">CSS</span><span class="pill">JavaScript</span>
+        </div>
+      </div>
+      <div class="skill-group">
+        <h3>Tools</h3>
+        <div class="pill-row">
+          <span class="pill">VS Code</span><span class="pill">NetBeans</span><span class="pill">MS Excel</span>
+          <span class="pill">MS Word</span><span class="pill">PowerPoint</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== Education ===== -->
+  <section class="section" id="education">
+    <div class="section-head">
+      <p class="eyebrow">Education</p>
+      <h2>Grounding</h2>
+    </div>
+
+    <div class="edu-grid">
+      <div class="edu-card">
+        <span class="edu-date">2022 – 2026</span>
+        <h3>B.Tech, Information Technology</h3>
+        <p>University College of Engineering (BIT Campus), Tiruchirappalli</p>
+        <span class="edu-score">CGPA 8.02</span>
+      </div>
+      <div class="edu-card">
+        <span class="edu-date">2022</span>
+        <h3>HSC</h3>
+        <p>Sri Venkateshwara Matric Hr. Sec. School</p>
+        <span class="edu-score">83.5%</span>
+      </div>
+      <div class="edu-card">
+        <span class="edu-date">2020</span>
+        <h3>SSLC</h3>
+        <p>Sri Venkateshwara Matric Hr. Sec. School</p>
+        <span class="edu-score">81.6%</span>
+      </div>
+    </div>
+
+    <div class="cert-row">
+      <span class="eyebrow">Certifications</span>
+      <p>Foundational Python — CodeFobe</p>
+    </div>
+  </section>
+
+  <!-- ===== Contact ===== -->
+  <section class="section contact" id="contact">
+    <div class="section-head">
+      <p class="eyebrow">Get in touch</p>
+      <h2>Let's work together</h2>
+    </div>
+
+    <div class="contact-grid">
+      <p class="contact-copy">
+        Open to opportunities in data analysis and UI/UX design — or anywhere the two overlap.
+        The fastest way to reach me is email; I usually reply within a day.
+      </p>
+      <div class="contact-links">
+        <a href="mailto:ramyasathiam@gmail.com" class="contact-item">
+          <span class="contact-label">Email</span>
+          <span class="contact-value">ramyasathiam@gmail.com</span>
+        </a>
+        <a href="tel:+916383493479" class="contact-item">
+          <span class="contact-label">Phone</span>
+          <span class="contact-value">+91 63834 93479</span>
+        </a>
+        <a href="#" class="contact-item" id="linkedinLink">
+          <span class="contact-label">LinkedIn</span>
+          <span class="contact-value">Add your profile URL</span>
+        </a>
+        <a href="#" class="contact-item" id="githubLink">
+          <span class="contact-label">GitHub</span>
+          <span class="contact-value">Add your profile URL</span>
+        </a>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer class="footer">
+  <p>© <span id="year"></span> Ramya S. Built with HTML, CSS &amp; JavaScript.</p>
+  <a href="#top" class="back-top">Back to top ↑</a>
+</footer>
+
+<script src="port.js"></script>
+</body>
+</html>
