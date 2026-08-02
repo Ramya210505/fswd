@@ -1,172 +1,426 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Responsive Personal Portfolio Website</title>
-    <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet" />
-    <link rel="stylesheet" href="port.css" />
-  </head>
-  <body>
-    <!-- Header Section -->
-    <header class="header">
-      <a href="#" class="logo">Portfolio</a>
-      <i class="bx bx-menu hamburger" id="menu-icon"></i>
-      <nav class="navbar">
-        <a href="#home" class="active">Home</a>
-        <a href="#about">About</a>
-        <a href="#education">Education</a>
-        <a href="#projects">Projects</a>
-        <a href="#certifications">Certifications</a>
-        <a href="#contact">Contact</a>
-      </nav>
-    </header>
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ramya S | Portfolio</title>
 
-    <!-- Mobile Side Drawer (Hidden by default) -->
-    <div class="side-menu" id="side-menu">
-      <nav class="navbar">
+    <!-- Box Icons -->
+    <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="port.css">
+</head>
+
+<body>
+
+<!-- ================= HEADER ================= -->
+
+<header class="header">
+    <a href="#" class="logo">Portfolio</a>
+
+    <i class='bx bx-menu' id="menu-icon"></i>
+
+    <nav class="navbar">
         <a href="#home" class="active">Home</a>
         <a href="#about">About</a>
+        <a href="#skills">Skills</a>
         <a href="#education">Education</a>
+        <a href="#experience">Experience</a>
         <a href="#projects">Projects</a>
-        <a href="#certifications">Certifications</a>
+        <a href="#certifications">Certificates</a>
         <a href="#contact">Contact</a>
-      </nav>
+    </nav>
+</header>
+
+<!-- ================= HOME ================= -->
+
+<section class="home" id="home">
+
+    <div class="home-content">
+
+        <h3>Hello, I'm</h3>
+
+        <h1>Ramya S</h1>
+
+        <h3>I'm an <span>Aspiring Software Developer</span></h3>
+
+        <p>
+            Enthusiastic Information Technology graduate with a strong
+            foundation in programming, data analysis and problem solving.
+            Passionate about learning new technologies and building
+            innovative solutions.
+        </p>
+
+        <div class="social-media">
+
+            <a href="https://github.com/ramya210505" target="_blank">
+                <i class='bx bxl-github'></i>
+            </a>
+
+            <a href="https://www.linkedin.com/in/ramya-s-4b04a928a" target="_blank">
+                <i class='bx bxl-linkedin'></i>
+            </a>
+
+            <a href="mailto:ramyasathiam@gmail.com">
+                <i class='bx bx-envelope'></i>
+            </a>
+
+        </div>
+
+        <a href="assets/Ramya_S_Resume.pdf" class="btn" download>
+            Download Resume
+        </a>
+
     </div>
 
-    <!-- Home Section -->
-    <section class="home" id="home">
-      <div class="home-content">
-        <h3>Hello, It's Me </h3>
-        <h1>Ramya Sathyam</h1>
-        <h4>And I'm an Aspiring Tech Innovator <span class="multiple-text"></span></h4>
-        <div class="social-media">
-          <a href="https://github.com/ramya210505" target="_blank">
-            <i class="bx bxl-github"></i>
-          </a>
-          <a href="mailto:ramyasathiam@gmail.com">
-            <i class="bx bxs-envelope"></i>
-          </a>
-          <a href="https://www.linkedin.com/in/ramya-s-4b04a928a" target="_blank">
-            <i class="bx bxl-linkedin"></i>
-          </a>
-        </div>
-        <a href="https://drive.google.com/file/d/1KOI2GWh3Ob-3y7eRcyDPKviG4chSaQFt/view?usp=drivesdk" class="btn" download>Download CV</a>
-      </div>
-    </section>
+    <div class="home-img">
+        <img src="images/profile.png" alt="Ramya">
+    </div>
 
-    <!-- About Section -->
-    <section class="about" id="about">
-      <div class="about-content">
-        <h2 class="heading">About<span> Me</span></h2>
-        <h3>Student (Information Technology)</h3>
+</section>
+
+<!-- ================= ABOUT ================= -->
+
+<section class="about" id="about">
+
+    <div class="about-img">
+        <img src="images/profile.png" alt="">
+    </div>
+
+    <div class="about-content">
+
+        <h2 class="heading">About <span>Me</span></h2>
+
+        <h3>Information Technology Graduate</h3>
+
         <p>
-          I am an ambitious and detail-driven IT enthusiast with a strong flair for coding, web design, and innovation. Proficient in Python, Java, and C, I have expertise in data structures and object-oriented programming. Skilled in web development using HTML and CSS, and experienced in UI/UX design using Figma. I’m passionate about harnessing technology to drive innovation and creativity.
+            I am an enthusiastic IT graduate with strong knowledge of Java,
+            Python, SQL, Web Development and Data Analytics.
+            I enjoy solving real-world problems through technology and
+            continuously improving my technical and professional skills.
+            My interests include software development,
+            machine learning, UI/UX design and data analysis.
         </p>
-        <a href="#projects" class="btn">Explore Projects</a>
-      </div>
-    </section>
 
-    <!-- Education Section -->
-    <section class="education" id="education">
-      <h2 class="heading">My<span> Education</span></h2>
-      <div class="education-content">
-        <h3>B.Tech in Information Technology</h3>
-        <p>University College of Engineering, BIT Campus, Tiruchirappalli</p>
-        <p><strong>Duration:</strong> October 2022 - July 2026</p>
+        <a href="#projects" class="btn">View Projects</a>
 
-        <h3>HSC (Higher Secondary School Certificate)</h3>
-        <p>Sri Venkateshwara Matric. Hr. Sec. School, Pudukkottai</p>
-        <p><strong>Year:</strong> 2022 | <strong>GPA:</strong> 83.5/100</p>
+    </div>
 
-        <h3>SSLC (Secondary School Leaving Certificate)</h3>
-        <p>Sri Venkateshwara Matric. Hr. Sec. School, Pudukkottai</p>
-        <p><strong>Year:</strong> 2020 | <strong>GPA:</strong> 81.6/100</p>
-      </div>
-    </section>
+</section>
 
-    <!-- Projects Section -->
-    <section class="projects" id="projects">
-      <h2 class="heading">Latest<span> Projects</span></h2>
-      <div class="projects-container">
-        <div class="project-box">
-          <h4>Comprehensive Web Development Project Suite</h4>
-          <p>I developed a diverse collection of responsive and interactive websites, showcasing my expertise in front-end development. This project suite includes a portfolio, to-do list app, microblogging platform, and food delivery website, all built using HTML, CSS, and JavaScript.</p>
-          <a href="https://ramya210505.github.io/fswd/" target="_blank" class="btn">View Project</a>
-        </div>
-        <div class="project-box">
-          <h4>Tollgate Entry App UI Design</h4>
-          <p>Designed an intuitive interface for a tollgate entry application, streamlining the payment process for drivers. Features include user registration, vehicle selection, toll calculation, secure payment gateway, and QR code generation. Created using Figma with a clean, responsive design.</p>
-          <a href="https://www.figma.com/file/BjxaxsycLx7tiU2XsT2lUi/WIREFRAMING" target="_blank" class="btn">View Project</a>
-        </div>
-      </div>
-    </section>
+<!-- ================= SKILLS ================= -->
 
-    <!-- Certifications Section -->
-    <section class="certifications" id="certifications">
-      <h2 class="heading">Certifications & <span>Achievements</span></h2>
-      <div class="certifications-container">
-        <h3>Key Achievements</h3>
-        <ul>
-          <li>Third Prize in District-Level Carrom Competitions.</li>
-          <li>Third Prize in Vina Vidai Vettai (Season-1) organized by Puthiya Thalaimurai.</li>
-          <li>Participant in the State-Level Talent Examination conducted by Sri Sai Foundation.</li>
-        </ul>
+<section class="skills" id="skills">
 
-        <h3>Certifications</h3>
-        <ul>
-          <li>Figma Design Course - Your Website From Start to Finish (Udemy)</li>
-        </ul>
-      </div>
-    </section>
+<h2 class="heading">My <span>Skills</span></h2>
 
-    <!-- Contact Section -->
-    <section id="contact" class="contact">
-      <h2 class="heading">Contact <span>Me</span></h2>
-      <div class="contact-container">
-        <!-- Left Side: Contact Info -->
-        <div class="contact-info">
-          <h3>Get In Touch</h3>
-          <p>Feel free to reach out via the form or through social media links below.</p>
-          <div class="info-item">
-            <i class="bx bx-phone"></i>
-            <p>+91 6383493479</p>
-          </div>
-          <div class="info-item">
-            <i class="bx bx-envelope"></i>
-            <p>ramyasathiam@gmail.com</p>
-          </div>
-          <div class="info-item">
-            <i class="bx bx-map"></i>
-            <p>123/61, Sourastra Big Street, Thiruvappur, Pudukkottai, Tamil Nadu, 622003</p>
-          </div>
-          <div class="social-media">
-            <a href="https://linkedin.com" target="_blank"><i class="bx bxl-linkedin"></i></a>
-            <a href="https://github.com" target="_blank"><i class="bx bxl-github"></i></a>
-          </div>
-        </div>
-        <!-- Right Side: Contact Form -->
-        <form class="contact-form">
-          <div class="input-box">
-            <input type="text" placeholder="Your Name" required />
-            <input type="email" placeholder="Your Email" required />
-          </div>
-          <textarea placeholder="Your Message" rows="5" required></textarea>
-          <button type="submit" class="btn">Send Message</button>
-        </form>
-      </div>
-    </section>
+<div class="skills-container">
 
-    <footer class="footer">
-      <div class="footer-text">
-        <p>&copy; 2023 by Ramya Sathyam | All Rights Reserved.</p>
-      </div>
-      <div class="footer-iconTop">
-        <a href="#home"><i class="bx bx-up-arrow-alt"></i></a>
-      </div>
-    </footer>
+<div class="skill-box">
+<i class='bx bxl-java'></i>
+<h3>Java</h3>
+</div>
 
-    <script src="port.js"></script>
-  </body>
+<div class="skill-box">
+<i class='bx bxl-python'></i>
+<h3>Python</h3>
+</div>
+
+<div class="skill-box">
+<i class='bx bxl-html5'></i>
+<h3>HTML</h3>
+</div>
+
+<div class="skill-box">
+<i class='bx bxl-css3'></i>
+<h3>CSS</h3>
+</div>
+
+<div class="skill-box">
+<i class='bx bxl-javascript'></i>
+<h3>JavaScript</h3>
+</div>
+
+<div class="skill-box">
+<i class='bx bx-data'></i>
+<h3>SQL</h3>
+</div>
+
+<div class="skill-box">
+<i class='bx bx-palette'></i>
+<h3>Figma</h3>
+</div>
+
+<div class="skill-box">
+<i class='bx bx-code-block'></i>
+<h3>Data Structures</h3>
+</div>
+
+<div class="skill-box">
+<i class='bx bx-brain'></i>
+<h3>Machine Learning</h3>
+</div>
+
+<div class="skill-box">
+<i class='bx bx-line-chart'></i>
+<h3>Data Analytics</h3>
+</div>
+
+</div>
+
+</section>
+
+<!-- ================= EDUCATION ================= -->
+
+<section class="education" id="education">
+
+<h2 class="heading">Education</h2>
+
+<div class="timeline">
+
+<div class="timeline-box">
+
+<h3>B.Tech Information Technology</h3>
+
+<h4>University College of Engineering (BIT Campus)</h4>
+
+<p>2022 - 2026</p>
+
+<p>CGPA : 8.02</p>
+
+</div>
+
+<div class="timeline-box">
+
+<h3>Higher Secondary</h3>
+
+<p>Sri Venkateshwara Matric Hr. Sec. School</p>
+
+<p>83.5%</p>
+
+</div>
+
+<div class="timeline-box">
+
+<h3>SSLC</h3>
+
+<p>Sri Venkateshwara Matric Hr. Sec. School</p>
+
+<p>81.6%</p>
+
+</div>
+
+</div>
+
+</section>
+
+<!-- ================= EXPERIENCE ================= -->
+
+<section class="experience" id="experience">
+
+<h2 class="heading">Experience</h2>
+
+<div class="experience-container">
+
+<div class="experience-box">
+
+<h3>Data Analyst Intern</h3>
+
+<h4>Winzone Softech</h4>
+
+<p>Jan 2025 - Feb 2025</p>
+
+<p>
+Worked on datasets, Excel analysis,
+business insights,
+problem solving and reporting.
+</p>
+
+</div>
+
+<div class="experience-box">
+
+<h3>UI/UX Design Intern</h3>
+
+<h4>Fantasy Solution</h4>
+
+<p>June 2025 - July 2025</p>
+
+<p>
+Designed wireframes,
+prototypes,
+responsive interfaces
+using Figma.
+</p>
+
+</div>
+
+</div>
+
+</section>
+
+<!-- ================= PROJECTS ================= -->
+
+<section class="projects" id="projects">
+
+<h2 class="heading">Projects</h2>
+
+<div class="projects-container">
+
+<div class="project-box">
+
+<h3>CKD Prediction System</h3>
+
+<p>
+
+Java-based Machine Learning application
+to predict Chronic Kidney Disease using
+multiple classification algorithms and
+data preprocessing techniques.
+
+</p>
+
+<a href="#" class="btn">View Details</a>
+
+</div>
+
+<div class="project-box">
+
+<h3>Tollgate Management System</h3>
+
+<p>
+
+UI/UX Design project developed in Figma
+with modern user interface,
+workflow optimization
+and responsive layouts.
+
+</p>
+
+<a href="#" class="btn">View Details</a>
+
+</div>
+
+<div class="project-box">
+
+<h3>Responsive Web Projects</h3>
+
+<p>
+
+Collection of responsive websites
+using HTML,
+CSS,
+JavaScript.
+
+Portfolio,
+Food Website,
+Todo App,
+Microblogging website.
+
+</p>
+
+<a href="https://ramya210505.github.io/fswd/" target="_blank" class="btn">
+
+Visit Website
+
+</a>
+
+</div>
+
+</div>
+
+</section>
+
+<!-- ================= CERTIFICATIONS ================= -->
+
+<section class="certifications" id="certifications">
+
+<h2 class="heading">Certificates</h2>
+
+<div class="certificate-container">
+
+<div class="certificate-box">
+<h3>Foundational Python</h3>
+<p>CodeFobe</p>
+</div>
+
+<div class="certificate-box">
+<h3>Figma Design</h3>
+<p>Udemy</p>
+</div>
+
+<div class="certificate-box">
+<h3>Deloitte Data Analytics</h3>
+<p>Forage Virtual Experience</p>
+</div>
+
+</div>
+
+</section>
+
+<!-- ================= CONTACT ================= -->
+
+<section class="contact" id="contact">
+
+<h2 class="heading">Contact <span>Me</span></h2>
+
+<form action="#">
+
+<div class="input-box">
+
+<input type="text" placeholder="Full Name">
+
+<input type="email" placeholder="Email Address">
+
+</div>
+
+<div class="input-box">
+
+<input type="text" placeholder="Subject">
+
+<input type="text" placeholder="Phone Number">
+
+</div>
+
+<textarea cols="30" rows="10" placeholder="Your Message"></textarea>
+
+<input type="submit" value="Send Message" class="btn">
+
+</form>
+
+</section>
+
+<!-- ================= FOOTER ================= -->
+
+<footer class="footer">
+
+<div class="footer-text">
+
+<p>
+
+Copyright © 2026 |
+Designed by Ramya S |
+All Rights Reserved.
+
+</p>
+
+</div>
+
+<div class="footer-iconTop">
+
+<a href="#home">
+
+<i class='bx bx-up-arrow-alt'></i>
+
+</a>
+
+</div>
+
+</footer>
+
+<script src="port.js"></script>
+
+</body>
 </html>
