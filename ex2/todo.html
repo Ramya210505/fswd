@@ -2,76 +2,58 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Modern Todo List</title>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <title>TaskFlow | Advanced Kanban</title>
+    <link rel="stylesheet" href="todo.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
-        body { background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%); min-height: 100vh; display: flex; justify-content: center; align-items: center; padding: 20px; }
-        .todo-app { background: rgba(255, 255, 255, 0.9); backdrop-filter: blur(10px); width: 100%; max-width: 500px; border-radius: 20px; padding: 40px; box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1); border: 1px solid rgba(255, 255, 255, 0.2); }
-        .header { display: flex; align-items: center; margin-bottom: 30px; color: #333; }
-        .header i { font-size: 30px; color: #ff6b6b; margin-right: 15px; }
-        .header h1 { font-size: 28px; font-weight: 700; }
-        .input-box { display: flex; align-items: center; background: #fff; border-radius: 30px; padding-left: 20px; margin-bottom: 30px; box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05); border: 1px solid #e1e1e1; overflow: hidden; }
-        .input-box input { flex: 1; border: none; outline: none; background: transparent; padding: 15px 0; font-size: 16px; color: #333; }
-        .input-box button { border: none; outline: none; padding: 15px 30px; background: #ff6b6b; color: #fff; font-size: 16px; font-weight: 600; cursor: pointer; transition: 0.3s; }
-        .input-box button:hover { background: #fa5252; }
-        ul { list-style: none; }
-        ul li { position: relative; background: #fff; padding: 15px 45px; border-radius: 12px; margin-bottom: 15px; font-size: 16px; color: #444; display: flex; align-items: center; box-shadow: 0 4px 10px rgba(0, 0, 0, 0.03); border: 1px solid #f0f0f0; transition: 0.3s; cursor: pointer; }
-        ul li:hover { transform: translateY(-2px); box-shadow: 0 6px 15px rgba(0, 0, 0, 0.05); }
-        ul li::before { content: ''; position: absolute; left: 15px; width: 20px; height: 20px; border-radius: 50%; border: 2px solid #ff6b6b; transition: 0.2s; }
-        ul li.checked { color: #a0a0a0; text-decoration: line-through; background: #f9f9f9; }
-        ul li.checked::before { background: #ff6b6b; border-color: #ff6b6b; background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="white"><path d="M9 16.2L4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4L9 16.2z"/></svg>'); background-size: 14px; background-repeat: no-repeat; background-position: center; }
-        ul li span { position: absolute; right: 15px; width: 30px; height: 30px; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #ccc; font-size: 18px; transition: 0.3s; }
-        ul li span:hover { background: #ffe3e3; color: #ff6b6b; }
-        .stats { display: flex; justify-content: space-between; margin-top: 30px; font-size: 14px; color: #777; padding-top: 20px; border-top: 1px solid #eee; }
-    </style>
 </head>
 <body>
-    <div class="todo-app">
-        <div class="header">
-            <i class="fas fa-clipboard-list"></i>
-            <h1>To-Do List</h1>
-        </div>
-        <div class="input-box">
-            <input type="text" id="input-box" placeholder="Add your task...">
-            <button onclick="addTask()">Add</button>
-        </div>
-        <ul id="list-container"></ul>
-        <div class="stats">
-            <span id="task-count">0 tasks total</span>
-            <button onclick="clearAll()" style="background: none; border: none; color: #ff6b6b; cursor: pointer; font-weight: 500;">Clear All</button>
-        </div>
-    </div>
-    <script>
-        const inputBox = document.getElementById("input-box");
-        const listContainer = document.getElementById("list-container");
-        const taskCount = document.getElementById("task-count");
+    <div class="app-container">
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar">
+            <div class="logo"><div class="logo-icon"><i class="fas fa-layer-group"></i></div> TaskFlow</div>
+            <div class="nav-menu">
+                <a href="#" class="nav-item active"><i class="fas fa-th-large"></i> Board View</a>
+            </div>
+            <!-- Live Progress Bar -->
+            <div class="storage-metrics">
+                <div class="metrics-header"><span>Task Completion</span><span id="completion-pct">0%</span></div>
+                <div class="progress-bar-bg"><div class="progress-bar-fill" id="completion-fill"></div></div>
+            </div>
+        </aside>
 
-        function addTask() {
-            if (inputBox.value.trim() === '') { alert("You must write something!"); } 
-            else {
-                let li = document.createElement("li");
-                li.innerHTML = inputBox.value;
-                listContainer.appendChild(li);
-                let span = document.createElement("span");
-                span.innerHTML = "\u00d7";
-                li.appendChild(span);
-            }
-            inputBox.value = "";
-            saveData(); updateCount();
-        }
-        listContainer.addEventListener("click", function(e) {
-            if (e.target.tagName === "LI") { e.target.classList.toggle("checked"); saveData(); } 
-            else if (e.target.tagName === "SPAN") { e.target.parentElement.remove(); saveData(); updateCount(); }
-        }, false);
-        inputBox.addEventListener("keypress", function(event) { if (event.key === "Enter") { event.preventDefault(); addTask(); } });
-        function clearAll() { listContainer.innerHTML = ""; saveData(); updateCount(); }
-        function updateCount() { const count = listContainer.getElementsByTagName("li").length; taskCount.textContent = count + (count === 1 ? " task total" : " tasks total"); }
-        function saveData() { localStorage.setItem("todoData", listContainer.innerHTML); }
-        function showTask() { listContainer.innerHTML = localStorage.getItem("todoData") || ""; updateCount(); }
-        showTask();
-    </script>
+        <!-- Main Kanban Board Area -->
+        <main class="main-content">
+            <header class="topbar">
+                <div class="search-box">
+                    <i class="fas fa-search"></i>
+                    <input type="text" id="searchInput" placeholder="Search tasks...">
+                </div>
+            </header>
+
+            <div class="board-header">
+                <div><h1>Product Engineering</h1><p class="subtitle">Drag and drop tasks to change their status.</p></div>
+                <button class="btn-primary" onclick="openModal()"><i class="fas fa-plus"></i> Create Task</button>
+            </div>
+
+            <div class="kanban-board">
+                <!-- Columns -->
+                <div class="kanban-column" data-status="todo">
+                    <div class="column-header">To Do <span id="count-todo">0</span></div>
+                    <div class="task-list" id="list-todo"></div>
+                </div>
+                <div class="kanban-column" data-status="inprogress">
+                    <div class="column-header">In Progress <span id="count-inprogress">0</span></div>
+                    <div class="task-list" id="list-inprogress"></div>
+                </div>
+                <div class="kanban-column" data-status="done">
+                    <div class="column-header">Done <span id="count-done">0</span></div>
+                    <div class="task-list" id="list-done"></div>
+                </div>
+            </div>
+        </main>
+    </div>
+    
+    <script src="todo.js"></script>
 </body>
 </html>
