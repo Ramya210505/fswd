@@ -1,16 +1,107 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Product App</title>
-    <link rel="stylesheet" href="bs.css">
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Swaply — Buy &amp; Sell</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@500;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="bs.css" />
 </head>
 <body>
-    <header>
-        Product App
-    </header>
-    <div id="app"></div>
-    <script src="bs.js"></script>
+
+<header class="topbar">
+  <div class="brand">🔁 Swaply</div>
+  <div class="search-box">
+    <span>⌕</span>
+    <input type="text" id="searchInput" placeholder="Search for anything…" />
+  </div>
+  <button class="sell-btn" id="openSell">＋ Sell an item</button>
+</header>
+
+<section class="hero">
+  <h1>Buy smart. Sell fast.</h1>
+  <p>A local marketplace for the stuff you no longer need — and the stuff someone else is waiting for.</p>
+</section>
+
+<div class="toolbar">
+  <div class="cat-scroll" id="categoryBar">
+    <button class="cat-chip is-active" data-cat="all">All</button>
+    <button class="cat-chip" data-cat="Electronics">Electronics</button>
+    <button class="cat-chip" data-cat="Furniture">Furniture</button>
+    <button class="cat-chip" data-cat="Books">Books</button>
+    <button class="cat-chip" data-cat="Fashion">Fashion</button>
+    <button class="cat-chip" data-cat="Vehicles">Vehicles</button>
+  </div>
+
+  <div class="toolbar-right">
+    <select id="sortSelect">
+      <option value="new">Newest first</option>
+      <option value="low">Price: Low to High</option>
+      <option value="high">Price: High to Low</option>
+    </select>
+    <select id="priceFilter">
+      <option value="all">Any price</option>
+      <option value="1000">Under ₹1,000</option>
+      <option value="5000">Under ₹5,000</option>
+      <option value="20000">Under ₹20,000</option>
+    </select>
+  </div>
+</div>
+
+<main class="listing-grid" id="listingGrid"></main>
+<p class="empty-msg" id="emptyMsg">No listings match your filters.</p>
+
+<!-- Sell modal -->
+<div class="modal-overlay" id="sellOverlay">
+  <div class="modal">
+    <div class="modal-head">
+      <h2>List an item</h2>
+      <button class="close-btn" id="closeSell">✕</button>
+    </div>
+    <form id="sellForm" class="modal-body">
+      <label>Title
+        <input type="text" id="itemTitle" required placeholder="e.g. iPhone 13, 128GB" />
+      </label>
+      <div class="form-row">
+        <label>Price (₹)
+          <input type="number" id="itemPrice" required min="1" placeholder="0" />
+        </label>
+        <label>Category
+          <select id="itemCategory">
+            <option>Electronics</option><option>Furniture</option><option>Books</option>
+            <option>Fashion</option><option>Vehicles</option>
+          </select>
+        </label>
+      </div>
+      <div class="form-row">
+        <label>Condition
+          <select id="itemCondition">
+            <option>New</option><option>Like New</option><option>Used</option>
+          </select>
+        </label>
+        <label>Location
+          <input type="text" id="itemLocation" placeholder="e.g. Pudukkottai" />
+        </label>
+      </div>
+      <label>Image URL
+        <input type="url" id="itemImage" placeholder="https://…" />
+      </label>
+      <label>Description
+        <textarea id="itemDesc" rows="3" placeholder="Describe the item's condition, age, reason for selling…"></textarea>
+      </label>
+      <button type="submit" class="submit-btn">Publish listing</button>
+    </form>
+  </div>
+</div>
+
+<!-- Detail modal -->
+<div class="modal-overlay" id="detailOverlay">
+  <div class="modal modal-detail" id="detailModal"></div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script src="bs.js"></script>
 </body>
 </html>
