@@ -3,73 +3,75 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>To-Do List</title>
-    <link rel="stylesheet" href="todo.css">
+    <title>Modern Todo List</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
+        body { background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%); min-height: 100vh; display: flex; justify-content: center; align-items: center; padding: 20px; }
+        .todo-app { background: rgba(255, 255, 255, 0.9); backdrop-filter: blur(10px); width: 100%; max-width: 500px; border-radius: 20px; padding: 40px; box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1); border: 1px solid rgba(255, 255, 255, 0.2); }
+        .header { display: flex; align-items: center; margin-bottom: 30px; color: #333; }
+        .header i { font-size: 30px; color: #ff6b6b; margin-right: 15px; }
+        .header h1 { font-size: 28px; font-weight: 700; }
+        .input-box { display: flex; align-items: center; background: #fff; border-radius: 30px; padding-left: 20px; margin-bottom: 30px; box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05); border: 1px solid #e1e1e1; overflow: hidden; }
+        .input-box input { flex: 1; border: none; outline: none; background: transparent; padding: 15px 0; font-size: 16px; color: #333; }
+        .input-box button { border: none; outline: none; padding: 15px 30px; background: #ff6b6b; color: #fff; font-size: 16px; font-weight: 600; cursor: pointer; transition: 0.3s; }
+        .input-box button:hover { background: #fa5252; }
+        ul { list-style: none; }
+        ul li { position: relative; background: #fff; padding: 15px 45px; border-radius: 12px; margin-bottom: 15px; font-size: 16px; color: #444; display: flex; align-items: center; box-shadow: 0 4px 10px rgba(0, 0, 0, 0.03); border: 1px solid #f0f0f0; transition: 0.3s; cursor: pointer; }
+        ul li:hover { transform: translateY(-2px); box-shadow: 0 6px 15px rgba(0, 0, 0, 0.05); }
+        ul li::before { content: ''; position: absolute; left: 15px; width: 20px; height: 20px; border-radius: 50%; border: 2px solid #ff6b6b; transition: 0.2s; }
+        ul li.checked { color: #a0a0a0; text-decoration: line-through; background: #f9f9f9; }
+        ul li.checked::before { background: #ff6b6b; border-color: #ff6b6b; background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="white"><path d="M9 16.2L4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4L9 16.2z"/></svg>'); background-size: 14px; background-repeat: no-repeat; background-position: center; }
+        ul li span { position: absolute; right: 15px; width: 30px; height: 30px; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #ccc; font-size: 18px; transition: 0.3s; }
+        ul li span:hover { background: #ffe3e3; color: #ff6b6b; }
+        .stats { display: flex; justify-content: space-between; margin-top: 30px; font-size: 14px; color: #777; padding-top: 20px; border-top: 1px solid #eee; }
+    </style>
 </head>
 <body>
-    <div class="todo-container">
-        <h2>To-Do List </h2>
-        <form id="task-form">
-            <input type="text" id="task-input" placeholder="Add your task">
-            <button type="submit">ADD</button>
-        </form>
-        <ul id="task-list" class="task-list"></ul>
+    <div class="todo-app">
+        <div class="header">
+            <i class="fas fa-clipboard-list"></i>
+            <h1>To-Do List</h1>
+        </div>
+        <div class="input-box">
+            <input type="text" id="input-box" placeholder="Add your task...">
+            <button onclick="addTask()">Add</button>
+        </div>
+        <ul id="list-container"></ul>
+        <div class="stats">
+            <span id="task-count">0 tasks total</span>
+            <button onclick="clearAll()" style="background: none; border: none; color: #ff6b6b; cursor: pointer; font-weight: 500;">Clear All</button>
+        </div>
     </div>
-
     <script>
-        // Array to hold tasks
-        let tasks = JSON.parse(localStorage.getItem('tasks')) || [];
+        const inputBox = document.getElementById("input-box");
+        const listContainer = document.getElementById("list-container");
+        const taskCount = document.getElementById("task-count");
 
-        // Function to render tasks
-        function renderTasks() {
-            const taskList = document.getElementById('task-list');
-            taskList.innerHTML = ''; // Clear the list
-
-            tasks.forEach((task, index) => {
-                const li = document.createElement('li');
-
-                const taskSpan = document.createElement('span');
-                taskSpan.textContent = task;
-                li.appendChild(taskSpan);
-
-                const deleteButton = document.createElement('button');
-                deleteButton.textContent = '×';
-                deleteButton.className = 'delete-btn';
-                deleteButton.addEventListener('click', () => {
-                    deleteTask(index);
-                });
-                li.appendChild(deleteButton);
-
-                taskList.appendChild(li);
-            });
-        }
-
-        // Function to add a task
-        function addTask(task) {
-            if (task) {
-                tasks.push(task);
-                localStorage.setItem('tasks', JSON.stringify(tasks));
-                renderTasks();
+        function addTask() {
+            if (inputBox.value.trim() === '') { alert("You must write something!"); } 
+            else {
+                let li = document.createElement("li");
+                li.innerHTML = inputBox.value;
+                listContainer.appendChild(li);
+                let span = document.createElement("span");
+                span.innerHTML = "\u00d7";
+                li.appendChild(span);
             }
+            inputBox.value = "";
+            saveData(); updateCount();
         }
-
-        // Function to delete a task
-        function deleteTask(index) {
-            tasks.splice(index, 1);
-            localStorage.setItem('tasks', JSON.stringify(tasks));
-            renderTasks();
-        }
-
-        // Handle form submission
-        document.getElementById('task-form').addEventListener('submit', function(e) {
-            e.preventDefault(); // Prevent the form from submitting
-            const taskInput = document.getElementById('task-input');
-            addTask(taskInput.value);
-            taskInput.value = ''; // Clear the input
-        });
-
-        // Initial rendering of tasks
-        renderTasks();
+        listContainer.addEventListener("click", function(e) {
+            if (e.target.tagName === "LI") { e.target.classList.toggle("checked"); saveData(); } 
+            else if (e.target.tagName === "SPAN") { e.target.parentElement.remove(); saveData(); updateCount(); }
+        }, false);
+        inputBox.addEventListener("keypress", function(event) { if (event.key === "Enter") { event.preventDefault(); addTask(); } });
+        function clearAll() { listContainer.innerHTML = ""; saveData(); updateCount(); }
+        function updateCount() { const count = listContainer.getElementsByTagName("li").length; taskCount.textContent = count + (count === 1 ? " task total" : " tasks total"); }
+        function saveData() { localStorage.setItem("todoData", listContainer.innerHTML); }
+        function showTask() { listContainer.innerHTML = localStorage.getItem("todoData") || ""; updateCount(); }
+        showTask();
     </script>
 </body>
 </html>
