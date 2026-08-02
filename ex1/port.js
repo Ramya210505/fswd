@@ -1,42 +1,84 @@
-// Custom Cursor
-const cursorDot = document.querySelector('[data-cursor-dot]');
-const cursorOutline = document.querySelector('[data-cursor-outline]');
+// ---------------------------------------------------------
+// Footer year
+// ---------------------------------------------------------
+document.getElementById('year').textContent = new Date().getFullYear();
 
-window.addEventListener('mousemove', (e) => {
-    const posX = e.clientX; const posY = e.clientY;
-    cursorDot.style.left = `${posX}px`; cursorDot.style.top = `${posY}px`;
-    cursorOutline.animate({ left: `${posX}px`, top: `${posY}px` }, { duration: 500, fill: "forwards" });
+// ---------------------------------------------------------
+// Mobile nav toggle
+// ---------------------------------------------------------
+const navToggle = document.getElementById('navToggle');
+const navLinks = document.getElementById('navLinks');
+
+navToggle.addEventListener('click', () => {
+  const isOpen = navLinks.classList.toggle('is-open');
+  navToggle.setAttribute('aria-expanded', String(isOpen));
 });
 
-// Canvas Particles Background
-const canvas = document.getElementById('hero-canvas');
-const ctx = canvas.getContext('2d');
-canvas.width = window.innerWidth; canvas.height = window.innerHeight;
+navLinks.querySelectorAll('a').forEach(link => {
+  link.addEventListener('click', () => {
+    navLinks.classList.remove('is-open');
+    navToggle.setAttribute('aria-expanded', 'false');
+  });
+});
 
-const particlesArray = [];
-class Particle {
-    constructor() {
-        this.x = Math.random() * canvas.width; this.y = Math.random() * canvas.height;
-        this.size = Math.random() * 2 + 0.1;
-        this.speedX = Math.random() * 1 - 0.5; this.speedY = Math.random() * 1 - 0.5;
-    }
-    update() {
-        this.x += this.speedX; this.y += this.speedY;
-        if(this.x < 0 || this.x > canvas.width) this.speedX *= -1;
-        if(this.y < 0 || this.y > canvas.height) this.speedY *= -1;
-    }
-    draw() {
-        ctx.fillStyle = 'rgba(255, 255, 255, 0.2)';
-        ctx.beginPath(); ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2); ctx.fill();
-    }
-}
-for (let i = 0; i < 100; i++) particlesArray.push(new Particle());
+// ---------------------------------------------------------
+// Signature interaction: Analyst / Designer mode toggle
+// Swaps accent color + copy to reflect Ramya's dual skillset
+// ---------------------------------------------------------
+const root = document.documentElement;
+const btnAnalyst = document.getElementById('btnAnalyst');
+const btnDesigner = document.getElementById('btnDesigner');
+const modeWord = document.getElementById('modeWord');
+const heroSub = document.getElementById('heroSub');
 
-function animate() {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    for (let i = 0; i < particlesArray.length; i++) {
-        particlesArray[i].update(); particlesArray[i].draw();
-    }
-    requestAnimationFrame(animate);
+const copy = {
+  analyst: {
+    accent: '#3ECF8E',
+    word: 'and finds the pattern.',
+    sub: `Data Analyst intern who cleaned, validated and interrogated live datasets in Excel —
+          turning raw records into decisions people could act on.`
+  },
+  designer: {
+    accent: '#FF6B5D',
+    word: 'and designs what it means.',
+    sub: `UI/UX Design intern who translated user requirements into wireframes and prototypes in
+          Figma — shaping structure into interfaces people can actually use.`
+  }
+};
+
+function setMode(mode) {
+  const data = copy[mode];
+  root.style.setProperty('--accent', data.accent);
+  modeWord.textContent = data.word;
+  heroSub.textContent = data.sub;
+
+  btnAnalyst.classList.toggle('is-active', mode === 'analyst');
+  btnDesigner.classList.toggle('is-active', mode === 'designer');
+
+  document.querySelectorAll('[data-mode-tag]').forEach(el => {
+    const match = el.dataset.modeTag === mode;
+    el.style.opacity = match ? '1' : '0.45';
+  });
 }
-animate();
+
+btnAnalyst.addEventListener('click', () => setMode('analyst'));
+btnDesigner.addEventListener('click', () => setMode('designer'));
+
+// ---------------------------------------------------------
+// Active nav link on scroll
+// ---------------------------------------------------------
+const sections = document.querySelectorAll('main section[id]');
+const navAnchors = document.querySelectorAll('.nav-links a');
+
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      const id = entry.target.getAttribute('id');
+      navAnchors.forEach(a => {
+        a.style.color = a.getAttribute('href') === `#${id}` ? 'var(--text)' : '';
+      });
+    }
+  });
+}, { rootMargin: '-40% 0px -55% 0px' });
+
+sections.forEach(s => observer.observe(s));
