@@ -1,1 +1,110 @@
 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Microblogging App</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
+        body { background-color: #f3f4f6; color: #111827; }
+        .container { max-width: 600px; margin: 0 auto; background: #fff; min-height: 100vh; border-left: 1px solid #e5e7eb; border-right: 1px solid #e5e7eb; }
+        header { position: sticky; top: 0; background: rgba(255, 255, 255, 0.9); backdrop-filter: blur(10px); padding: 15px 20px; border-bottom: 1px solid #e5e7eb; z-index: 10; }
+        header h1 { font-size: 20px; font-weight: 700; }
+        .compose { padding: 20px; border-bottom: 1px solid #e5e7eb; display: flex; gap: 15px; }
+        .avatar { width: 48px; height: 48px; border-radius: 50%; background: linear-gradient(135deg, #3b82f6, #8b5cf6); display: flex; align-items: center; justify-content: center; color: #fff; font-weight: bold; font-size: 20px; flex-shrink: 0; }
+        .compose-area { flex: 1; }
+        .compose-area textarea { width: 100%; border: none; resize: none; font-size: 18px; outline: none; min-height: 60px; padding-top: 12px; }
+        .compose-actions { display: flex; justify-content: space-between; align-items: center; margin-top: 15px; padding-top: 15px; border-top: 1px solid #f3f4f6; }
+        .action-icons { display: flex; gap: 15px; color: #3b82f6; font-size: 18px; }
+        .action-icons i { cursor: pointer; padding: 8px; border-radius: 50%; transition: 0.2s; }
+        .action-icons i:hover { background: #eff6ff; }
+        .btn-post { background: #3b82f6; color: white; border: none; padding: 10px 20px; border-radius: 30px; font-weight: 600; cursor: pointer; transition: 0.2s; }
+        .btn-post:hover { background: #2563eb; }
+        .btn-post:disabled { background: #93c5fd; cursor: not-allowed; }
+        .feed { display: flex; flex-direction: column; }
+        .post { padding: 20px; border-bottom: 1px solid #e5e7eb; display: flex; gap: 15px; transition: 0.2s; cursor: pointer; }
+        .post:hover { background: #f9fafb; }
+        .post-content { flex: 1; }
+        .post-header { display: flex; align-items: center; gap: 8px; margin-bottom: 5px; }
+        .post-name { font-weight: 700; color: #111827; }
+        .post-handle, .post-time { color: #6b7280; font-size: 14px; }
+        .post-text { font-size: 16px; line-height: 1.5; margin-bottom: 15px; word-wrap: break-word; }
+        .post-actions { display: flex; justify-content: space-between; max-width: 400px; color: #6b7280; }
+        .post-action { display: flex; align-items: center; gap: 8px; transition: 0.2s; }
+        .post-action i { padding: 8px; border-radius: 50%; }
+        .post-action.like:hover, .post-action.liked { color: #ef4444; }
+        .post-action.like:hover i { background: #fef2f2; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header><h1>Home</h1></header>
+        <div class="compose">
+            <div class="avatar">R</div>
+            <div class="compose-area">
+                <textarea id="post-input" placeholder="What's happening?" oninput="checkInput()"></textarea>
+                <div class="compose-actions">
+                    <div class="action-icons"><i class="far fa-image"></i><i class="fas fa-poll"></i><i class="far fa-smile"></i></div>
+                    <button class="btn-post" id="post-btn" onclick="addPost()" disabled>Post</button>
+                </div>
+            </div>
+        </div>
+        <div class="feed" id="feed">
+            <div class="post">
+                <div class="avatar" style="background: #10b981;">J</div>
+                <div class="post-content">
+                    <div class="post-header">
+                        <span class="post-name">John Doe</span>
+                        <span class="post-handle">@johndoe</span>
+                        <span class="post-time">· 2h</span>
+                    </div>
+                    <div class="post-text">Just setting up my microblogging platform. It's looking really clean and minimal! 🚀✨</div>
+                    <div class="post-actions">
+                        <div class="post-action reply"><i class="far fa-comment"></i> 12</div>
+                        <div class="post-action retweet"><i class="fas fa-retweet"></i> 4</div>
+                        <div class="post-action like" onclick="toggleLike(this)"><i class="far fa-heart"></i> <span>48</span></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        const postInput = document.getElementById('post-input');
+        const postBtn = document.getElementById('post-btn');
+        const feed = document.getElementById('feed');
+        function checkInput() {
+            postBtn.disabled = postInput.value.trim().length === 0;
+            postInput.style.height = 'auto';
+            postInput.style.height = (postInput.scrollHeight) + 'px';
+        }
+        function addPost() {
+            const content = postInput.value.trim();
+            if (!content) return;
+            const postHTML = `
+                <div class="post" style="animation: fadeIn 0.3s ease;">
+                    <div class="avatar">R</div>
+                    <div class="post-content">
+                        <div class="post-header"><span class="post-name">Ramya S</span><span class="post-handle">@ramya_s</span><span class="post-time">· Just now</span></div>
+                        <div class="post-text">${escapeHTML(content)}</div>
+                        <div class="post-actions">
+                            <div class="post-action reply"><i class="far fa-comment"></i> 0</div>
+                            <div class="post-action retweet"><i class="fas fa-retweet"></i> 0</div>
+                            <div class="post-action like" onclick="toggleLike(this)"><i class="far fa-heart"></i> <span>0</span></div>
+                        </div>
+                    </div>
+                </div>`;
+            feed.insertAdjacentHTML('afterbegin', postHTML);
+            postInput.value = ''; postInput.style.height = 'auto'; postBtn.disabled = true;
+        }
+        function toggleLike(element) {
+            const icon = element.querySelector('i'); const span = element.querySelector('span'); let count = parseInt(span.innerText);
+            if (element.classList.contains('liked')) { element.classList.remove('liked'); icon.classList.replace('fas', 'far'); span.innerText = count - 1; } 
+            else { element.classList.add('liked'); icon.classList.replace('far', 'fas'); span.innerText = count + 1; }
+        }
+        function escapeHTML(str) { return str.replace(/[&<>'"]/g, tag => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' }[tag] || tag)); }
+    </script>
+</body>
+</html>
