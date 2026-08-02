@@ -1,59 +1,128 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>TaskFlow | Advanced Kanban</title>
-    <link rel="stylesheet" href="todo.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Flow — Todo List</title>
+<meta name="description" content="A fast, animated todo app with priorities, categories, due dates and drag-to-reorder." />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@500;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="todo.css" />
 </head>
 <body>
-    <div class="app-container">
-        <!-- Sidebar Navigation -->
-        <aside class="sidebar">
-            <div class="logo"><div class="logo-icon"><i class="fas fa-layer-group"></i></div> TaskFlow</div>
-            <div class="nav-menu">
-                <a href="#" class="nav-item active"><i class="fas fa-th-large"></i> Board View</a>
-            </div>
-            <!-- Live Progress Bar -->
-            <div class="storage-metrics">
-                <div class="metrics-header"><span>Task Completion</span><span id="completion-pct">0%</span></div>
-                <div class="progress-bar-bg"><div class="progress-bar-fill" id="completion-fill"></div></div>
-            </div>
-        </aside>
 
-        <!-- Main Kanban Board Area -->
-        <main class="main-content">
-            <header class="topbar">
-                <div class="search-box">
-                    <i class="fas fa-search"></i>
-                    <input type="text" id="searchInput" placeholder="Search tasks...">
-                </div>
-            </header>
+<div class="bg-blob blob-1"></div>
+<div class="bg-blob blob-2"></div>
 
-            <div class="board-header">
-                <div><h1>Product Engineering</h1><p class="subtitle">Drag and drop tasks to change their status.</p></div>
-                <button class="btn-primary" onclick="openModal()"><i class="fas fa-plus"></i> Create Task</button>
-            </div>
+<div class="app">
 
-            <div class="kanban-board">
-                <!-- Columns -->
-                <div class="kanban-column" data-status="todo">
-                    <div class="column-header">To Do <span id="count-todo">0</span></div>
-                    <div class="task-list" id="list-todo"></div>
-                </div>
-                <div class="kanban-column" data-status="inprogress">
-                    <div class="column-header">In Progress <span id="count-inprogress">0</span></div>
-                    <div class="task-list" id="list-inprogress"></div>
-                </div>
-                <div class="kanban-column" data-status="done">
-                    <div class="column-header">Done <span id="count-done">0</span></div>
-                    <div class="task-list" id="list-done"></div>
-                </div>
-            </div>
-        </main>
+  <!-- ===== Top bar ===== -->
+  <header class="topbar">
+    <div class="brand">
+      <span class="brand-mark">◆</span>
+      <span>Flow</span>
     </div>
-    
-    <script src="todo.js"></script>
+    <button class="theme-toggle" id="themeToggle" aria-label="Toggle dark mode" title="Toggle dark mode">
+      <span id="themeIcon">☾</span>
+    </button>
+  </header>
+
+  <!-- ===== Progress ring + stats ===== -->
+  <section class="summary">
+    <div class="ring-wrap">
+      <svg class="ring" viewBox="0 0 120 120">
+        <circle class="ring-track" cx="60" cy="60" r="52"></circle>
+        <circle class="ring-fill" id="ringFill" cx="60" cy="60" r="52"></circle>
+      </svg>
+      <div class="ring-label">
+        <span id="ringPercent">0%</span>
+        <small>done today</small>
+      </div>
+    </div>
+
+    <div class="summary-stats">
+      <div class="stat-pill"><strong id="statTotal">0</strong><span>Total</span></div>
+      <div class="stat-pill"><strong id="statActive">0</strong><span>Active</span></div>
+      <div class="stat-pill"><strong id="statDone">0</strong><span>Done</span></div>
+      <div class="stat-pill stat-pill--warn"><strong id="statOverdue">0</strong><span>Overdue</span></div>
+    </div>
+  </section>
+
+  <!-- ===== Quick add ===== -->
+  <form class="add-form" id="addForm">
+    <input type="text" id="taskInput" placeholder="Add a task and hit Enter…" autocomplete="off" required />
+
+    <select id="prioritySelect" title="Priority">
+      <option value="low">Low</option>
+      <option value="medium" selected>Medium</option>
+      <option value="high">High</option>
+    </select>
+
+    <select id="categorySelect" title="Category">
+      <option value="personal">Personal</option>
+      <option value="work">Work</option>
+      <option value="study">Study</option>
+      <option value="health">Health</option>
+    </select>
+
+    <input type="date" id="dueInput" title="Due date" />
+
+    <button type="submit" class="add-btn">Add <span>＋</span></button>
+  </form>
+
+  <!-- ===== Filters ===== -->
+  <div class="filters">
+    <div class="filter-group" id="statusFilters">
+      <button class="chip is-active" data-filter="all">All</button>
+      <button class="chip" data-filter="active">Active</button>
+      <button class="chip" data-filter="completed">Completed</button>
+      <button class="chip" data-filter="overdue">Overdue</button>
+    </div>
+
+    <div class="filter-right">
+      <select id="sortSelect" title="Sort by">
+        <option value="manual">Manual order</option>
+        <option value="priority">Priority</option>
+        <option value="due">Due date</option>
+        <option value="alpha">A–Z</option>
+      </select>
+      <div class="search-box">
+        <span>⌕</span>
+        <input type="text" id="searchInput" placeholder="Search tasks…" />
+      </div>
+    </div>
+  </div>
+
+  <div class="category-filters" id="categoryFilters">
+    <button class="tag-chip is-active" data-category="all">All categories</button>
+    <button class="tag-chip" data-category="personal">Personal</button>
+    <button class="tag-chip" data-category="work">Work</button>
+    <button class="tag-chip" data-category="study">Study</button>
+    <button class="tag-chip" data-category="health">Health</button>
+  </div>
+
+  <!-- ===== List ===== -->
+  <ul class="task-list" id="taskList" aria-live="polite"></ul>
+
+  <div class="empty-state" id="emptyState">
+    <div class="empty-illustration">✓</div>
+    <h3>Nothing here</h3>
+    <p id="emptyText">Add your first task above to get started.</p>
+  </div>
+
+  <div class="list-footer" id="listFooter">
+    <span id="remainingText">0 tasks left</span>
+    <button class="clear-btn" id="clearCompleted">Clear completed</button>
+  </div>
+
+</div>
+
+<!-- Confetti canvas for the "all done" celebration -->
+<canvas id="confettiCanvas"></canvas>
+
+<div class="toast" id="toast"></div>
+
+<script src="todo.js"></script>
 </body>
 </html>
