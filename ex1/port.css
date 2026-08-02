@@ -837,3 +837,19 @@ transform:translateY(0);
 animation:fadeUp .8s ease;
 
 }
+
+.hidden{
+    opacity:0;
+    transform:translateY(60px);
+    transition:all .8s ease;
+}
+
+.show{
+    opacity:1;
+    transform:translateY(0);
+}
+
+.header.sticky{
+    box-shadow:0 5px 20px rgba(0,212,255,.2);
+    background:rgba(11,17,32,.95);
+}
