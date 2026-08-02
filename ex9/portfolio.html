@@ -1,1 +1,220 @@
 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ramya S | Portfolio</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --bg-color: #0f172a;
+            --text-color: #cbd5e1;
+            --heading-color: #f8fafc;
+            --accent-color: #38bdf8;
+            --card-bg: #1e293b;
+            --border-radius: 12px;
+            --transition: 0.3s ease;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Outfit', sans-serif; scroll-behavior: smooth; }
+        body { background-color: var(--bg-color); color: var(--text-color); line-height: 1.7; }
+        nav { position: fixed; top: 0; width: 100%; background: rgba(15, 23, 42, 0.8); backdrop-filter: blur(10px); padding: 20px 50px; display: flex; justify-content: space-between; align-items: center; z-index: 1000; border-bottom: 1px solid rgba(255, 255, 255, 0.05); }
+        .logo { font-size: 24px; font-weight: 800; color: var(--heading-color); text-decoration: none; }
+        .logo span { color: var(--accent-color); }
+        .nav-links { list-style: none; display: flex; gap: 30px; }
+        .nav-links a { color: var(--text-color); text-decoration: none; font-weight: 600; transition: var(--transition); }
+        .nav-links a:hover { color: var(--accent-color); }
+        header { height: 100vh; display: flex; align-items: center; padding: 0 10%; background: radial-gradient(circle at top right, rgba(56, 189, 248, 0.1), transparent 40%); }
+        .hero-content { max-width: 800px; }
+        .hero-content h3 { color: var(--accent-color); font-size: 20px; margin-bottom: 15px; letter-spacing: 2px; }
+        .hero-content h1 { font-size: 64px; color: var(--heading-color); margin-bottom: 20px; line-height: 1.1; }
+        .hero-content p { font-size: 18px; max-width: 600px; margin-bottom: 40px; }
+        .btn { display: inline-block; padding: 12px 30px; background: var(--accent-color); color: #0f172a; text-decoration: none; font-weight: 600; border-radius: 30px; transition: var(--transition); border: 2px solid var(--accent-color); }
+        .btn:hover { background: transparent; color: var(--accent-color); }
+        .btn-outline { background: transparent; color: var(--accent-color); margin-left: 15px; }
+        .btn-outline:hover { background: rgba(56, 189, 248, 0.1); }
+        section { padding: 100px 10%; }
+        .section-title { font-size: 36px; color: var(--heading-color); margin-bottom: 50px; display: flex; align-items: center; gap: 20px; }
+        .section-title::after { content: ''; height: 1px; flex: 1; background: rgba(255, 255, 255, 0.1); }
+        .timeline { display: flex; flex-direction: column; gap: 30px; }
+        .timeline-item { background: var(--card-bg); padding: 30px; border-radius: var(--border-radius); border-left: 4px solid var(--accent-color); transition: transform var(--transition); }
+        .timeline-item:hover { transform: translateY(-5px); }
+        .timeline-item h4 { color: var(--heading-color); font-size: 22px; margin-bottom: 5px; }
+        .timeline-item .date { color: var(--accent-color); font-size: 14px; margin-bottom: 15px; font-weight: 600; }
+        .projects-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; }
+        .project-card { background: var(--card-bg); padding: 30px; border-radius: var(--border-radius); transition: var(--transition); position: relative; overflow: hidden; }
+        .project-card::before { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 4px; background: var(--accent-color); transform: scaleX(0); transform-origin: left; transition: var(--transition); }
+        .project-card:hover { transform: translateY(-10px); box-shadow: 0 10px 30px rgba(0,0,0,0.3); }
+        .project-card:hover::before { transform: scaleX(1); }
+        .project-card h4 { color: var(--heading-color); font-size: 24px; margin-bottom: 15px; }
+        .skills-container { display: flex; flex-wrap: wrap; gap: 15px; }
+        .skill-tag { background: rgba(56, 189, 248, 0.1); color: var(--accent-color); padding: 8px 16px; border-radius: 20px; font-size: 14px; font-weight: 600; border: 1px solid rgba(56, 189, 248, 0.2); }
+        .contact-content { text-align: center; max-width: 600px; margin: 0 auto; }
+        .contact-info { display: flex; justify-content: center; gap: 30px; margin: 40px 0; flex-wrap: wrap; }
+        .contact-item { display: flex; align-items: center; gap: 10px; color: var(--heading-color); }
+        .contact-item i { color: var(--accent-color); font-size: 20px; }
+        .social-links { display: flex; justify-content: center; gap: 20px; }
+        .social-links a { width: 45px; height: 45px; border-radius: 50%; background: var(--card-bg); display: flex; align-items: center; justify-content: center; color: var(--text-color); text-decoration: none; transition: var(--transition); font-size: 20px; }
+        .social-links a:hover { background: var(--accent-color); color: #0f172a; transform: translateY(-3px); }
+        footer { text-align: center; padding: 30px; border-top: 1px solid rgba(255, 255, 255, 0.05); font-size: 14px; }
+        @media (max-width: 768px) { .nav-links { display: none; } .hero-content h1 { font-size: 40px; } section { padding: 60px 5%; } .contact-info { flex-direction: column; gap: 15px; } }
+    </style>
+</head>
+<body>
+    <nav>
+        <a href="#" class="logo">Ramya<span>.</span></a>
+        <ul class="nav-links">
+            <li><a href="#about">About</a></li>
+            <li><a href="#experience">Experience</a></li>
+            <li><a href="#projects">Projects</a></li>
+            <li><a href="#skills">Skills</a></li>
+            <li><a href="#contact">Contact</a></li>
+        </ul>
+    </nav>
+    <header id="home">
+        <div class="hero-content">
+            <h3>HELLO, WORLD!</h3>
+            <h1>I'm Ramya S</h1>
+            <p>An enthusiastic Information Technology graduate with a strong foundation in programming, data analysis, UI/UX design, and problem-solving.</p>
+            <a href="#projects" class="btn">View My Work</a>
+            <a href="#contact" class="btn btn-outline">Contact Me</a>
+        </div>
+    </header>
+    <section id="about">
+        <h2 class="section-title">About Me</h2>
+        <p style="max-width: 800px; font-size: 18px;">
+            Eager to apply technical knowledge, learn new skills, and contribute effectively in a professional work environment. Committed to continuous learning, delivering high-quality results, and collaborating with teams to achieve organizational goals. Based in Pudukkottai, Tamil Nadu.
+        </p>
+    </section>
+    <section id="experience">
+        <h2 class="section-title">Experience & Education</h2>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 40px;">
+            <div>
+                <h3 style="color: var(--heading-color); margin-bottom: 20px;"><i class="fas fa-briefcase" style="color: var(--accent-color); margin-right: 10px;"></i> Work Experience</h3>
+                <div class="timeline">
+                    <div class="timeline-item">
+                        <h4>UI/UX Design Intern</h4>
+                        <div class="date">Fantasy Solution, Tiruchirappalli | June 2025 – July 2025</div>
+                        <ul>
+                            <li>Analyzed user requirements and improved workflow efficiency.</li>
+                            <li>Created wireframes and prototypes using Figma.</li>
+                            <li>Enhanced usability using user-centered design principles.</li>
+                        </ul>
+                    </div>
+                    <div class="timeline-item">
+                        <h4>Data Analyst Intern</h4>
+                        <div class="date">Winzone Softech, Karaikudi | Jan 2025 – Feb 2025</div>
+                        <ul>
+                            <li>Analyzed datasets and supported data-driven decision making.</li>
+                            <li>Applied data analysis techniques using Excel to identify patterns.</li>
+                            <li>Collaborated with team members to resolve data-related queries.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div>
+                <h3 style="color: var(--heading-color); margin-bottom: 20px;"><i class="fas fa-graduation-cap" style="color: var(--accent-color); margin-right: 10px;"></i> Education</h3>
+                <div class="timeline">
+                    <div class="timeline-item">
+                        <h4>B.Tech – Information Technology</h4>
+                        <div class="date">University College of Engineering (BIT Campus) | 2022 - 2026</div>
+                        <p>CGPA: 8.02</p>
+                    </div>
+                    <div class="timeline-item">
+                        <h4>HSC (12th Grade)</h4>
+                        <div class="date">Sri Venkateshwara Matric Hr. Sec. School | 2022</div>
+                        <p>Percentage: 83.5%</p>
+                    </div>
+                    <div class="timeline-item">
+                        <h4>SSLC (10th Grade)</h4>
+                        <div class="date">Sri Venkateshwara Matric Hr. Sec. School | 2020</div>
+                        <p>Percentage: 81.6%</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <section id="projects">
+        <h2 class="section-title">Featured Projects</h2>
+        <div class="projects-grid">
+            <div class="project-card">
+                <h4>Chronic Kidney Disease (CKD) Prediction System</h4>
+                <p style="margin-bottom: 15px; font-size: 14px; color: #94a3b8;">2026</p>
+                <p>Developed a data-driven system to analyze medical records and classify disease risk. Performed data preprocessing, validation, and accuracy improvement.</p>
+                <div class="skills-container" style="margin-top: 20px;">
+                    <span class="skill-tag">Python</span>
+                    <span class="skill-tag">Machine Learning</span>
+                </div>
+            </div>
+            <div class="project-card">
+                <h4>Tollgate Management System</h4>
+                <p style="margin-bottom: 15px; font-size: 14px; color: #94a3b8;">2025</p>
+                <p>Designed a system for transaction tracking, record maintenance, and reporting. Improved data organization and workflow efficiency.</p>
+                <div class="skills-container" style="margin-top: 20px;">
+                    <span class="skill-tag">Java</span>
+                    <span class="skill-tag">SQL</span>
+                </div>
+            </div>
+            <div class="project-card">
+                <h4>Portfolio Website</h4>
+                <p style="margin-bottom: 15px; font-size: 14px; color: #94a3b8;">Frontend Project</p>
+                <p>A professional, responsive portfolio website showcasing my skills, experience, and projects using modern web technologies.</p>
+                <div class="skills-container" style="margin-top: 20px;">
+                    <span class="skill-tag">HTML</span>
+                    <span class="skill-tag">CSS</span>
+                    <span class="skill-tag">JavaScript</span>
+                </div>
+            </div>
+        </div>
+    </section>
+    <section id="skills">
+        <h2 class="section-title">Skills & Expertise</h2>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 30px;">
+            <div style="background: var(--card-bg); padding: 30px; border-radius: var(--border-radius);">
+                <h4 style="color: var(--heading-color); margin-bottom: 20px;">Technical Skills</h4>
+                <div class="skills-container">
+                    <span class="skill-tag">Python</span> <span class="skill-tag">Java</span> <span class="skill-tag">SQL</span> <span class="skill-tag">HTML</span> <span class="skill-tag">CSS</span> <span class="skill-tag">Data Structures</span> <span class="skill-tag">OOP</span> <span class="skill-tag">Machine Learning</span>
+                </div>
+            </div>
+            <div style="background: var(--card-bg); padding: 30px; border-radius: var(--border-radius);">
+                <h4 style="color: var(--heading-color); margin-bottom: 20px;">UI/UX & Tools</h4>
+                <div class="skills-container">
+                    <span class="skill-tag">Figma</span> <span class="skill-tag">Miro</span> <span class="skill-tag">Whimsical</span> <span class="skill-tag">Wireframing</span> <span class="skill-tag">Prototyping</span> <span class="skill-tag">VS Code</span> <span class="skill-tag">NetBeans</span>
+                </div>
+            </div>
+            <div style="background: var(--card-bg); padding: 30px; border-radius: var(--border-radius);">
+                <h4 style="color: var(--heading-color); margin-bottom: 20px;">Soft Skills</h4>
+                <div class="skills-container">
+                    <span class="skill-tag">Problem Solving</span> <span class="skill-tag">Analytical Thinking</span> <span class="skill-tag">Communication</span> <span class="skill-tag">Teamwork</span> <span class="skill-tag">Adaptability</span>
+                </div>
+            </div>
+        </div>
+    </section>
+    <section id="contact">
+        <h2 class="section-title" style="justify-content: center;">Get In Touch</h2>
+        <div class="contact-content">
+            <p>I'm currently looking for new opportunities. Whether you have a question or just want to say hi, I'll try my best to get back to you!</p>
+            <div class="contact-info">
+                <div class="contact-item"><i class="fas fa-envelope"></i> ramyasathiam@gmail.com</div>
+                <div class="contact-item"><i class="fas fa-phone"></i> +91 63834 93479</div>
+                <div class="contact-item"><i class="fas fa-map-marker-alt"></i> Pudukkottai, Tamil Nadu</div>
+            </div>
+            <div class="social-links">
+                <a href="#" target="_blank" title="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+                <a href="#" target="_blank" title="GitHub"><i class="fab fa-github"></i></a>
+            </div>
+        </div>
+    </section>
+    <footer>
+        <p>Designed & Built by Ramya S &copy; 2026</p>
+    </footer>
+    <script>
+        window.addEventListener('scroll', () => {
+            const nav = document.querySelector('nav');
+            if (window.scrollY > 50) { nav.style.boxShadow = '0 4px 30px rgba(0, 0, 0, 0.1)'; } 
+            else { nav.style.boxShadow = 'none'; }
+        });
+    </script>
+</body>
+</html>
