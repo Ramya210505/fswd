@@ -1,159 +1,170 @@
-const STORAGE_KEY = 'orbit-tasks-v1';
-let tasks = load();
-let dragId = null;
-let searchTerm = '';
+const STORAGE_KEY = 'voxel-responses-v1';
 
-document.getElementById('searchInput').addEventListener('input', (e) => {
-  searchTerm = e.target.value.toLowerCase();
-  renderBoard();
+const QUESTIONS = [
+  {
+    id: 'interest', type: 'single', title: 'Which project type interests you most?',
+    options: ['Web apps', 'Mobile design', 'Data dashboards', 'E-commerce']
+  },
+  {
+    id: 'features', type: 'multi', title: 'Which features matter most to you? (pick any)',
+    options: ['Smooth animations', 'Fast load times', 'Accessibility', 'Dark mode']
+  },
+  {
+    id: 'rating', type: 'rating', title: 'How would you rate the ease of use of these demos?'
+  },
+  {
+    id: 'source', type: 'single', title: 'How did you find this project series?',
+    options: ['GitHub', 'Portfolio site', 'A friend', 'Other']
+  },
+  {
+    id: 'feedback', type: 'text', title: 'Any feedback or feature requests?'
+  }
+];
+
+let responses = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
+let current = {};
+let step = 0;
+
+const introCard = document.getElementById('introCard');
+const surveyCard = document.getElementById('surveyCard');
+const doneCard = document.getElementById('doneCard');
+const resultsCard = document.getElementById('resultsCard');
+const questionWrap = document.getElementById('questionWrap');
+const progressFill = document.getElementById('progressFill');
+const stepNum = document.getElementById('stepNum');
+const nextBtn = document.getElementById('nextBtn');
+const backBtn = document.getElementById('backBtn');
+
+document.getElementById('stepTotal').textContent = QUESTIONS.length;
+
+function showOnly(card) {
+  [introCard, surveyCard, doneCard, resultsCard].forEach(c => c.hidden = c !== card);
+}
+
+document.getElementById('startBtn').addEventListener('click', () => {
+  current = {};
+  step = 0;
+  showOnly(surveyCard);
+  renderQuestion();
 });
 
-const toast = document.getElementById('toast');
+document.getElementById('viewResultsBtn').addEventListener('click', renderResults);
+document.getElementById('seeResultsBtn').addEventListener('click', renderResults);
+document.getElementById('backHomeBtn').addEventListener('click', () => showOnly(introCard));
+document.getElementById('restartBtn').addEventListener('click', () => {
+  current = {}; step = 0; showOnly(surveyCard); renderQuestion();
+});
 
-function uid() { return Math.random().toString(36).slice(2, 10); }
-function load() {
-  try {
-    const raw = localStorage.getItem(STORAGE_KEY);
-    return raw ? JSON.parse(raw) : seed();
-  } catch { return seed(); }
+function renderQuestion() {
+  const q = QUESTIONS[step];
+  progressFill.style.width = `${((step) / QUESTIONS.length) * 100}%`;
+  stepNum.textContent = step + 1;
+  backBtn.style.visibility = step === 0 ? 'hidden' : 'visible';
+
+  document.getElementById('stepDots').innerHTML = QUESTIONS.map((_, i) =>
+    `<span class="step-dot ${i === step ? 'is-active' : i < step ? 'is-done' : ''}"></span>`
+  ).join('');
+
+  let html = `<h2 class="q-title">${q.title}</h2>`;
+
+  if (q.type === 'single') {
+    html += `<div class="option-list">` + q.options.map(opt => `
+      <button type="button" class="option-btn ${current[q.id] === opt ? 'is-selected' : ''}" data-value="${opt}">
+        <span class="option-check">${current[q.id] === opt ? '✓' : ''}</span>${opt}
+      </button>`).join('') + `</div>`;
+  } else if (q.type === 'multi') {
+    const selected = current[q.id] || [];
+    html += `<div class="option-list">` + q.options.map(opt => `
+      <button type="button" class="option-btn ${selected.includes(opt) ? 'is-selected' : ''}" data-multi data-value="${opt}">
+        <span class="option-check">${selected.includes(opt) ? '✓' : ''}</span>${opt}
+      </button>`).join('') + `</div>`;
+  } else if (q.type === 'rating') {
+    html += `<div class="rating-row">` + [1,2,3,4,5].map(n => `
+      <button type="button" class="rating-btn ${current[q.id] === n ? 'is-selected' : ''}" data-value="${n}">${n}</button>
+    `).join('') + `</div>
+    <div style="display:flex; justify-content:space-between; margin-top:8px; font-size:0.75rem; color:var(--text-dim);">
+      <span>Needs work</span><span>Excellent</span>
+    </div>`;
+  } else if (q.type === 'text') {
+    html += `<textarea class="text-answer" id="textAnswer" placeholder="Type your thoughts…">${current[q.id] || ''}</textarea>`;
+  }
+
+  questionWrap.innerHTML = html;
+  attachHandlers(q);
+  updateNextState(q);
 }
-function save() { localStorage.setItem(STORAGE_KEY, JSON.stringify(tasks)); }
 
-function seed() {
-  const today = new Date();
-  const iso = (d) => new Date(today.getFullYear(), today.getMonth(), today.getDate() + d).toISOString().slice(0, 10);
-  return [
-    { id: uid(), title: 'Design token system for site', priority: 'high', assignee: 'RS', due: iso(-1), status: 'todo' },
-    { id: uid(), title: 'Wireframe leave management flow', priority: 'medium', assignee: 'AK', due: iso(3), status: 'todo' },
-    { id: uid(), title: 'Build todo list drag-reorder', priority: 'high', assignee: 'RS', due: iso(1), status: 'progress' },
-    { id: uid(), title: 'API mock for food delivery cart', priority: 'medium', assignee: 'MP', due: iso(5), status: 'progress' },
-    { id: uid(), title: 'Accessibility pass on marketplace', priority: 'low', assignee: 'AK', due: iso(6), status: 'review' },
-    { id: uid(), title: 'Portfolio hero copywriting', priority: 'medium', assignee: 'RS', due: iso(-3), status: 'done' },
-    { id: uid(), title: 'Set up repo structure', priority: 'low', assignee: 'Unassigned', due: '', status: 'done' }
-  ];
-}
-
-function isOverdue(task) {
-  if (!task.due || task.status === 'done') return false;
-  return new Date(task.due) < new Date(new Date().toDateString());
-}
-function formatDue(dateStr) {
-  if (!dateStr) return null;
-  return new Date(dateStr + 'T00:00:00').toLocaleDateString(undefined, { month: 'short', day: 'numeric' });
-}
-
-function renderStats() {
-  const total = tasks.length;
-  const done = tasks.filter(t => t.status === 'done').length;
-  const overdue = tasks.filter(isOverdue).length;
-  const highPriority = tasks.filter(t => t.priority === 'high' && t.status !== 'done').length;
-  document.getElementById('statsRow').innerHTML = `
-    <div class="stat-card"><span>Total tasks</span><strong>${total}</strong></div>
-    <div class="stat-card"><span>Completed</span><strong>${done}</strong></div>
-    <div class="stat-card"><span>Overdue</span><strong style="color:var(--high)">${overdue}</strong></div>
-    <div class="stat-card"><span>High priority open</span><strong>${highPriority}</strong></div>
-  `;
-}
-
-function renderBoard() {
-  const visible = searchTerm ? tasks.filter(t => t.title.toLowerCase().includes(searchTerm)) : tasks;
-  const columns = { todo: [], progress: [], review: [], done: [] };
-  visible.forEach(t => columns[t.status].push(t));
-
-  const overallPct = tasks.length ? Math.round((tasks.filter(t => t.status === 'done').length / tasks.length) * 100) : 0;
-  document.getElementById('overallPct').textContent = `${overallPct}%`;
-  document.getElementById('overallFill').style.width = `${overallPct}%`;
-
-  Object.entries(columns).forEach(([status, list]) => {
-    const el = document.getElementById(`col-${status}`);
-    el.innerHTML = list.map(t => {
-      const overdue = isOverdue(t);
-      const dueLabel = formatDue(t.due);
-      return `
-        <div class="task-card priority-${t.priority}" draggable="true" data-id="${t.id}">
-          <div class="task-title">${t.title}</div>
-          <div class="task-footer">
-            <div class="task-footer-row">
-              <span class="task-badge ${overdue ? 'due-overdue' : ''}">${dueLabel ? (overdue ? 'Overdue · ' : '') + dueLabel : t.priority}</span>
-            </div>
-            <div class="task-footer-row">
-              <div class="task-avatar" title="${t.assignee}">${t.assignee === 'Unassigned' ? '—' : t.assignee}${t.assignee !== 'Unassigned' ? '<span class="status-dot"></span>' : ''}</div>
-              <button class="task-delete" data-id="${t.id}">✕</button>
-            </div>
-          </div>
-        </div>
-      `;
-    }).join('');
-    document.getElementById(`count${status.charAt(0).toUpperCase() + status.slice(1)}`).textContent = list.length;
-  });
-
-  document.querySelectorAll('.task-card').forEach(card => {
-    card.addEventListener('dragstart', () => { dragId = card.dataset.id; card.classList.add('dragging'); });
-    card.addEventListener('dragend', () => card.classList.remove('dragging'));
-  });
-  document.querySelectorAll('.task-delete').forEach(btn => {
-    btn.addEventListener('click', (e) => {
-      e.stopPropagation();
-      tasks = tasks.filter(t => t.id !== btn.dataset.id);
-      save();
-      renderAll();
-      showToast('Task deleted');
+function attachHandlers(q) {
+  if (q.type === 'single') {
+    questionWrap.querySelectorAll('.option-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        current[q.id] = btn.dataset.value;
+        renderQuestion();
+      });
     });
-  });
-
-  renderStats();
+  } else if (q.type === 'multi') {
+    questionWrap.querySelectorAll('.option-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const val = btn.dataset.value;
+        const list = current[q.id] || [];
+        current[q.id] = list.includes(val) ? list.filter(v => v !== val) : [...list, val];
+        renderQuestion();
+      });
+    });
+  } else if (q.type === 'rating') {
+    questionWrap.querySelectorAll('.rating-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        current[q.id] = Number(btn.dataset.value);
+        renderQuestion();
+      });
+    });
+  } else if (q.type === 'text') {
+    const ta = document.getElementById('textAnswer');
+    ta.addEventListener('input', () => {
+      current[q.id] = ta.value;
+      updateNextState(q);
+    });
+  }
 }
 
-document.querySelectorAll('.column-body').forEach(col => {
-  col.addEventListener('dragover', (e) => { e.preventDefault(); col.classList.add('drag-over'); });
-  col.addEventListener('dragleave', () => col.classList.remove('drag-over'));
-  col.addEventListener('drop', () => {
-    col.classList.remove('drag-over');
-    if (!dragId) return;
-    const status = col.closest('.column').dataset.status;
-    const task = tasks.find(t => t.id === dragId);
-    if (task) {
-      const wasNotDone = task.status !== 'done';
-      task.status = status;
-      save();
-      renderAll();
-      if (status === 'done' && wasNotDone) {
-        showToast(`"${task.title}" marked done 🎉`);
-        launchConfetti();
-      }
-    }
-    dragId = null;
-  });
+function isAnswered(q) {
+  const v = current[q.id];
+  if (q.type === 'multi') return Array.isArray(v) && v.length > 0;
+  if (q.type === 'text') return true; // optional
+  return v !== undefined && v !== '';
+}
+
+function updateNextState(q) {
+  nextBtn.disabled = !isAnswered(q);
+  nextBtn.textContent = step === QUESTIONS.length - 1 ? 'Submit ✓' : 'Next →';
+}
+
+backBtn.addEventListener('click', () => {
+  if (step === 0) return;
+  step--;
+  renderQuestion();
 });
 
-// Add task modal
-const addOverlay = document.getElementById('addOverlay');
-document.getElementById('openAdd').addEventListener('click', () => addOverlay.classList.add('is-open'));
-document.getElementById('closeAdd').addEventListener('click', () => addOverlay.classList.remove('is-open'));
-addOverlay.addEventListener('click', (e) => { if (e.target === addOverlay) addOverlay.classList.remove('is-open'); });
+nextBtn.addEventListener('click', () => {
+  const q = QUESTIONS[step];
+  if (!isAnswered(q)) return;
 
-document.getElementById('addForm').addEventListener('submit', (e) => {
-  e.preventDefault();
-  const title = document.getElementById('taskTitle').value.trim();
-  if (!title) return;
-  tasks.push({
-    id: uid(),
-    title,
-    priority: document.getElementById('taskPriority').value,
-    assignee: document.getElementById('taskAssignee').value,
-    due: document.getElementById('taskDue').value,
-    status: document.getElementById('taskStatus').value
-  });
-  save();
-  e.target.reset();
-  addOverlay.classList.remove('is-open');
-  renderAll();
-  showToast('Task added');
+  if (step < QUESTIONS.length - 1) {
+    questionWrap.classList.add('leaving');
+    setTimeout(() => { step++; questionWrap.classList.remove('leaving'); renderQuestion(); }, 200);
+  } else {
+    submitSurvey();
+  }
 });
 
-function renderAll() { renderBoard(); }
+function submitSurvey() {
+  responses.push({ ...current, ts: Date.now() });
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(responses));
+  progressFill.style.width = '100%';
+  setTimeout(() => { showOnly(doneCard); launchConfetti(); }, 200);
+}
 
-// Confetti burst for completed tasks
+// Confetti celebration
 const confettiCanvas = document.getElementById('confettiCanvas');
 const cctx = confettiCanvas.getContext('2d');
 function resizeConfetti() { confettiCanvas.width = window.innerWidth; confettiCanvas.height = window.innerHeight; }
@@ -161,19 +172,19 @@ window.addEventListener('resize', resizeConfetti);
 resizeConfetti();
 
 function launchConfetti() {
-  const colors = ['#7C6FF0', '#45C4B0', '#4D8DFF', '#3ECF8E'];
-  const particles = Array.from({ length: 60 }, () => ({
-    x: confettiCanvas.width / 2, y: confettiCanvas.height / 3,
-    vx: (Math.random() - 0.5) * 10, vy: Math.random() * -9 - 3,
-    size: Math.random() * 5 + 3, color: colors[Math.floor(Math.random() * colors.length)],
+  const colors = ['#6C5CE7', '#FF7EB3', '#2FAE60', '#FFD166'];
+  const particles = Array.from({ length: 90 }, () => ({
+    x: confettiCanvas.width / 2, y: confettiCanvas.height / 2.5,
+    vx: (Math.random() - 0.5) * 13, vy: Math.random() * -11 - 4,
+    size: Math.random() * 6 + 4, color: colors[Math.floor(Math.random() * colors.length)],
     rotation: Math.random() * 360, life: 0
   }));
   function frame() {
     cctx.clearRect(0, 0, confettiCanvas.width, confettiCanvas.height);
     let alive = false;
     particles.forEach(p => {
-      p.vy += 0.32; p.x += p.vx; p.y += p.vy; p.life++;
-      if (p.life < 110) {
+      p.vy += 0.34; p.x += p.vx; p.y += p.vy; p.life++;
+      if (p.life < 120) {
         alive = true;
         cctx.save();
         cctx.translate(p.x, p.y);
@@ -189,11 +200,53 @@ function launchConfetti() {
   requestAnimationFrame(frame);
 }
 
-function showToast(msg) {
-  toast.textContent = msg;
-  toast.classList.add('is-visible');
-  clearTimeout(showToast._t);
-  showToast._t = setTimeout(() => toast.classList.remove('is-visible'), 2200);
+function renderResults() {
+  const body = document.getElementById('resultsBody');
+  document.getElementById('responseCount').textContent = `${responses.length} response${responses.length !== 1 ? 's' : ''}`;
+
+  if (!responses.length) {
+    body.innerHTML = `<p style="color:var(--text-dim)">No responses yet — be the first to take the survey!</p>`;
+  } else {
+    let html = '';
+    QUESTIONS.forEach(q => {
+      if (q.type === 'single' || q.type === 'multi') {
+        const counts = {};
+        q.options.forEach(o => counts[o] = 0);
+        responses.forEach(r => {
+          const val = r[q.id];
+          if (!val) return;
+          if (Array.isArray(val)) val.forEach(v => counts[v] = (counts[v] || 0) + 1);
+          else counts[val] = (counts[val] || 0) + 1;
+        });
+        const total = Object.values(counts).reduce((a, b) => a + b, 0) || 1;
+        html += `<div class="result-block"><h3>${q.title}</h3>` +
+          Object.entries(counts).map(([label, count]) => {
+            const pct = Math.round((count / total) * 100);
+            return `<div class="bar-row"><span class="bar-label">${label}</span><div class="bar-track"><div class="bar-fill" style="width:${pct}%"></div></div><span class="bar-pct">${pct}%</span></div>`;
+          }).join('') + `</div>`;
+      } else if (q.type === 'rating') {
+        const vals = responses.map(r => r[q.id]).filter(Boolean);
+        const avg = vals.length ? (vals.reduce((a, b) => a + b, 0) / vals.length).toFixed(1) : '—';
+        html += `<div class="result-block"><h3>${q.title}</h3><p style="font-family:var(--font-d); font-size:1.6rem; margin:0;">${avg} <span style="font-size:0.9rem; color:var(--text-dim); font-family:var(--font-b);">/ 5 average</span></p></div>`;
+      } else if (q.type === 'text') {
+        const texts = responses.map(r => r[q.id]).filter(t => t && t.trim());
+        html += `<div class="result-block"><h3>${q.title}</h3>` +
+          (texts.length ? texts.map(t => `<div class="result-text-item">${t}</div>`).join('') : `<p style="color:var(--text-dim); font-size:0.85rem;">No written feedback yet.</p>`) +
+          `</div>`;
+      }
+    });
+    body.innerHTML = html;
+
+    // Animate bar fills in after paint
+    requestAnimationFrame(() => {
+      body.querySelectorAll('.bar-fill').forEach(bar => {
+        const target = bar.style.width;
+        bar.style.width = '0%';
+        requestAnimationFrame(() => { bar.style.width = target; });
+      });
+    });
+  }
+  showOnly(resultsCard);
 }
 
-renderAll();
+showOnly(introCard);
