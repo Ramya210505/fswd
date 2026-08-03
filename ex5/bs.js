@@ -22,11 +22,11 @@ function saveFavs() { localStorage.setItem(FAV_KEY, JSON.stringify([...favs])); 
 function seed() {
   const now = Date.now();
   return [
-    { id: uid(), title: 'MacBook Air M1, 8/256GB', price: 42000, category: 'Electronics', condition: 'Like New', location: 'Trichy', image: 'https://images.unsplash.com/photo-1517336714731-489689fd1ca8?w=600&q=60', desc: 'Barely used, comes with charger and original box. AppleCare active till Dec.', ts: now - 90000000 },
-    { id: uid(), title: 'Study Table with Chair', price: 2800, category: 'Furniture', condition: 'Used', location: 'Pudukkottai', image: 'https://images.unsplash.com/photo-1518455027359-f3f8164ba6bd?w=600&q=60', desc: 'Sturdy wooden table, minor scratches. Great for a hostel room.', ts: now - 40000000 },
-    { id: uid(), title: 'Data Structures & Algorithms (Set of 3)', price: 650, category: 'Books', condition: 'Used', location: 'Trichy', image: 'https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?w=600&q=60', desc: 'Well-kept textbooks, minimal highlighting.', ts: now - 20000000 },
-    { id: uid(), title: 'Denim Jacket, Size M', price: 900, category: 'Fashion', condition: 'New', location: 'Karaikudi', image: 'https://images.unsplash.com/photo-1551028719-00167b16eac5?w=600&q=60', desc: 'Never worn, tag still attached.', ts: now - 5000000 },
-    { id: uid(), title: 'Activa 5G, 2021', price: 58000, category: 'Vehicles', condition: 'Used', location: 'Pudukkottai', image: 'https://images.unsplash.com/photo-1558981806-ec527fa84c39?w=600&q=60', desc: 'Single owner, all papers up to date, recently serviced.', ts: now - 300000000 }
+    { id: uid(), title: 'MacBook Air M1, 8/256GB', price: 42000, category: 'Electronics', condition: 'Like New', location: 'Trichy', verified: true, images: ['https://images.unsplash.com/photo-1517336714731-489689fd1ca8?w=600&q=60','https://images.unsplash.com/photo-1541807084-5c52b6b3adef?w=600&q=60'], desc: 'Barely used, comes with charger and original box. AppleCare active till Dec.', ts: now - 90000000 },
+    { id: uid(), title: 'Study Table with Chair', price: 2800, category: 'Furniture', condition: 'Used', location: 'Pudukkottai', verified: false, images: ['https://images.unsplash.com/photo-1518455027359-f3f8164ba6bd?w=600&q=60'], desc: 'Sturdy wooden table, minor scratches. Great for a hostel room.', ts: now - 40000000 },
+    { id: uid(), title: 'Data Structures & Algorithms (Set of 3)', price: 650, category: 'Books', condition: 'Used', location: 'Trichy', verified: true, images: ['https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?w=600&q=60','https://images.unsplash.com/photo-1512820790803-83ca734da794?w=600&q=60'], desc: 'Well-kept textbooks, minimal highlighting.', ts: now - 20000000 },
+    { id: uid(), title: 'Denim Jacket, Size M', price: 900, category: 'Fashion', condition: 'New', location: 'Karaikudi', verified: false, images: ['https://images.unsplash.com/photo-1551028719-00167b16eac5?w=600&q=60'], desc: 'Never worn, tag still attached.', ts: now - 5000000 },
+    { id: uid(), title: 'Activa 5G, 2021', price: 58000, category: 'Vehicles', condition: 'Used', location: 'Pudukkottai', verified: true, images: ['https://images.unsplash.com/photo-1558981806-ec527fa84c39?w=600&q=60','https://images.unsplash.com/photo-1568772585407-9361f9bf3a87?w=600&q=60'], desc: 'Single owner, all papers up to date, recently serviced.', ts: now - 300000000 }
   ];
 }
 
@@ -49,7 +49,8 @@ document.getElementById('sellForm').addEventListener('submit', (e) => {
     category: document.getElementById('itemCategory').value,
     condition: document.getElementById('itemCondition').value,
     location: document.getElementById('itemLocation').value.trim() || 'Not specified',
-    image: document.getElementById('itemImage').value.trim() || 'https://images.unsplash.com/photo-1558769132-cb1aea458c5e?w=600&q=60',
+    images: [document.getElementById('itemImage').value.trim() || 'https://images.unsplash.com/photo-1558769132-cb1aea458c5e?w=600&q=60'],
+    verified: false,
     desc: document.getElementById('itemDesc').value.trim() || 'No description provided.',
     ts: Date.now()
   });
@@ -94,12 +95,26 @@ function timeAgo(ts) {
   return `${d} days ago`;
 }
 
+function showListingSkeleton() {
+  listingGrid.innerHTML = Array.from({ length: 5 }).map(() => `
+    <div class="listing-card" style="cursor:default;">
+      <div class="skeleton-img"></div>
+      <div class="listing-body">
+        <div class="skeleton-line w40"></div>
+        <div class="skeleton-line w90"></div>
+        <div class="skeleton-line w60"></div>
+      </div>
+    </div>
+  `).join('');
+}
+
 function render() {
   const filtered = getFiltered();
   listingGrid.innerHTML = filtered.map(l => `
     <article class="listing-card" data-id="${l.id}">
-      <div class="listing-img" style="background-image:url('${l.image}')">
+      <div class="listing-img" style="background-image:url('${l.images[0]}')">
         <span class="condition-badge">${l.condition}</span>
+        ${l.verified ? '<span class="verified-badge">✓ Verified</span>' : ''}
         <button class="fav-btn ${favs.has(l.id) ? 'is-fav' : ''}" data-fav="${l.id}" aria-label="Save">${favs.has(l.id) ? '♥' : '♡'}</button>
       </div>
       <div class="listing-body">
@@ -111,6 +126,7 @@ function render() {
   `).join('');
 
   emptyMsg.classList.toggle('is-visible', filtered.length === 0);
+  renderRecentlyViewed();
 
   listingGrid.querySelectorAll('.fav-btn').forEach(btn => {
     btn.addEventListener('click', (e) => {
@@ -133,25 +149,69 @@ function render() {
 // Detail modal
 const detailOverlay = document.getElementById('detailOverlay');
 const detailModal = document.getElementById('detailModal');
+let recentlyViewed = JSON.parse(localStorage.getItem('swaply-recent-v1') || '[]');
+
 function openDetail(id) {
   const l = listings.find(x => x.id === id);
   if (!l) return;
-  detailModal.innerHTML = `
-    <img src="${l.image}" alt="${l.title}">
-    <div class="modal-detail-body">
-      <button class="close-btn" id="closeDetail" style="float:right; margin-top:-6px;">✕</button>
-      <h2>${l.title}</h2>
-      <div class="modal-detail-price">₹${l.price.toLocaleString('en-IN')}</div>
-      <div class="modal-detail-tags">
-        <span>${l.category}</span><span>${l.condition}</span><span>${l.location}</span>
-      </div>
-      <p class="modal-detail-desc">${l.desc}</p>
-      <button class="contact-seller-btn" id="contactSeller">Contact seller</button>
+
+  recentlyViewed = [id, ...recentlyViewed.filter(x => x !== id)].slice(0, 5);
+  localStorage.setItem('swaply-recent-v1', JSON.stringify(recentlyViewed));
+
+  let imgIndex = 0;
+  const renderCarousel = () => `
+    <div class="carousel">
+      <img src="${l.images[imgIndex]}" alt="${l.title}">
+      ${l.images.length > 1 ? `
+        <button class="carousel-nav prev" id="carouselPrev">‹</button>
+        <button class="carousel-nav next" id="carouselNext">›</button>
+        <div class="carousel-dots">${l.images.map((_, i) => `<span class="c-dot ${i === imgIndex ? 'is-active' : ''}"></span>`).join('')}</div>
+      ` : ''}
     </div>
   `;
+
+  function paint() {
+    detailModal.innerHTML = `
+      ${renderCarousel()}
+      <div class="modal-detail-body">
+        <button class="close-btn" id="closeDetail" style="float:right; margin-top:-6px;">✕</button>
+        <h2>${l.title} ${l.verified ? '<span class="verified-inline">✓ Verified seller</span>' : ''}</h2>
+        <div class="modal-detail-price">₹${l.price.toLocaleString('en-IN')}</div>
+        <div class="modal-detail-tags">
+          <span>${l.category}</span><span>${l.condition}</span><span>${l.location}</span>
+        </div>
+        <p class="modal-detail-desc">${l.desc}</p>
+        <button class="contact-seller-btn" id="contactSeller">Contact seller</button>
+      </div>
+    `;
+    document.getElementById('closeDetail').addEventListener('click', () => detailOverlay.classList.remove('is-open'));
+    document.getElementById('contactSeller').addEventListener('click', () => showToast('Message sent to seller!'));
+    const prev = document.getElementById('carouselPrev');
+    const next = document.getElementById('carouselNext');
+    if (prev) prev.addEventListener('click', () => { imgIndex = (imgIndex - 1 + l.images.length) % l.images.length; paint(); });
+    if (next) next.addEventListener('click', () => { imgIndex = (imgIndex + 1) % l.images.length; paint(); });
+  }
+  paint();
   detailOverlay.classList.add('is-open');
-  document.getElementById('closeDetail').addEventListener('click', () => detailOverlay.classList.remove('is-open'));
-  document.getElementById('contactSeller').addEventListener('click', () => showToast('Message sent to seller!'));
+}
+
+function renderRecentlyViewed() {
+  let strip = document.getElementById('recentStrip');
+  const items = recentlyViewed.map(id => listings.find(l => l.id === id)).filter(Boolean);
+  if (!items.length) { if (strip) strip.remove(); return; }
+
+  if (!strip) {
+    strip = document.createElement('div');
+    strip.id = 'recentStrip';
+    strip.className = 'recent-strip';
+    listingGrid.parentElement.insertBefore(strip, listingGrid);
+  }
+  strip.innerHTML = `<span class="recent-label">Recently viewed</span><div class="recent-row">` +
+    items.map(l => `<div class="recent-chip" data-id="${l.id}"><img src="${l.images[0]}" alt=""><span>${l.title}</span></div>`).join('') +
+    `</div>`;
+  strip.querySelectorAll('.recent-chip').forEach(chip => {
+    chip.addEventListener('click', () => openDetail(chip.dataset.id));
+  });
 }
 detailOverlay.addEventListener('click', (e) => { if (e.target === detailOverlay) detailOverlay.classList.remove('is-open'); });
 
@@ -162,4 +222,5 @@ function showToast(msg) {
   showToast._t = setTimeout(() => toast.classList.remove('is-visible'), 2200);
 }
 
-render();
+showListingSkeleton();
+setTimeout(render, 500);
