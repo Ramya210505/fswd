@@ -3,104 +3,64 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Orbit — Project Dashboard</title>
+<title>Voxel — Online Survey</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Sora:wght@600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="stles.css" />
 </head>
 <body>
 
-<div class="shell">
-  <aside class="sidebar">
-    <div class="logo">🪐 Orbit</div>
-    <nav>
-      <a class="nav-item is-active">Board</a>
-      <a class="nav-item">Backlog</a>
-      <a class="nav-item">Reports</a>
-      <a class="nav-item">Team</a>
-    </nav>
-    <div class="project-switch">
-      <span class="label">Project</span>
-      <strong>Portfolio Site Revamp</strong>
+<div class="bg-gradient"></div>
+
+<div class="app-wrap">
+
+  <!-- Intro -->
+  <section class="card intro-card" id="introCard">
+    <span class="eyebrow">Frontend Projects Feedback</span>
+    <h1>Tell us what you think</h1>
+    <p>5 quick questions, about a minute. Your answers help shape what gets built next.</p>
+    <button class="primary-btn" id="startBtn">Start survey →</button>
+    <button class="ghost-btn" id="viewResultsBtn">View results so far</button>
+  </section>
+
+  <!-- Survey -->
+  <section class="card survey-card" id="surveyCard" hidden>
+    <div class="step-dots" id="stepDots"></div>
+    <div class="progress-track">
+      <div class="progress-fill" id="progressFill"></div>
     </div>
-  </aside>
+    <div class="step-label"><span id="stepNum">1</span> / <span id="stepTotal">5</span></div>
 
-  <main class="content">
-    <header class="page-head">
-      <div>
-        <h1>Board</h1>
-        <p>Drag cards between columns as work moves.</p>
-      </div>
-      <div class="head-actions">
-        <div class="search-box">
-          <span>⌕</span>
-          <input type="text" id="searchInput" placeholder="Search tasks…" />
-        </div>
-        <button class="add-btn" id="openAdd">＋ New task</button>
-      </div>
-    </header>
+    <div class="question-wrap" id="questionWrap"></div>
 
-    <section class="stats-row" id="statsRow"></section>
-
-    <div class="overall-progress">
-      <div class="overall-progress-head"><span>Overall completion</span><strong id="overallPct">0%</strong></div>
-      <div class="overall-track"><div class="overall-fill" id="overallFill"></div></div>
+    <div class="nav-row">
+      <button class="ghost-btn" id="backBtn">← Back</button>
+      <button class="primary-btn" id="nextBtn">Next →</button>
     </div>
+  </section>
 
-    <section class="board" id="board">
-      <div class="column" data-status="todo">
-        <div class="column-head"><span class="dot todo"></span>To do <span class="count" id="countTodo">0</span></div>
-        <div class="column-body" id="col-todo"></div>
-      </div>
-      <div class="column" data-status="progress">
-        <div class="column-head"><span class="dot progress"></span>In progress <span class="count" id="countProgress">0</span></div>
-        <div class="column-body" id="col-progress"></div>
-      </div>
-      <div class="column" data-status="review">
-        <div class="column-head"><span class="dot review"></span>Review <span class="count" id="countReview">0</span></div>
-        <div class="column-body" id="col-review"></div>
-      </div>
-      <div class="column" data-status="done">
-        <div class="column-head"><span class="dot done"></span>Done <span class="count" id="countDone">0</span></div>
-        <div class="column-body" id="col-done"></div>
-      </div>
-    </section>
-  </main>
-</div>
+  <!-- Thank you -->
+  <section class="card done-card" id="doneCard" hidden>
+    <div class="done-icon">🎉</div>
+    <h1>Thanks for the feedback!</h1>
+    <p>Your response has been recorded.</p>
+    <button class="primary-btn" id="seeResultsBtn">See aggregated results</button>
+    <button class="ghost-btn" id="restartBtn">Take survey again</button>
+  </section>
 
-<!-- Add task modal -->
-<div class="modal-overlay" id="addOverlay">
-  <div class="modal">
-    <div class="modal-head">
-      <h2>New task</h2>
-      <button class="close-btn" id="closeAdd">✕</button>
+  <!-- Results -->
+  <section class="card results-card" id="resultsCard" hidden>
+    <div class="results-head">
+      <h1>Results so far</h1>
+      <span id="responseCount" class="response-count">0 responses</span>
     </div>
-    <form id="addForm" class="modal-body">
-      <label>Title
-        <input type="text" id="taskTitle" required placeholder="e.g. Design the hero section" />
-      </label>
-      <div class="form-row">
-        <label>Priority
-          <select id="taskPriority"><option value="low">Low</option><option value="medium" selected>Medium</option><option value="high">High</option></select>
-        </label>
-        <label>Assignee
-          <select id="taskAssignee"><option>RS</option><option>AK</option><option>MP</option><option>Unassigned</option></select>
-        </label>
-      </div>
-      <div class="form-row">
-        <label>Due date <input type="date" id="taskDue" /></label>
-        <label>Column
-          <select id="taskStatus"><option value="todo">To do</option><option value="progress">In progress</option><option value="review">Review</option><option value="done">Done</option></select>
-        </label>
-      </div>
-      <button type="submit" class="submit-btn">Add task</button>
-    </form>
-  </div>
+    <div id="resultsBody"></div>
+    <button class="ghost-btn" id="backHomeBtn">← Back to start</button>
+  </section>
+
 </div>
 
 <canvas id="confettiCanvas"></canvas>
-<div class="toast" id="toast"></div>
-
 <script src="script.js"></script>
 </body>
 </html>
