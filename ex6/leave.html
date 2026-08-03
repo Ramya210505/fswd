@@ -3,115 +3,102 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Leavo — Leave Management</title>
+<title>Orbit — Project Dashboard</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Sora:wght@600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="stles.css" />
 </head>
 <body>
 
 <div class="shell">
   <aside class="sidebar">
-    <div class="logo">🗓 Leavo</div>
+    <div class="logo">🪐 Orbit</div>
     <nav>
-      <a class="nav-item is-active">Dashboard</a>
-      <a class="nav-item">My requests</a>
-      <a class="nav-item">Team calendar</a>
-      <a class="nav-item">Settings</a>
+      <a class="nav-item is-active">Board</a>
+      <a class="nav-item">Backlog</a>
+      <a class="nav-item">Reports</a>
+      <a class="nav-item">Team</a>
     </nav>
-    <div class="user-card">
-      <div class="avatar">RS</div>
-      <div><strong>Ramya S</strong><span>IT Department</span></div>
+    <div class="project-switch">
+      <span class="label">Project</span>
+      <strong>Portfolio Site Revamp</strong>
     </div>
   </aside>
 
   <main class="content">
     <header class="page-head">
       <div>
-        <h1>Leave dashboard</h1>
-        <p>Track your balance, apply for time off, and see request status.</p>
+        <h1>Board</h1>
+        <p>Drag cards between columns as work moves.</p>
       </div>
       <div class="head-actions">
-        <div class="notif-wrap">
-          <button class="notif-btn" id="notifBtn" aria-label="Notifications">🔔<span class="notif-badge" id="notifBadge">2</span></button>
-          <div class="notif-dropdown" id="notifDropdown">
-            <div class="notif-item"><strong>Casual leave</strong> approved <span>1h</span></div>
-            <div class="notif-item"><strong>Earned leave</strong> pending review <span>3h</span></div>
-          </div>
+        <div class="search-box">
+          <span>⌕</span>
+          <input type="text" id="searchInput" placeholder="Search tasks…" />
         </div>
-        <button class="apply-btn" id="openApply">＋ Apply for leave</button>
+        <button class="add-btn" id="openAdd">＋ New task</button>
       </div>
     </header>
 
-    <section class="balance-grid" id="balanceGrid"></section>
+    <section class="stats-row" id="statsRow"></section>
 
-    <section class="holiday-strip" id="holidayStrip"></section>
+    <div class="overall-progress">
+      <div class="overall-progress-head"><span>Overall completion</span><strong id="overallPct">0%</strong></div>
+      <div class="overall-track"><div class="overall-fill" id="overallFill"></div></div>
+    </div>
 
-    <section class="panels">
-      <div class="panel panel-requests">
-        <div class="panel-head">
-          <h2>Your requests</h2>
-          <div class="status-filters" id="statusFilters">
-            <button class="chip is-active" data-status="all">All</button>
-            <button class="chip" data-status="Pending">Pending</button>
-            <button class="chip" data-status="Approved">Approved</button>
-            <button class="chip" data-status="Rejected">Rejected</button>
-          </div>
-        </div>
-        <div class="table-wrap">
-          <table>
-            <thead>
-              <tr><th>Type</th><th>Dates</th><th>Days</th><th>Reason</th><th>Status</th><th></th></tr>
-            </thead>
-            <tbody id="requestsBody"></tbody>
-          </table>
-        </div>
-        <p class="empty-msg" id="emptyMsg">No leave requests here yet.</p>
+    <section class="board" id="board">
+      <div class="column" data-status="todo">
+        <div class="column-head"><span class="dot todo"></span>To do <span class="count" id="countTodo">0</span></div>
+        <div class="column-body" id="col-todo"></div>
       </div>
-
-      <div class="panel panel-calendar">
-        <div class="panel-head">
-          <h2 id="calMonthLabel">This month</h2>
-          <div class="cal-nav">
-            <button id="prevMonth">‹</button>
-            <button id="nextMonth">›</button>
-          </div>
-        </div>
-        <div class="calendar-grid" id="calendarGrid"></div>
-        <div class="cal-legend">
-          <span><i class="dot approved"></i> Approved</span>
-          <span><i class="dot pending"></i> Pending</span>
-        </div>
+      <div class="column" data-status="progress">
+        <div class="column-head"><span class="dot progress"></span>In progress <span class="count" id="countProgress">0</span></div>
+        <div class="column-body" id="col-progress"></div>
+      </div>
+      <div class="column" data-status="review">
+        <div class="column-head"><span class="dot review"></span>Review <span class="count" id="countReview">0</span></div>
+        <div class="column-body" id="col-review"></div>
+      </div>
+      <div class="column" data-status="done">
+        <div class="column-head"><span class="dot done"></span>Done <span class="count" id="countDone">0</span></div>
+        <div class="column-body" id="col-done"></div>
       </div>
     </section>
   </main>
 </div>
 
-<!-- Apply modal -->
-<div class="modal-overlay" id="applyOverlay">
+<!-- Add task modal -->
+<div class="modal-overlay" id="addOverlay">
   <div class="modal">
     <div class="modal-head">
-      <h2>Apply for leave</h2>
-      <button class="close-btn" id="closeApply">✕</button>
+      <h2>New task</h2>
+      <button class="close-btn" id="closeAdd">✕</button>
     </div>
-    <form id="applyForm" class="modal-body">
-      <label>Leave type
-        <select id="leaveType">
-          <option>Casual</option><option>Sick</option><option>Earned</option>
-        </select>
+    <form id="addForm" class="modal-body">
+      <label>Title
+        <input type="text" id="taskTitle" required placeholder="e.g. Design the hero section" />
       </label>
       <div class="form-row">
-        <label>From <input type="date" id="fromDate" required></label>
-        <label>To <input type="date" id="toDate" required></label>
+        <label>Priority
+          <select id="taskPriority"><option value="low">Low</option><option value="medium" selected>Medium</option><option value="high">High</option></select>
+        </label>
+        <label>Assignee
+          <select id="taskAssignee"><option>RS</option><option>AK</option><option>MP</option><option>Unassigned</option></select>
+        </label>
       </div>
-      <label>Reason
-        <textarea id="reason" rows="3" placeholder="Briefly describe the reason for leave…" required></textarea>
-      </label>
-      <button type="submit" class="submit-btn">Submit request</button>
+      <div class="form-row">
+        <label>Due date <input type="date" id="taskDue" /></label>
+        <label>Column
+          <select id="taskStatus"><option value="todo">To do</option><option value="progress">In progress</option><option value="review">Review</option><option value="done">Done</option></select>
+        </label>
+      </div>
+      <button type="submit" class="submit-btn">Add task</button>
     </form>
   </div>
 </div>
 
+<canvas id="confettiCanvas"></canvas>
 <div class="toast" id="toast"></div>
 
 <script src="script.js"></script>
