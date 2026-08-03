@@ -1,252 +1,227 @@
-const STORAGE_KEY = 'voxel-responses-v1';
+const STORAGE_KEY = 'leavo-requests-v1';
+const BALANCE_TOTALS = { Casual: 12, Sick: 10, Earned: 15 };
 
-const QUESTIONS = [
-  {
-    id: 'interest', type: 'single', title: 'Which project type interests you most?',
-    options: ['Web apps', 'Mobile design', 'Data dashboards', 'E-commerce']
-  },
-  {
-    id: 'features', type: 'multi', title: 'Which features matter most to you? (pick any)',
-    options: ['Smooth animations', 'Fast load times', 'Accessibility', 'Dark mode']
-  },
-  {
-    id: 'rating', type: 'rating', title: 'How would you rate the ease of use of these demos?'
-  },
-  {
-    id: 'source', type: 'single', title: 'How did you find this project series?',
-    options: ['GitHub', 'Portfolio site', 'A friend', 'Other']
-  },
-  {
-    id: 'feedback', type: 'text', title: 'Any feedback or feature requests?'
-  }
-];
+let requests = load();
+let statusFilter = 'all';
+let calDate = new Date();
 
-let responses = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
-let current = {};
-let step = 0;
+const balanceGrid = document.getElementById('balanceGrid');
+const requestsBody = document.getElementById('requestsBody');
+const emptyMsg = document.getElementById('emptyMsg');
+const calendarGrid = document.getElementById('calendarGrid');
+const calMonthLabel = document.getElementById('calMonthLabel');
+const toast = document.getElementById('toast');
 
-const introCard = document.getElementById('introCard');
-const surveyCard = document.getElementById('surveyCard');
-const doneCard = document.getElementById('doneCard');
-const resultsCard = document.getElementById('resultsCard');
-const questionWrap = document.getElementById('questionWrap');
-const progressFill = document.getElementById('progressFill');
-const stepNum = document.getElementById('stepNum');
-const nextBtn = document.getElementById('nextBtn');
-const backBtn = document.getElementById('backBtn');
+function uid() { return Math.random().toString(36).slice(2, 10); }
+function load() {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    return raw ? JSON.parse(raw) : seed();
+  } catch { return seed(); }
+}
+function save() { localStorage.setItem(STORAGE_KEY, JSON.stringify(requests)); }
 
-document.getElementById('stepTotal').textContent = QUESTIONS.length;
-
-function showOnly(card) {
-  [introCard, surveyCard, doneCard, resultsCard].forEach(c => c.hidden = c !== card);
+function seed() {
+  const y = new Date().getFullYear(), m = new Date().getMonth();
+  const pad = (n) => String(n).padStart(2, '0');
+  const d = (day) => `${y}-${pad(m + 1)}-${pad(day)}`;
+  return [
+    { id: uid(), type: 'Casual', from: d(4), to: d(5), reason: 'Family function', status: 'Approved' },
+    { id: uid(), type: 'Sick', from: d(12), to: d(12), reason: 'Fever', status: 'Approved' },
+    { id: uid(), type: 'Earned', from: d(21), to: d(23), reason: 'Personal travel', status: 'Pending' }
+  ];
 }
 
-document.getElementById('startBtn').addEventListener('click', () => {
-  current = {};
-  step = 0;
-  showOnly(surveyCard);
-  renderQuestion();
+function daysBetween(a, b) {
+  return Math.round((new Date(b) - new Date(a)) / 86400000) + 1;
+}
+
+function usedDays(type) {
+  return requests
+    .filter(r => r.type === type && r.status !== 'Rejected')
+    .reduce((sum, r) => sum + daysBetween(r.from, r.to), 0);
+}
+
+// Balance cards with animated ring charts
+function renderBalances() {
+  const circumference = 2 * Math.PI * 28; // r=28
+  balanceGrid.innerHTML = Object.entries(BALANCE_TOTALS).map(([type, total]) => {
+    const used = usedDays(type);
+    const remaining = Math.max(total - used, 0);
+    const pct = Math.min((used / total) * 100, 100);
+    const offset = circumference - (circumference * pct) / 100;
+    return `
+      <div class="balance-card">
+        <div class="balance-ring-wrap">
+          <svg class="balance-ring" viewBox="0 0 64 64">
+            <circle class="balance-ring-track" cx="32" cy="32" r="28"></circle>
+            <circle class="balance-ring-fill" cx="32" cy="32" r="28"
+              stroke-dasharray="${circumference}" stroke-dashoffset="${circumference}"
+              data-final-offset="${offset}"></circle>
+          </svg>
+          <div class="balance-ring-label">${remaining}</div>
+        </div>
+        <div>
+          <span class="type">${type} leave</span>
+          <div class="amount">${remaining}<span> / ${total} left</span></div>
+        </div>
+      </div>
+    `;
+  }).join('');
+
+  // Animate rings in after paint
+  requestAnimationFrame(() => {
+    document.querySelectorAll('.balance-ring-fill').forEach(ring => {
+      ring.style.strokeDashoffset = ring.dataset.finalOffset;
+    });
+  });
+}
+
+function renderHolidays() {
+  const strip = document.getElementById('holidayStrip');
+  const holidays = [
+    { date: 'Aug 15', name: 'Independence Day' },
+    { date: 'Aug 27', name: 'Ganesh Chaturthi' },
+    { date: 'Oct 2', name: 'Gandhi Jayanti' },
+    { date: 'Oct 21', name: 'Diwali' }
+  ];
+  strip.innerHTML = holidays.map(h => `
+    <div class="holiday-chip"><span class="h-date">${h.date}</span><span class="h-name">${h.name}</span></div>
+  `).join('');
+}
+
+// Apply modal
+const applyOverlay = document.getElementById('applyOverlay');
+document.getElementById('openApply').addEventListener('click', () => applyOverlay.classList.add('is-open'));
+document.getElementById('closeApply').addEventListener('click', () => applyOverlay.classList.remove('is-open'));
+applyOverlay.addEventListener('click', (e) => { if (e.target === applyOverlay) applyOverlay.classList.remove('is-open'); });
+
+document.getElementById('applyForm').addEventListener('submit', (e) => {
+  e.preventDefault();
+  const from = document.getElementById('fromDate').value;
+  const to = document.getElementById('toDate').value;
+  const reason = document.getElementById('reason').value.trim();
+  if (!from || !to || !reason) return;
+  if (new Date(to) < new Date(from)) { showToast('End date must be after start date'); return; }
+
+  requests.unshift({
+    id: uid(),
+    type: document.getElementById('leaveType').value,
+    from, to, reason,
+    status: 'Pending'
+  });
+  save();
+  e.target.reset();
+  applyOverlay.classList.remove('is-open');
+  renderAll();
+  showToast('Leave request submitted');
 });
 
-document.getElementById('viewResultsBtn').addEventListener('click', renderResults);
-document.getElementById('seeResultsBtn').addEventListener('click', renderResults);
-document.getElementById('backHomeBtn').addEventListener('click', () => showOnly(introCard));
-document.getElementById('restartBtn').addEventListener('click', () => {
-  current = {}; step = 0; showOnly(surveyCard); renderQuestion();
+// Status filters
+document.getElementById('statusFilters').addEventListener('click', (e) => {
+  const btn = e.target.closest('.chip');
+  if (!btn) return;
+  statusFilter = btn.dataset.status;
+  document.querySelectorAll('#statusFilters .chip').forEach(c => c.classList.remove('is-active'));
+  btn.classList.add('is-active');
+  renderTable();
 });
 
-function renderQuestion() {
-  const q = QUESTIONS[step];
-  progressFill.style.width = `${((step) / QUESTIONS.length) * 100}%`;
-  stepNum.textContent = step + 1;
-  backBtn.style.visibility = step === 0 ? 'hidden' : 'visible';
+function formatRange(from, to) {
+  const opts = { month: 'short', day: 'numeric' };
+  const f = new Date(from + 'T00:00:00').toLocaleDateString(undefined, opts);
+  const t = new Date(to + 'T00:00:00').toLocaleDateString(undefined, opts);
+  return from === to ? f : `${f} – ${t}`;
+}
 
-  document.getElementById('stepDots').innerHTML = QUESTIONS.map((_, i) =>
-    `<span class="step-dot ${i === step ? 'is-active' : i < step ? 'is-done' : ''}"></span>`
-  ).join('');
+function renderTable() {
+  const filtered = statusFilter === 'all' ? requests : requests.filter(r => r.status === statusFilter);
+  requestsBody.innerHTML = filtered.map(r => `
+    <tr data-id="${r.id}">
+      <td>${r.type}</td>
+      <td>${formatRange(r.from, r.to)}</td>
+      <td>${daysBetween(r.from, r.to)}</td>
+      <td>${r.reason}</td>
+      <td><span class="status-badge ${r.status}">${r.status}</span></td>
+      <td>${r.status === 'Pending' ? `<button class="row-delete" data-id="${r.id}">🗑</button>` : ''}</td>
+    </tr>
+  `).join('');
 
-  let html = `<h2 class="q-title">${q.title}</h2>`;
+  emptyMsg.classList.toggle('is-visible', filtered.length === 0);
 
-  if (q.type === 'single') {
-    html += `<div class="option-list">` + q.options.map(opt => `
-      <button type="button" class="option-btn ${current[q.id] === opt ? 'is-selected' : ''}" data-value="${opt}">
-        <span class="option-check">${current[q.id] === opt ? '✓' : ''}</span>${opt}
-      </button>`).join('') + `</div>`;
-  } else if (q.type === 'multi') {
-    const selected = current[q.id] || [];
-    html += `<div class="option-list">` + q.options.map(opt => `
-      <button type="button" class="option-btn ${selected.includes(opt) ? 'is-selected' : ''}" data-multi data-value="${opt}">
-        <span class="option-check">${selected.includes(opt) ? '✓' : ''}</span>${opt}
-      </button>`).join('') + `</div>`;
-  } else if (q.type === 'rating') {
-    html += `<div class="rating-row">` + [1,2,3,4,5].map(n => `
-      <button type="button" class="rating-btn ${current[q.id] === n ? 'is-selected' : ''}" data-value="${n}">${n}</button>
-    `).join('') + `</div>
-    <div style="display:flex; justify-content:space-between; margin-top:8px; font-size:0.75rem; color:var(--text-dim);">
-      <span>Needs work</span><span>Excellent</span>
-    </div>`;
-  } else if (q.type === 'text') {
-    html += `<textarea class="text-answer" id="textAnswer" placeholder="Type your thoughts…">${current[q.id] || ''}</textarea>`;
+  requestsBody.querySelectorAll('.row-delete').forEach(btn => {
+    btn.addEventListener('click', () => {
+      requests = requests.filter(r => r.id !== btn.dataset.id);
+      save();
+      renderAll();
+      showToast('Request withdrawn');
+    });
+  });
+}
+
+// Simulate approval flow: pending requests randomly resolve after a few seconds (feels "real-time")
+function simulateApprovals() {
+  const pending = requests.filter(r => r.status === 'Pending');
+  if (!pending.length) return;
+  const target = pending[Math.floor(Math.random() * pending.length)];
+  target.status = Math.random() > 0.25 ? 'Approved' : 'Rejected';
+  save();
+  renderAll();
+  showToast(`${target.type} leave (${formatRange(target.from, target.to)}) was ${target.status.toLowerCase()}`);
+}
+setInterval(simulateApprovals, 15000);
+
+// Calendar
+function renderCalendar() {
+  const year = calDate.getFullYear();
+  const month = calDate.getMonth();
+  calMonthLabel.textContent = calDate.toLocaleDateString(undefined, { month: 'long', year: 'numeric' });
+
+  const firstDay = new Date(year, month, 1).getDay();
+  const daysInMonth = new Date(year, month + 1, 0).getDate();
+  const pad = (n) => String(n).padStart(2, '0');
+
+  const dowNames = ['S','M','T','W','T','F','S'];
+  let html = dowNames.map(d => `<div class="cal-dow">${d}</div>`).join('');
+  for (let i = 0; i < firstDay; i++) html += `<div class="cal-day is-empty"></div>`;
+
+  for (let day = 1; day <= daysInMonth; day++) {
+    const dateStr = `${year}-${pad(month + 1)}-${pad(day)}`;
+    const dayReqs = requests.filter(r => dateStr >= r.from && dateStr <= r.to && r.status !== 'Rejected');
+    const marker = dayReqs.length
+      ? `<span class="dot ${dayReqs.some(r => r.status === 'Approved') ? 'approved' : 'pending'}"></span>`
+      : '';
+    html += `<div class="cal-day">${day}${marker}</div>`;
   }
-
-  questionWrap.innerHTML = html;
-  attachHandlers(q);
-  updateNextState(q);
+  calendarGrid.innerHTML = html;
 }
+document.getElementById('prevMonth').addEventListener('click', () => { calDate.setMonth(calDate.getMonth() - 1); renderCalendar(); });
+document.getElementById('nextMonth').addEventListener('click', () => { calDate.setMonth(calDate.getMonth() + 1); renderCalendar(); });
 
-function attachHandlers(q) {
-  if (q.type === 'single') {
-    questionWrap.querySelectorAll('.option-btn').forEach(btn => {
-      btn.addEventListener('click', () => {
-        current[q.id] = btn.dataset.value;
-        renderQuestion();
-      });
-    });
-  } else if (q.type === 'multi') {
-    questionWrap.querySelectorAll('.option-btn').forEach(btn => {
-      btn.addEventListener('click', () => {
-        const val = btn.dataset.value;
-        const list = current[q.id] || [];
-        current[q.id] = list.includes(val) ? list.filter(v => v !== val) : [...list, val];
-        renderQuestion();
-      });
-    });
-  } else if (q.type === 'rating') {
-    questionWrap.querySelectorAll('.rating-btn').forEach(btn => {
-      btn.addEventListener('click', () => {
-        current[q.id] = Number(btn.dataset.value);
-        renderQuestion();
-      });
-    });
-  } else if (q.type === 'text') {
-    const ta = document.getElementById('textAnswer');
-    ta.addEventListener('input', () => {
-      current[q.id] = ta.value;
-      updateNextState(q);
-    });
-  }
-}
-
-function isAnswered(q) {
-  const v = current[q.id];
-  if (q.type === 'multi') return Array.isArray(v) && v.length > 0;
-  if (q.type === 'text') return true; // optional
-  return v !== undefined && v !== '';
-}
-
-function updateNextState(q) {
-  nextBtn.disabled = !isAnswered(q);
-  nextBtn.textContent = step === QUESTIONS.length - 1 ? 'Submit ✓' : 'Next →';
-}
-
-backBtn.addEventListener('click', () => {
-  if (step === 0) return;
-  step--;
-  renderQuestion();
+const notifBtn = document.getElementById('notifBtn');
+const notifDropdown = document.getElementById('notifDropdown');
+const notifBadge = document.getElementById('notifBadge');
+notifBtn.addEventListener('click', (e) => {
+  e.stopPropagation();
+  notifDropdown.classList.toggle('is-open');
+  notifBadge.style.display = 'none';
+});
+document.addEventListener('click', (e) => {
+  if (!notifDropdown.contains(e.target) && e.target !== notifBtn) notifDropdown.classList.remove('is-open');
 });
 
-nextBtn.addEventListener('click', () => {
-  const q = QUESTIONS[step];
-  if (!isAnswered(q)) return;
-
-  if (step < QUESTIONS.length - 1) {
-    questionWrap.classList.add('leaving');
-    setTimeout(() => { step++; questionWrap.classList.remove('leaving'); renderQuestion(); }, 200);
-  } else {
-    submitSurvey();
-  }
-});
-
-function submitSurvey() {
-  responses.push({ ...current, ts: Date.now() });
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(responses));
-  progressFill.style.width = '100%';
-  setTimeout(() => { showOnly(doneCard); launchConfetti(); }, 200);
+function renderAll() {
+  renderBalances();
+  renderTable();
+  renderCalendar();
+  renderHolidays();
 }
 
-// Confetti celebration
-const confettiCanvas = document.getElementById('confettiCanvas');
-const cctx = confettiCanvas.getContext('2d');
-function resizeConfetti() { confettiCanvas.width = window.innerWidth; confettiCanvas.height = window.innerHeight; }
-window.addEventListener('resize', resizeConfetti);
-resizeConfetti();
-
-function launchConfetti() {
-  const colors = ['#6C5CE7', '#FF7EB3', '#2FAE60', '#FFD166'];
-  const particles = Array.from({ length: 90 }, () => ({
-    x: confettiCanvas.width / 2, y: confettiCanvas.height / 2.5,
-    vx: (Math.random() - 0.5) * 13, vy: Math.random() * -11 - 4,
-    size: Math.random() * 6 + 4, color: colors[Math.floor(Math.random() * colors.length)],
-    rotation: Math.random() * 360, life: 0
-  }));
-  function frame() {
-    cctx.clearRect(0, 0, confettiCanvas.width, confettiCanvas.height);
-    let alive = false;
-    particles.forEach(p => {
-      p.vy += 0.34; p.x += p.vx; p.y += p.vy; p.life++;
-      if (p.life < 120) {
-        alive = true;
-        cctx.save();
-        cctx.translate(p.x, p.y);
-        cctx.rotate((p.rotation + p.life * 4) * Math.PI / 180);
-        cctx.fillStyle = p.color;
-        cctx.fillRect(-p.size / 2, -p.size / 2, p.size, p.size);
-        cctx.restore();
-      }
-    });
-    if (alive) requestAnimationFrame(frame);
-    else cctx.clearRect(0, 0, confettiCanvas.width, confettiCanvas.height);
-  }
-  requestAnimationFrame(frame);
+function showToast(msg) {
+  toast.textContent = msg;
+  toast.classList.add('is-visible');
+  clearTimeout(showToast._t);
+  showToast._t = setTimeout(() => toast.classList.remove('is-visible'), 2600);
 }
 
-function renderResults() {
-  const body = document.getElementById('resultsBody');
-  document.getElementById('responseCount').textContent = `${responses.length} response${responses.length !== 1 ? 's' : ''}`;
-
-  if (!responses.length) {
-    body.innerHTML = `<p style="color:var(--text-dim)">No responses yet — be the first to take the survey!</p>`;
-  } else {
-    let html = '';
-    QUESTIONS.forEach(q => {
-      if (q.type === 'single' || q.type === 'multi') {
-        const counts = {};
-        q.options.forEach(o => counts[o] = 0);
-        responses.forEach(r => {
-          const val = r[q.id];
-          if (!val) return;
-          if (Array.isArray(val)) val.forEach(v => counts[v] = (counts[v] || 0) + 1);
-          else counts[val] = (counts[val] || 0) + 1;
-        });
-        const total = Object.values(counts).reduce((a, b) => a + b, 0) || 1;
-        html += `<div class="result-block"><h3>${q.title}</h3>` +
-          Object.entries(counts).map(([label, count]) => {
-            const pct = Math.round((count / total) * 100);
-            return `<div class="bar-row"><span class="bar-label">${label}</span><div class="bar-track"><div class="bar-fill" style="width:${pct}%"></div></div><span class="bar-pct">${pct}%</span></div>`;
-          }).join('') + `</div>`;
-      } else if (q.type === 'rating') {
-        const vals = responses.map(r => r[q.id]).filter(Boolean);
-        const avg = vals.length ? (vals.reduce((a, b) => a + b, 0) / vals.length).toFixed(1) : '—';
-        html += `<div class="result-block"><h3>${q.title}</h3><p style="font-family:var(--font-d); font-size:1.6rem; margin:0;">${avg} <span style="font-size:0.9rem; color:var(--text-dim); font-family:var(--font-b);">/ 5 average</span></p></div>`;
-      } else if (q.type === 'text') {
-        const texts = responses.map(r => r[q.id]).filter(t => t && t.trim());
-        html += `<div class="result-block"><h3>${q.title}</h3>` +
-          (texts.length ? texts.map(t => `<div class="result-text-item">${t}</div>`).join('') : `<p style="color:var(--text-dim); font-size:0.85rem;">No written feedback yet.</p>`) +
-          `</div>`;
-      }
-    });
-    body.innerHTML = html;
-
-    // Animate bar fills in after paint
-    requestAnimationFrame(() => {
-      body.querySelectorAll('.bar-fill').forEach(bar => {
-        const target = bar.style.width;
-        bar.style.width = '0%';
-        requestAnimationFrame(() => { bar.style.width = target; });
-      });
-    });
-  }
-  showOnly(resultsCard);
-}
-
-showOnly(introCard);
+renderAll();
