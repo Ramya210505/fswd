@@ -3,64 +3,117 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Voxel — Online Survey</title>
+<title>Leavo — Leave Management</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="stles.css" />
 </head>
 <body>
 
-<div class="bg-gradient"></div>
-
-<div class="app-wrap">
-
-  <!-- Intro -->
-  <section class="card intro-card" id="introCard">
-    <span class="eyebrow">Frontend Projects Feedback</span>
-    <h1>Tell us what you think</h1>
-    <p>5 quick questions, about a minute. Your answers help shape what gets built next.</p>
-    <button class="primary-btn" id="startBtn">Start survey →</button>
-    <button class="ghost-btn" id="viewResultsBtn">View results so far</button>
-  </section>
-
-  <!-- Survey -->
-  <section class="card survey-card" id="surveyCard" hidden>
-    <div class="step-dots" id="stepDots"></div>
-    <div class="progress-track">
-      <div class="progress-fill" id="progressFill"></div>
+<div class="shell">
+  <aside class="sidebar">
+    <div class="logo">🗓 Leavo</div>
+    <nav>
+      <a class="nav-item is-active">Dashboard</a>
+      <a class="nav-item">My requests</a>
+      <a class="nav-item">Team calendar</a>
+      <a class="nav-item">Settings</a>
+    </nav>
+    <div class="user-card">
+      <div class="avatar">RS</div>
+      <div><strong>Ramya S</strong><span>IT Department</span></div>
     </div>
-    <div class="step-label"><span id="stepNum">1</span> / <span id="stepTotal">5</span></div>
+  </aside>
 
-    <div class="question-wrap" id="questionWrap"></div>
+  <main class="content">
+    <header class="page-head">
+      <div>
+        <h1>Leave dashboard</h1>
+        <p>Track your balance, apply for time off, and see request status.</p>
+      </div>
+      <div class="head-actions">
+        <div class="notif-wrap">
+          <button class="notif-btn" id="notifBtn" aria-label="Notifications">🔔<span class="notif-badge" id="notifBadge">2</span></button>
+          <div class="notif-dropdown" id="notifDropdown">
+            <div class="notif-item"><strong>Casual leave</strong> approved <span>1h</span></div>
+            <div class="notif-item"><strong>Earned leave</strong> pending review <span>3h</span></div>
+          </div>
+        </div>
+        <button class="apply-btn" id="openApply">＋ Apply for leave</button>
+      </div>
+    </header>
 
-    <div class="nav-row">
-      <button class="ghost-btn" id="backBtn">← Back</button>
-      <button class="primary-btn" id="nextBtn">Next →</button>
-    </div>
-  </section>
+    <section class="balance-grid" id="balanceGrid"></section>
 
-  <!-- Thank you -->
-  <section class="card done-card" id="doneCard" hidden>
-    <div class="done-icon">🎉</div>
-    <h1>Thanks for the feedback!</h1>
-    <p>Your response has been recorded.</p>
-    <button class="primary-btn" id="seeResultsBtn">See aggregated results</button>
-    <button class="ghost-btn" id="restartBtn">Take survey again</button>
-  </section>
+    <section class="holiday-strip" id="holidayStrip"></section>
 
-  <!-- Results -->
-  <section class="card results-card" id="resultsCard" hidden>
-    <div class="results-head">
-      <h1>Results so far</h1>
-      <span id="responseCount" class="response-count">0 responses</span>
-    </div>
-    <div id="resultsBody"></div>
-    <button class="ghost-btn" id="backHomeBtn">← Back to start</button>
-  </section>
+    <section class="panels">
+      <div class="panel panel-requests">
+        <div class="panel-head">
+          <h2>Your requests</h2>
+          <div class="status-filters" id="statusFilters">
+            <button class="chip is-active" data-status="all">All</button>
+            <button class="chip" data-status="Pending">Pending</button>
+            <button class="chip" data-status="Approved">Approved</button>
+            <button class="chip" data-status="Rejected">Rejected</button>
+          </div>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr><th>Type</th><th>Dates</th><th>Days</th><th>Reason</th><th>Status</th><th></th></tr>
+            </thead>
+            <tbody id="requestsBody"></tbody>
+          </table>
+        </div>
+        <p class="empty-msg" id="emptyMsg">No leave requests here yet.</p>
+      </div>
 
+      <div class="panel panel-calendar">
+        <div class="panel-head">
+          <h2 id="calMonthLabel">This month</h2>
+          <div class="cal-nav">
+            <button id="prevMonth">‹</button>
+            <button id="nextMonth">›</button>
+          </div>
+        </div>
+        <div class="calendar-grid" id="calendarGrid"></div>
+        <div class="cal-legend">
+          <span><i class="dot approved"></i> Approved</span>
+          <span><i class="dot pending"></i> Pending</span>
+        </div>
+      </div>
+    </section>
+  </main>
 </div>
 
-<canvas id="confettiCanvas"></canvas>
+<!-- Apply modal -->
+<div class="modal-overlay" id="applyOverlay">
+  <div class="modal">
+    <div class="modal-head">
+      <h2>Apply for leave</h2>
+      <button class="close-btn" id="closeApply">✕</button>
+    </div>
+    <form id="applyForm" class="modal-body">
+      <label>Leave type
+        <select id="leaveType">
+          <option>Casual</option><option>Sick</option><option>Earned</option>
+        </select>
+      </label>
+      <div class="form-row">
+        <label>From <input type="date" id="fromDate" required></label>
+        <label>To <input type="date" id="toDate" required></label>
+      </div>
+      <label>Reason
+        <textarea id="reason" rows="3" placeholder="Briefly describe the reason for leave…" required></textarea>
+      </label>
+      <button type="submit" class="submit-btn">Submit request</button>
+    </form>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
 <script src="script.js"></script>
 </body>
 </html>
