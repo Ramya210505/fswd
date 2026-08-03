@@ -1,81 +1,119 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Leave Management System</title>
-    <link rel="stylesheet" href="stles.css">
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&family=Montserrat:wght@500&display=swap" rel="stylesheet">
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Leavo — Leave Management</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="stles.css" />
 </head>
 <body>
-    <div class="container">
-        <header>
-            <h1>Leave Management System</h1>
-        </header>
 
-        <!-- Leave Details Section -->
-        <div class="leave-details">
-            <h3>Your Leave Balance</h3>
-            <p><strong>Annual Leave:</strong> <span id="annual-leave">10</span> days</p>
-            <p><strong>Sick Leave:</strong> <span id="sick-leave">5</span> days</p>
-            <p><strong>Medical Leave:</strong> <span id="medical-leave">0</span> days (unlimited)</p>
-        </div>
-
-        <!-- Leave Application Form Section -->
-        <div class="leave-application-form">
-            <h3>Apply for Leave</h3>
-            <form id="leave-form">
-                <label for="leave-type">Leave Type:</label>
-                <select id="leave-type" required>
-                    <option value="annual">Annual Leave</option>
-                    <option value="sick">Sick Leave</option>
-                    <option value="medical">Medical Leave</option>
-                </select><br><br>
-
-                <label for="leave-start-date">Start Date:</label>
-                <input type="date" id="leave-start-date" required><br><br>
-
-                <label for="leave-end-date">End Date:</label>
-                <input type="date" id="leave-end-date" required><br><br>
-
-                <button type="submit">Apply for Leave</button>
-            </form>
-        </div>
-
-        <!-- Leave Policy Section -->
-        <div class="leave-policy">
-            <h3>Leave Policy</h3>
-            <p>Our leave policy includes a variety of leave options:</p>
-            <ul>
-                <li><strong>Annual Leave</strong>: 10 days per year, carry forward up to 5 days.</li>
-                <li><strong>Sick Leave</strong>: 5 days per year, non-carry forward.</li>
-                <li><strong>Medical Leave</strong>: Unlimited days for medical emergencies with proper documentation.</li>
-            </ul>
-        </div>
-
-        <!-- Leave Status Section -->
-        <div class="leave-status">
-            <h3>Your Leave Application History</h3>
-            <ul id="leave-status-list"></ul>
-        </div>
-
-        <!-- Confirmation Modal -->
-        <div id="confirmation-modal" class="modal">
-            <div class="modal-content">
-                <span id="close-modal" class="close-btn">&times;</span>
-                <h3>Leave Application Successful</h3>
-                <p id="confirmation-text"></p>
-                <p><strong>Start Date:</strong> <span id="modal-start-date"></span></p>
-                <p><strong>End Date:</strong> <span id="modal-end-date"></span></p>
-            </div>
-        </div>
-
-        <!-- Footer Section -->
-        <footer>
-            <p>&copy; 2024 Leave Management System. All rights reserved.</p>
-        </footer>
+<div class="shell">
+  <aside class="sidebar">
+    <div class="logo">🗓 Leavo</div>
+    <nav>
+      <a class="nav-item is-active">Dashboard</a>
+      <a class="nav-item">My requests</a>
+      <a class="nav-item">Team calendar</a>
+      <a class="nav-item">Settings</a>
+    </nav>
+    <div class="user-card">
+      <div class="avatar">RS</div>
+      <div><strong>Ramya S</strong><span>IT Department</span></div>
     </div>
+  </aside>
 
-    <script src="script.js"></script>
+  <main class="content">
+    <header class="page-head">
+      <div>
+        <h1>Leave dashboard</h1>
+        <p>Track your balance, apply for time off, and see request status.</p>
+      </div>
+      <div class="head-actions">
+        <div class="notif-wrap">
+          <button class="notif-btn" id="notifBtn" aria-label="Notifications">🔔<span class="notif-badge" id="notifBadge">2</span></button>
+          <div class="notif-dropdown" id="notifDropdown">
+            <div class="notif-item"><strong>Casual leave</strong> approved <span>1h</span></div>
+            <div class="notif-item"><strong>Earned leave</strong> pending review <span>3h</span></div>
+          </div>
+        </div>
+        <button class="apply-btn" id="openApply">＋ Apply for leave</button>
+      </div>
+    </header>
+
+    <section class="balance-grid" id="balanceGrid"></section>
+
+    <section class="holiday-strip" id="holidayStrip"></section>
+
+    <section class="panels">
+      <div class="panel panel-requests">
+        <div class="panel-head">
+          <h2>Your requests</h2>
+          <div class="status-filters" id="statusFilters">
+            <button class="chip is-active" data-status="all">All</button>
+            <button class="chip" data-status="Pending">Pending</button>
+            <button class="chip" data-status="Approved">Approved</button>
+            <button class="chip" data-status="Rejected">Rejected</button>
+          </div>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr><th>Type</th><th>Dates</th><th>Days</th><th>Reason</th><th>Status</th><th></th></tr>
+            </thead>
+            <tbody id="requestsBody"></tbody>
+          </table>
+        </div>
+        <p class="empty-msg" id="emptyMsg">No leave requests here yet.</p>
+      </div>
+
+      <div class="panel panel-calendar">
+        <div class="panel-head">
+          <h2 id="calMonthLabel">This month</h2>
+          <div class="cal-nav">
+            <button id="prevMonth">‹</button>
+            <button id="nextMonth">›</button>
+          </div>
+        </div>
+        <div class="calendar-grid" id="calendarGrid"></div>
+        <div class="cal-legend">
+          <span><i class="dot approved"></i> Approved</span>
+          <span><i class="dot pending"></i> Pending</span>
+        </div>
+      </div>
+    </section>
+  </main>
+</div>
+
+<!-- Apply modal -->
+<div class="modal-overlay" id="applyOverlay">
+  <div class="modal">
+    <div class="modal-head">
+      <h2>Apply for leave</h2>
+      <button class="close-btn" id="closeApply">✕</button>
+    </div>
+    <form id="applyForm" class="modal-body">
+      <label>Leave type
+        <select id="leaveType">
+          <option>Casual</option><option>Sick</option><option>Earned</option>
+        </select>
+      </label>
+      <div class="form-row">
+        <label>From <input type="date" id="fromDate" required></label>
+        <label>To <input type="date" id="toDate" required></label>
+      </div>
+      <label>Reason
+        <textarea id="reason" rows="3" placeholder="Briefly describe the reason for leave…" required></textarea>
+      </label>
+      <button type="submit" class="submit-btn">Submit request</button>
+    </form>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script src="script.js"></script>
 </body>
 </html>
