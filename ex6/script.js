@@ -1,15 +1,13 @@
-const STORAGE_KEY = 'leavo-requests-v1';
-const BALANCE_TOTALS = { Casual: 12, Sick: 10, Earned: 15 };
+const STORAGE_KEY = 'orbit-tasks-v1';
+let tasks = load();
+let dragId = null;
+let searchTerm = '';
 
-let requests = load();
-let statusFilter = 'all';
-let calDate = new Date();
+document.getElementById('searchInput').addEventListener('input', (e) => {
+  searchTerm = e.target.value.toLowerCase();
+  renderBoard();
+});
 
-const balanceGrid = document.getElementById('balanceGrid');
-const requestsBody = document.getElementById('requestsBody');
-const emptyMsg = document.getElementById('emptyMsg');
-const calendarGrid = document.getElementById('calendarGrid');
-const calMonthLabel = document.getElementById('calMonthLabel');
 const toast = document.getElementById('toast');
 
 function uid() { return Math.random().toString(36).slice(2, 10); }
@@ -19,209 +17,183 @@ function load() {
     return raw ? JSON.parse(raw) : seed();
   } catch { return seed(); }
 }
-function save() { localStorage.setItem(STORAGE_KEY, JSON.stringify(requests)); }
+function save() { localStorage.setItem(STORAGE_KEY, JSON.stringify(tasks)); }
 
 function seed() {
-  const y = new Date().getFullYear(), m = new Date().getMonth();
-  const pad = (n) => String(n).padStart(2, '0');
-  const d = (day) => `${y}-${pad(m + 1)}-${pad(day)}`;
+  const today = new Date();
+  const iso = (d) => new Date(today.getFullYear(), today.getMonth(), today.getDate() + d).toISOString().slice(0, 10);
   return [
-    { id: uid(), type: 'Casual', from: d(4), to: d(5), reason: 'Family function', status: 'Approved' },
-    { id: uid(), type: 'Sick', from: d(12), to: d(12), reason: 'Fever', status: 'Approved' },
-    { id: uid(), type: 'Earned', from: d(21), to: d(23), reason: 'Personal travel', status: 'Pending' }
+    { id: uid(), title: 'Design token system for site', priority: 'high', assignee: 'RS', due: iso(-1), status: 'todo' },
+    { id: uid(), title: 'Wireframe leave management flow', priority: 'medium', assignee: 'AK', due: iso(3), status: 'todo' },
+    { id: uid(), title: 'Build todo list drag-reorder', priority: 'high', assignee: 'RS', due: iso(1), status: 'progress' },
+    { id: uid(), title: 'API mock for food delivery cart', priority: 'medium', assignee: 'MP', due: iso(5), status: 'progress' },
+    { id: uid(), title: 'Accessibility pass on marketplace', priority: 'low', assignee: 'AK', due: iso(6), status: 'review' },
+    { id: uid(), title: 'Portfolio hero copywriting', priority: 'medium', assignee: 'RS', due: iso(-3), status: 'done' },
+    { id: uid(), title: 'Set up repo structure', priority: 'low', assignee: 'Unassigned', due: '', status: 'done' }
   ];
 }
 
-function daysBetween(a, b) {
-  return Math.round((new Date(b) - new Date(a)) / 86400000) + 1;
+function isOverdue(task) {
+  if (!task.due || task.status === 'done') return false;
+  return new Date(task.due) < new Date(new Date().toDateString());
+}
+function formatDue(dateStr) {
+  if (!dateStr) return null;
+  return new Date(dateStr + 'T00:00:00').toLocaleDateString(undefined, { month: 'short', day: 'numeric' });
 }
 
-function usedDays(type) {
-  return requests
-    .filter(r => r.type === type && r.status !== 'Rejected')
-    .reduce((sum, r) => sum + daysBetween(r.from, r.to), 0);
+function renderStats() {
+  const total = tasks.length;
+  const done = tasks.filter(t => t.status === 'done').length;
+  const overdue = tasks.filter(isOverdue).length;
+  const highPriority = tasks.filter(t => t.priority === 'high' && t.status !== 'done').length;
+  document.getElementById('statsRow').innerHTML = `
+    <div class="stat-card"><span>Total tasks</span><strong>${total}</strong></div>
+    <div class="stat-card"><span>Completed</span><strong>${done}</strong></div>
+    <div class="stat-card"><span>Overdue</span><strong style="color:var(--high)">${overdue}</strong></div>
+    <div class="stat-card"><span>High priority open</span><strong>${highPriority}</strong></div>
+  `;
 }
 
-// Balance cards with animated ring charts
-function renderBalances() {
-  const circumference = 2 * Math.PI * 28; // r=28
-  balanceGrid.innerHTML = Object.entries(BALANCE_TOTALS).map(([type, total]) => {
-    const used = usedDays(type);
-    const remaining = Math.max(total - used, 0);
-    const pct = Math.min((used / total) * 100, 100);
-    const offset = circumference - (circumference * pct) / 100;
-    return `
-      <div class="balance-card">
-        <div class="balance-ring-wrap">
-          <svg class="balance-ring" viewBox="0 0 64 64">
-            <circle class="balance-ring-track" cx="32" cy="32" r="28"></circle>
-            <circle class="balance-ring-fill" cx="32" cy="32" r="28"
-              stroke-dasharray="${circumference}" stroke-dashoffset="${circumference}"
-              data-final-offset="${offset}"></circle>
-          </svg>
-          <div class="balance-ring-label">${remaining}</div>
-        </div>
-        <div>
-          <span class="type">${type} leave</span>
-          <div class="amount">${remaining}<span> / ${total} left</span></div>
-        </div>
-      </div>
-    `;
-  }).join('');
+function renderBoard() {
+  const visible = searchTerm ? tasks.filter(t => t.title.toLowerCase().includes(searchTerm)) : tasks;
+  const columns = { todo: [], progress: [], review: [], done: [] };
+  visible.forEach(t => columns[t.status].push(t));
 
-  // Animate rings in after paint
-  requestAnimationFrame(() => {
-    document.querySelectorAll('.balance-ring-fill').forEach(ring => {
-      ring.style.strokeDashoffset = ring.dataset.finalOffset;
+  const overallPct = tasks.length ? Math.round((tasks.filter(t => t.status === 'done').length / tasks.length) * 100) : 0;
+  document.getElementById('overallPct').textContent = `${overallPct}%`;
+  document.getElementById('overallFill').style.width = `${overallPct}%`;
+
+  Object.entries(columns).forEach(([status, list]) => {
+    const el = document.getElementById(`col-${status}`);
+    el.innerHTML = list.map(t => {
+      const overdue = isOverdue(t);
+      const dueLabel = formatDue(t.due);
+      return `
+        <div class="task-card priority-${t.priority}" draggable="true" data-id="${t.id}">
+          <div class="task-title">${t.title}</div>
+          <div class="task-footer">
+            <div class="task-footer-row">
+              <span class="task-badge ${overdue ? 'due-overdue' : ''}">${dueLabel ? (overdue ? 'Overdue · ' : '') + dueLabel : t.priority}</span>
+            </div>
+            <div class="task-footer-row">
+              <div class="task-avatar" title="${t.assignee}">${t.assignee === 'Unassigned' ? '—' : t.assignee}${t.assignee !== 'Unassigned' ? '<span class="status-dot"></span>' : ''}</div>
+              <button class="task-delete" data-id="${t.id}">✕</button>
+            </div>
+          </div>
+        </div>
+      `;
+    }).join('');
+    document.getElementById(`count${status.charAt(0).toUpperCase() + status.slice(1)}`).textContent = list.length;
+  });
+
+  document.querySelectorAll('.task-card').forEach(card => {
+    card.addEventListener('dragstart', () => { dragId = card.dataset.id; card.classList.add('dragging'); });
+    card.addEventListener('dragend', () => card.classList.remove('dragging'));
+  });
+  document.querySelectorAll('.task-delete').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      tasks = tasks.filter(t => t.id !== btn.dataset.id);
+      save();
+      renderAll();
+      showToast('Task deleted');
     });
   });
+
+  renderStats();
 }
 
-function renderHolidays() {
-  const strip = document.getElementById('holidayStrip');
-  const holidays = [
-    { date: 'Aug 15', name: 'Independence Day' },
-    { date: 'Aug 27', name: 'Ganesh Chaturthi' },
-    { date: 'Oct 2', name: 'Gandhi Jayanti' },
-    { date: 'Oct 21', name: 'Diwali' }
-  ];
-  strip.innerHTML = holidays.map(h => `
-    <div class="holiday-chip"><span class="h-date">${h.date}</span><span class="h-name">${h.name}</span></div>
-  `).join('');
-}
+document.querySelectorAll('.column-body').forEach(col => {
+  col.addEventListener('dragover', (e) => { e.preventDefault(); col.classList.add('drag-over'); });
+  col.addEventListener('dragleave', () => col.classList.remove('drag-over'));
+  col.addEventListener('drop', () => {
+    col.classList.remove('drag-over');
+    if (!dragId) return;
+    const status = col.closest('.column').dataset.status;
+    const task = tasks.find(t => t.id === dragId);
+    if (task) {
+      const wasNotDone = task.status !== 'done';
+      task.status = status;
+      save();
+      renderAll();
+      if (status === 'done' && wasNotDone) {
+        showToast(`"${task.title}" marked done 🎉`);
+        launchConfetti();
+      }
+    }
+    dragId = null;
+  });
+});
 
-// Apply modal
-const applyOverlay = document.getElementById('applyOverlay');
-document.getElementById('openApply').addEventListener('click', () => applyOverlay.classList.add('is-open'));
-document.getElementById('closeApply').addEventListener('click', () => applyOverlay.classList.remove('is-open'));
-applyOverlay.addEventListener('click', (e) => { if (e.target === applyOverlay) applyOverlay.classList.remove('is-open'); });
+// Add task modal
+const addOverlay = document.getElementById('addOverlay');
+document.getElementById('openAdd').addEventListener('click', () => addOverlay.classList.add('is-open'));
+document.getElementById('closeAdd').addEventListener('click', () => addOverlay.classList.remove('is-open'));
+addOverlay.addEventListener('click', (e) => { if (e.target === addOverlay) addOverlay.classList.remove('is-open'); });
 
-document.getElementById('applyForm').addEventListener('submit', (e) => {
+document.getElementById('addForm').addEventListener('submit', (e) => {
   e.preventDefault();
-  const from = document.getElementById('fromDate').value;
-  const to = document.getElementById('toDate').value;
-  const reason = document.getElementById('reason').value.trim();
-  if (!from || !to || !reason) return;
-  if (new Date(to) < new Date(from)) { showToast('End date must be after start date'); return; }
-
-  requests.unshift({
+  const title = document.getElementById('taskTitle').value.trim();
+  if (!title) return;
+  tasks.push({
     id: uid(),
-    type: document.getElementById('leaveType').value,
-    from, to, reason,
-    status: 'Pending'
+    title,
+    priority: document.getElementById('taskPriority').value,
+    assignee: document.getElementById('taskAssignee').value,
+    due: document.getElementById('taskDue').value,
+    status: document.getElementById('taskStatus').value
   });
   save();
   e.target.reset();
-  applyOverlay.classList.remove('is-open');
+  addOverlay.classList.remove('is-open');
   renderAll();
-  showToast('Leave request submitted');
+  showToast('Task added');
 });
 
-// Status filters
-document.getElementById('statusFilters').addEventListener('click', (e) => {
-  const btn = e.target.closest('.chip');
-  if (!btn) return;
-  statusFilter = btn.dataset.status;
-  document.querySelectorAll('#statusFilters .chip').forEach(c => c.classList.remove('is-active'));
-  btn.classList.add('is-active');
-  renderTable();
-});
+function renderAll() { renderBoard(); }
 
-function formatRange(from, to) {
-  const opts = { month: 'short', day: 'numeric' };
-  const f = new Date(from + 'T00:00:00').toLocaleDateString(undefined, opts);
-  const t = new Date(to + 'T00:00:00').toLocaleDateString(undefined, opts);
-  return from === to ? f : `${f} – ${t}`;
-}
+// Confetti burst for completed tasks
+const confettiCanvas = document.getElementById('confettiCanvas');
+const cctx = confettiCanvas.getContext('2d');
+function resizeConfetti() { confettiCanvas.width = window.innerWidth; confettiCanvas.height = window.innerHeight; }
+window.addEventListener('resize', resizeConfetti);
+resizeConfetti();
 
-function renderTable() {
-  const filtered = statusFilter === 'all' ? requests : requests.filter(r => r.status === statusFilter);
-  requestsBody.innerHTML = filtered.map(r => `
-    <tr data-id="${r.id}">
-      <td>${r.type}</td>
-      <td>${formatRange(r.from, r.to)}</td>
-      <td>${daysBetween(r.from, r.to)}</td>
-      <td>${r.reason}</td>
-      <td><span class="status-badge ${r.status}">${r.status}</span></td>
-      <td>${r.status === 'Pending' ? `<button class="row-delete" data-id="${r.id}">🗑</button>` : ''}</td>
-    </tr>
-  `).join('');
-
-  emptyMsg.classList.toggle('is-visible', filtered.length === 0);
-
-  requestsBody.querySelectorAll('.row-delete').forEach(btn => {
-    btn.addEventListener('click', () => {
-      requests = requests.filter(r => r.id !== btn.dataset.id);
-      save();
-      renderAll();
-      showToast('Request withdrawn');
+function launchConfetti() {
+  const colors = ['#7C6FF0', '#45C4B0', '#4D8DFF', '#3ECF8E'];
+  const particles = Array.from({ length: 60 }, () => ({
+    x: confettiCanvas.width / 2, y: confettiCanvas.height / 3,
+    vx: (Math.random() - 0.5) * 10, vy: Math.random() * -9 - 3,
+    size: Math.random() * 5 + 3, color: colors[Math.floor(Math.random() * colors.length)],
+    rotation: Math.random() * 360, life: 0
+  }));
+  function frame() {
+    cctx.clearRect(0, 0, confettiCanvas.width, confettiCanvas.height);
+    let alive = false;
+    particles.forEach(p => {
+      p.vy += 0.32; p.x += p.vx; p.y += p.vy; p.life++;
+      if (p.life < 110) {
+        alive = true;
+        cctx.save();
+        cctx.translate(p.x, p.y);
+        cctx.rotate((p.rotation + p.life * 4) * Math.PI / 180);
+        cctx.fillStyle = p.color;
+        cctx.fillRect(-p.size / 2, -p.size / 2, p.size, p.size);
+        cctx.restore();
+      }
     });
-  });
-}
-
-// Simulate approval flow: pending requests randomly resolve after a few seconds (feels "real-time")
-function simulateApprovals() {
-  const pending = requests.filter(r => r.status === 'Pending');
-  if (!pending.length) return;
-  const target = pending[Math.floor(Math.random() * pending.length)];
-  target.status = Math.random() > 0.25 ? 'Approved' : 'Rejected';
-  save();
-  renderAll();
-  showToast(`${target.type} leave (${formatRange(target.from, target.to)}) was ${target.status.toLowerCase()}`);
-}
-setInterval(simulateApprovals, 15000);
-
-// Calendar
-function renderCalendar() {
-  const year = calDate.getFullYear();
-  const month = calDate.getMonth();
-  calMonthLabel.textContent = calDate.toLocaleDateString(undefined, { month: 'long', year: 'numeric' });
-
-  const firstDay = new Date(year, month, 1).getDay();
-  const daysInMonth = new Date(year, month + 1, 0).getDate();
-  const pad = (n) => String(n).padStart(2, '0');
-
-  const dowNames = ['S','M','T','W','T','F','S'];
-  let html = dowNames.map(d => `<div class="cal-dow">${d}</div>`).join('');
-  for (let i = 0; i < firstDay; i++) html += `<div class="cal-day is-empty"></div>`;
-
-  for (let day = 1; day <= daysInMonth; day++) {
-    const dateStr = `${year}-${pad(month + 1)}-${pad(day)}`;
-    const dayReqs = requests.filter(r => dateStr >= r.from && dateStr <= r.to && r.status !== 'Rejected');
-    const marker = dayReqs.length
-      ? `<span class="dot ${dayReqs.some(r => r.status === 'Approved') ? 'approved' : 'pending'}"></span>`
-      : '';
-    html += `<div class="cal-day">${day}${marker}</div>`;
+    if (alive) requestAnimationFrame(frame);
+    else cctx.clearRect(0, 0, confettiCanvas.width, confettiCanvas.height);
   }
-  calendarGrid.innerHTML = html;
-}
-document.getElementById('prevMonth').addEventListener('click', () => { calDate.setMonth(calDate.getMonth() - 1); renderCalendar(); });
-document.getElementById('nextMonth').addEventListener('click', () => { calDate.setMonth(calDate.getMonth() + 1); renderCalendar(); });
-
-const notifBtn = document.getElementById('notifBtn');
-const notifDropdown = document.getElementById('notifDropdown');
-const notifBadge = document.getElementById('notifBadge');
-notifBtn.addEventListener('click', (e) => {
-  e.stopPropagation();
-  notifDropdown.classList.toggle('is-open');
-  notifBadge.style.display = 'none';
-});
-document.addEventListener('click', (e) => {
-  if (!notifDropdown.contains(e.target) && e.target !== notifBtn) notifDropdown.classList.remove('is-open');
-});
-
-function renderAll() {
-  renderBalances();
-  renderTable();
-  renderCalendar();
-  renderHolidays();
+  requestAnimationFrame(frame);
 }
 
 function showToast(msg) {
   toast.textContent = msg;
   toast.classList.add('is-visible');
   clearTimeout(showToast._t);
-  showToast._t = setTimeout(() => toast.classList.remove('is-visible'), 2600);
+  showToast._t = setTimeout(() => toast.classList.remove('is-visible'), 2200);
 }
 
 renderAll();
