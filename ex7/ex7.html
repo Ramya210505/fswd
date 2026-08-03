@@ -1,23 +1,106 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Project Management Dashboard</title>
-  <link rel="stylesheet" href="style.css">
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Orbit — Project Dashboard</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <div class="container">
-    <h1>Project Management Dashboard</h1>
 
-    <div class="task-input">
-      <input type="text" id="task-input" placeholder="Add a new task" />
-      <button onclick="addTask()">Add Task</button>
+<div class="shell">
+  <aside class="sidebar">
+    <div class="logo">🪐 Orbit</div>
+    <nav>
+      <a class="nav-item is-active">Board</a>
+      <a class="nav-item">Backlog</a>
+      <a class="nav-item">Reports</a>
+      <a class="nav-item">Team</a>
+    </nav>
+    <div class="project-switch">
+      <span class="label">Project</span>
+      <strong>Portfolio Site Revamp</strong>
+    </div>
+  </aside>
+
+  <main class="content">
+    <header class="page-head">
+      <div>
+        <h1>Board</h1>
+        <p>Drag cards between columns as work moves.</p>
+      </div>
+      <div class="head-actions">
+        <div class="search-box">
+          <span>⌕</span>
+          <input type="text" id="searchInput" placeholder="Search tasks…" />
+        </div>
+        <button class="add-btn" id="openAdd">＋ New task</button>
+      </div>
+    </header>
+
+    <section class="stats-row" id="statsRow"></section>
+
+    <div class="overall-progress">
+      <div class="overall-progress-head"><span>Overall completion</span><strong id="overallPct">0%</strong></div>
+      <div class="overall-track"><div class="overall-fill" id="overallFill"></div></div>
     </div>
 
-    <ul id="task-list"></ul>
-  </div>
+    <section class="board" id="board">
+      <div class="column" data-status="todo">
+        <div class="column-head"><span class="dot todo"></span>To do <span class="count" id="countTodo">0</span></div>
+        <div class="column-body" id="col-todo"></div>
+      </div>
+      <div class="column" data-status="progress">
+        <div class="column-head"><span class="dot progress"></span>In progress <span class="count" id="countProgress">0</span></div>
+        <div class="column-body" id="col-progress"></div>
+      </div>
+      <div class="column" data-status="review">
+        <div class="column-head"><span class="dot review"></span>Review <span class="count" id="countReview">0</span></div>
+        <div class="column-body" id="col-review"></div>
+      </div>
+      <div class="column" data-status="done">
+        <div class="column-head"><span class="dot done"></span>Done <span class="count" id="countDone">0</span></div>
+        <div class="column-body" id="col-done"></div>
+      </div>
+    </section>
+  </main>
+</div>
 
-  <script src="script.js"></script>
+<!-- Add task modal -->
+<div class="modal-overlay" id="addOverlay">
+  <div class="modal">
+    <div class="modal-head">
+      <h2>New task</h2>
+      <button class="close-btn" id="closeAdd">✕</button>
+    </div>
+    <form id="addForm" class="modal-body">
+      <label>Title
+        <input type="text" id="taskTitle" required placeholder="e.g. Design the hero section" />
+      </label>
+      <div class="form-row">
+        <label>Priority
+          <select id="taskPriority"><option value="low">Low</option><option value="medium" selected>Medium</option><option value="high">High</option></select>
+        </label>
+        <label>Assignee
+          <select id="taskAssignee"><option>RS</option><option>AK</option><option>MP</option><option>Unassigned</option></select>
+        </label>
+      </div>
+      <div class="form-row">
+        <label>Due date <input type="date" id="taskDue" /></label>
+        <label>Column
+          <select id="taskStatus"><option value="todo">To do</option><option value="progress">In progress</option><option value="review">Review</option><option value="done">Done</option></select>
+        </label>
+      </div>
+      <button type="submit" class="submit-btn">Add task</button>
+    </form>
+  </div>
+</div>
+
+<canvas id="confettiCanvas"></canvas>
+<div class="toast" id="toast"></div>
+
+<script src="script.js"></script>
 </body>
 </html>
