@@ -1,409 +1,995 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="dark">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Microblogging App</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <title>Echo | Microblogging</title>
-    <link rel="stylesheet" href="miblo.css">
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Inter', sans-serif;
-        }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pulse — Microblogging</title>
+<meta name="description" content="Pulse is a modern microblogging platform. Share your thoughts in real-time.">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<style>
+:root {
+  --bg: #0a0a0f;
+  --bg2: #111118;
+  --bg3: #1a1a24;
+  --card: #16161f;
+  --card2: #1e1e2a;
+  --border: #2a2a38;
+  --text: #f0f0f5;
+  --text2: #a0a0b8;
+  --text3: #6060788;
+  --accent: #7c3aed;
+  --accent2: #a855f7;
+  --accent3: #c084fc;
+  --pink: #ec4899;
+  --blue: #3b82f6;
+  --green: #10b981;
+  --orange: #f59e0b;
+  --red: #ef4444;
+  --glow: rgba(124,58,237,0.3);
+  --shadow: 0 8px 32px rgba(0,0,0,0.4);
+  --radius: 16px;
+  --radius2: 12px;
+  --radius3: 8px;
+  --transition: all 0.3s cubic-bezier(0.4,0,0.2,1);
+}
+[data-theme="light"] {
+  --bg: #f8f8ff;
+  --bg2: #ffffff;
+  --bg3: #f0f0f8;
+  --card: #ffffff;
+  --card2: #f5f5fd;
+  --border: #e2e2f0;
+  --text: #0a0a1a;
+  --text2: #5a5a78;
+  --glow: rgba(124,58,237,0.15);
+  --shadow: 0 8px 32px rgba(0,0,0,0.08);
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden;}
+
+/* Animated background */
+body::before{
+  content:'';position:fixed;top:0;left:0;right:0;bottom:0;
+  background:radial-gradient(ellipse at 20% 50%,rgba(124,58,237,0.05) 0%,transparent 50%),
+             radial-gradient(ellipse at 80% 20%,rgba(236,72,153,0.05) 0%,transparent 50%);
+  pointer-events:none;z-index:0;
+}
+
+/* Layout */
+.app-container{display:grid;grid-template-columns:280px 1fr 320px;min-height:100vh;max-width:1400px;margin:0 auto;position:relative;z-index:1;}
+
+/* Sidebar */
+.sidebar{
+  padding:24px 20px;position:sticky;top:0;height:100vh;overflow-y:auto;
+  border-right:1px solid var(--border);display:flex;flex-direction:column;gap:8px;
+}
+.sidebar::-webkit-scrollbar{display:none;}
+.logo{
+  display:flex;align-items:center;gap:12px;padding:8px 12px;margin-bottom:16px;
+  font-size:24px;font-weight:800;
+}
+.logo-icon{
+  width:42px;height:42px;border-radius:12px;
+  background:linear-gradient(135deg,var(--accent),var(--pink));
+  display:flex;align-items:center;justify-content:center;
+  font-size:20px;box-shadow:0 4px 16px var(--glow);
+}
+.logo-text{background:linear-gradient(135deg,var(--accent3),var(--pink));-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
+
+.nav-item{
+  display:flex;align-items:center;gap:14px;padding:13px 16px;border-radius:var(--radius2);
+  cursor:pointer;transition:var(--transition);font-size:15px;font-weight:500;
+  color:var(--text2);position:relative;text-decoration:none;
+}
+.nav-item:hover{background:var(--card2);color:var(--text);transform:translateX(4px);}
+.nav-item.active{background:linear-gradient(135deg,rgba(124,58,237,0.2),rgba(168,85,247,0.1));color:var(--text);border:1px solid rgba(124,58,237,0.3);}
+.nav-item .icon{width:22px;text-align:center;font-size:18px;}
+.nav-badge{
+  margin-left:auto;background:var(--accent);color:#fff;
+  font-size:11px;font-weight:700;padding:2px 7px;border-radius:100px;
+  animation:pulse-badge 2s infinite;
+}
+@keyframes pulse-badge{0%,100%{box-shadow:0 0 0 0 rgba(124,58,237,0.4);}50%{box-shadow:0 0 0 6px rgba(124,58,237,0);}}
+
+.post-btn{
+  margin-top:8px;padding:14px;border:none;border-radius:var(--radius);
+  background:linear-gradient(135deg,var(--accent),var(--accent2));
+  color:#fff;font-size:15px;font-weight:700;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;gap:8px;
+  transition:var(--transition);box-shadow:0 4px 20px var(--glow);
+}
+.post-btn:hover{transform:translateY(-2px);box-shadow:0 8px 28px var(--glow);}
+.post-btn:active{transform:translateY(0);}
+
+.sidebar-user{
+  margin-top:auto;display:flex;align-items:center;gap:12px;
+  padding:14px 16px;border-radius:var(--radius2);background:var(--card);
+  border:1px solid var(--border);cursor:pointer;transition:var(--transition);
+}
+.sidebar-user:hover{background:var(--card2);}
+.sidebar-avatar{width:40px;height:40px;border-radius:50%;object-fit:cover;border:2px solid var(--accent);}
+.sidebar-user-info{flex:1;}
+.sidebar-user-name{font-weight:600;font-size:14px;}
+.sidebar-user-handle{color:var(--text2);font-size:12px;}
+
+/* Stories */
+.stories-row{
+  display:flex;gap:12px;padding:20px 0 16px;overflow-x:auto;
+  scrollbar-width:none;border-bottom:1px solid var(--border);margin-bottom:4px;
+}
+.stories-row::-webkit-scrollbar{display:none;}
+.story-item{display:flex;flex-direction:column;align-items:center;gap:6px;cursor:pointer;flex-shrink:0;}
+.story-ring{
+  width:60px;height:60px;border-radius:50%;
+  background:linear-gradient(135deg,var(--accent),var(--pink),var(--orange));
+  padding:2.5px;transition:var(--transition);
+}
+.story-ring:hover{transform:scale(1.08);}
+.story-inner{
+  width:100%;height:100%;border-radius:50%;overflow:hidden;
+  border:2.5px solid var(--bg);
+}
+.story-inner img{width:100%;height:100%;object-fit:cover;}
+.story-name{font-size:11px;color:var(--text2);text-align:center;max-width:60px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.story-add .story-ring{background:var(--card2);border:2px dashed var(--border);}
+.story-add-icon{width:100%;height:100%;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:22px;color:var(--accent);}
+
+/* Composer */
+.composer{
+  padding:20px;background:var(--card);border-radius:var(--radius);
+  margin:16px 0;border:1px solid var(--border);transition:var(--transition);
+}
+.composer:focus-within{border-color:var(--accent);box-shadow:0 0 0 3px rgba(124,58,237,0.15);}
+.composer-top{display:flex;gap:14px;align-items:flex-start;}
+.composer-avatar{width:44px;height:44px;border-radius:50%;object-fit:cover;flex-shrink:0;border:2px solid var(--accent);}
+.composer-textarea{
+  flex:1;background:transparent;border:none;outline:none;
+  font-family:'Inter',sans-serif;font-size:16px;color:var(--text);
+  resize:none;min-height:60px;max-height:200px;line-height:1.6;
+}
+.composer-textarea::placeholder{color:var(--text2);}
+.composer-actions{
+  display:flex;align-items:center;gap:8px;padding-top:14px;
+  border-top:1px solid var(--border);margin-top:14px;
+}
+.composer-action-btn{
+  width:36px;height:36px;border:none;background:transparent;
+  color:var(--accent3);cursor:pointer;border-radius:var(--radius3);
+  font-size:17px;transition:var(--transition);display:flex;align-items:center;justify-content:center;
+}
+.composer-action-btn:hover{background:rgba(124,58,237,0.1);color:var(--accent2);transform:scale(1.1);}
+.char-count{margin-left:auto;font-size:13px;color:var(--text2);}
+.char-count.warn{color:var(--orange);}
+.char-count.danger{color:var(--red);}
+.submit-post-btn{
+  padding:9px 22px;border:none;border-radius:100px;
+  background:linear-gradient(135deg,var(--accent),var(--accent2));
+  color:#fff;font-weight:700;font-size:14px;cursor:pointer;
+  transition:var(--transition);
+}
+.submit-post-btn:hover{transform:scale(1.05);box-shadow:0 4px 16px var(--glow);}
+.submit-post-btn:disabled{opacity:0.4;cursor:not-allowed;transform:none;}
+
+/* Feed */
+.feed{padding:0 24px;overflow-y:auto;}
+.feed::-webkit-scrollbar{width:4px;}
+.feed::-webkit-scrollbar-track{background:transparent;}
+.feed::-webkit-scrollbar-thumb{background:var(--border);border-radius:4px;}
+
+.feed-tabs{
+  display:flex;gap:0;border-bottom:1px solid var(--border);
+  position:sticky;top:0;background:var(--bg);z-index:10;
+  backdrop-filter:blur(20px);
+}
+.feed-tab{
+  flex:1;padding:16px;text-align:center;cursor:pointer;
+  font-weight:600;font-size:14px;color:var(--text2);
+  border-bottom:2px solid transparent;transition:var(--transition);
+}
+.feed-tab:hover{color:var(--text);background:rgba(124,58,237,0.05);}
+.feed-tab.active{color:var(--accent2);border-bottom-color:var(--accent2);}
+
+/* Post Card */
+.post-card{
+  border-bottom:1px solid var(--border);padding:18px 0;
+  transition:var(--transition);animation:slideIn 0.4s ease-out;
+}
+.post-card:hover{background:rgba(124,58,237,0.02);}
+@keyframes slideIn{from{opacity:0;transform:translateY(-10px);}to{opacity:1;transform:translateY(0);}}
+
+.post-header{display:flex;gap:12px;align-items:flex-start;}
+.post-avatar{
+  width:46px;height:46px;border-radius:50%;object-fit:cover;flex-shrink:0;
+  cursor:pointer;transition:var(--transition);border:2px solid transparent;
+}
+.post-avatar:hover{border-color:var(--accent);transform:scale(1.05);}
+.post-meta{flex:1;}
+.post-user{display:flex;align-items:center;gap:8px;flex-wrap:wrap;}
+.post-name{font-weight:700;font-size:15px;cursor:pointer;}
+.post-name:hover{color:var(--accent2);}
+.post-handle{color:var(--text2);font-size:13px;}
+.post-time{color:var(--text2);font-size:12px;margin-left:auto;}
+.verified{color:var(--blue);font-size:14px;}
+.post-more{color:var(--text2);cursor:pointer;padding:4px 8px;border-radius:8px;transition:var(--transition);}
+.post-more:hover{background:var(--card2);color:var(--text);}
+
+.post-content{margin:10px 0 0 58px;font-size:15px;line-height:1.65;word-break:break-word;}
+.post-hashtag{color:var(--accent2);cursor:pointer;}
+.post-hashtag:hover{text-decoration:underline;}
+.post-mention{color:var(--blue);cursor:pointer;}
+
+.post-image{
+  margin:12px 0 0 58px;border-radius:var(--radius2);overflow:hidden;
+  max-height:320px;cursor:pointer;
+}
+.post-image img{width:100%;height:100%;object-fit:cover;transition:var(--transition);}
+.post-image:hover img{transform:scale(1.02);}
+
+.post-actions{
+  display:flex;gap:4px;margin-top:14px;margin-left:50px;
+}
+.action-btn{
+  display:flex;align-items:center;gap:6px;padding:7px 12px;
+  border:none;background:transparent;color:var(--text2);
+  cursor:pointer;border-radius:100px;font-size:13px;font-weight:500;
+  transition:var(--transition);
+}
+.action-btn:hover.like{background:rgba(236,72,153,0.1);color:var(--pink);}
+.action-btn:hover.comment{background:rgba(59,130,246,0.1);color:var(--blue);}
+.action-btn:hover.repost{background:rgba(16,185,129,0.1);color:var(--green);}
+.action-btn:hover.share{background:rgba(245,158,11,0.1);color:var(--orange);}
+.action-btn.liked{color:var(--pink);}
+.action-btn.liked i{animation:heartPop 0.4s cubic-bezier(0.175,0.885,0.32,1.275);}
+@keyframes heartPop{0%{transform:scale(1);}50%{transform:scale(1.4);}100%{transform:scale(1);}}
+.action-btn.reposted{color:var(--green);}
+
+/* Right Panel */
+.right-panel{
+  padding:24px 20px;position:sticky;top:0;height:100vh;
+  overflow-y:auto;border-left:1px solid var(--border);
+}
+.right-panel::-webkit-scrollbar{display:none;}
+
+.search-bar{
+  position:relative;margin-bottom:20px;
+}
+.search-bar input{
+  width:100%;padding:12px 16px 12px 42px;
+  background:var(--card);border:1px solid var(--border);
+  border-radius:100px;color:var(--text);font-family:'Inter',sans-serif;font-size:14px;
+  outline:none;transition:var(--transition);
+}
+.search-bar input:focus{border-color:var(--accent);background:var(--card2);box-shadow:0 0 0 3px rgba(124,58,237,0.1);}
+.search-bar input::placeholder{color:var(--text2);}
+.search-bar i{position:absolute;left:15px;top:50%;transform:translateY(-50%);color:var(--text2);}
+.search-results{
+  position:absolute;top:calc(100% + 6px);left:0;right:0;
+  background:var(--card);border:1px solid var(--border);border-radius:var(--radius2);
+  overflow:hidden;box-shadow:var(--shadow);z-index:100;display:none;
+}
+.search-result-item{
+  padding:12px 16px;cursor:pointer;display:flex;align-items:center;gap:10px;
+  transition:var(--transition);
+}
+.search-result-item:hover{background:var(--card2);}
+
+.widget{
+  background:var(--card);border:1px solid var(--border);
+  border-radius:var(--radius);padding:18px;margin-bottom:16px;
+  transition:var(--transition);
+}
+.widget:hover{border-color:rgba(124,58,237,0.3);}
+.widget-title{font-size:18px;font-weight:700;margin-bottom:16px;}
+
+/* Trending */
+.trend-item{
+  padding:12px 0;border-bottom:1px solid var(--border);cursor:pointer;
+  transition:var(--transition);
+}
+.trend-item:last-child{border:none;padding-bottom:0;}
+.trend-item:hover{padding-left:6px;}
+.trend-meta{font-size:11px;color:var(--text2);margin-bottom:3px;}
+.trend-tag{font-size:15px;font-weight:700;}
+.trend-count{font-size:12px;color:var(--text2);margin-top:2px;}
+
+/* Who to follow */
+.follow-item{
+  display:flex;align-items:center;gap:10px;padding:10px 0;
+  border-bottom:1px solid var(--border);
+}
+.follow-item:last-child{border:none;}
+.follow-avatar{width:40px;height:40px;border-radius:50%;object-fit:cover;}
+.follow-info{flex:1;}
+.follow-name{font-weight:600;font-size:14px;display:flex;align-items:center;gap:4px;}
+.follow-handle{font-size:12px;color:var(--text2);}
+.follow-btn{
+  padding:6px 16px;border-radius:100px;border:1px solid var(--accent);
+  color:var(--accent2);background:transparent;font-weight:600;font-size:13px;
+  cursor:pointer;transition:var(--transition);white-space:nowrap;
+}
+.follow-btn:hover{background:var(--accent);color:#fff;box-shadow:0 4px 12px var(--glow);}
+.follow-btn.following{background:var(--accent);color:#fff;border-color:var(--accent);}
+
+/* Notification toast */
+.toast-container{position:fixed;top:20px;right:20px;z-index:9999;display:flex;flex-direction:column;gap:10px;}
+.toast{
+  padding:14px 20px;background:var(--card);border:1px solid var(--border);
+  border-radius:var(--radius2);box-shadow:var(--shadow);
+  display:flex;align-items:center;gap:12px;min-width:280px;max-width:360px;
+  animation:toastIn 0.4s cubic-bezier(0.175,0.885,0.32,1.275);
+  border-left:3px solid var(--accent);
+}
+.toast.removing{animation:toastOut 0.3s ease-in forwards;}
+@keyframes toastIn{from{opacity:0;transform:translateX(100px);}to{opacity:1;transform:translateX(0);}}
+@keyframes toastOut{from{opacity:1;transform:translateX(0);}to{opacity:0;transform:translateX(100px);}}
+.toast-icon{font-size:18px;}
+.toast-msg{font-size:13px;font-weight:500;}
+
+/* Theme toggle */
+.theme-toggle{
+  position:fixed;bottom:24px;right:24px;z-index:999;
+  width:48px;height:48px;border-radius:50%;border:none;
+  background:linear-gradient(135deg,var(--accent),var(--pink));
+  color:#fff;font-size:18px;cursor:pointer;
+  box-shadow:0 4px 20px var(--glow);transition:var(--transition);
+  display:flex;align-items:center;justify-content:center;
+}
+.theme-toggle:hover{transform:scale(1.1) rotate(15deg);}
+
+/* Comment Modal */
+.modal-overlay{
+  position:fixed;inset:0;background:rgba(0,0,0,0.7);
+  backdrop-filter:blur(6px);z-index:1000;
+  display:flex;align-items:center;justify-content:center;
+  opacity:0;pointer-events:none;transition:var(--transition);
+}
+.modal-overlay.open{opacity:1;pointer-events:all;}
+.modal{
+  background:var(--card);border:1px solid var(--border);border-radius:var(--radius);
+  padding:24px;width:90%;max-width:560px;max-height:80vh;overflow-y:auto;
+  transform:scale(0.9);transition:var(--transition);
+}
+.modal-overlay.open .modal{transform:scale(1);}
+.modal-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;}
+.modal-close{background:transparent;border:none;color:var(--text2);font-size:20px;cursor:pointer;padding:4px;border-radius:8px;transition:var(--transition);}
+.modal-close:hover{background:var(--card2);color:var(--text);}
+.comment-item{display:flex;gap:12px;padding:14px 0;border-bottom:1px solid var(--border);}
+.comment-item:last-child{border:none;}
+.comment-body{flex:1;}
+.comment-author{font-weight:600;font-size:14px;}
+.comment-text{font-size:14px;color:var(--text2);margin-top:4px;line-height:1.5;}
+.comment-time{font-size:11px;color:var(--text2);margin-top:6px;}
+
+/* Live indicator */
+.live-dot{
+  width:8px;height:8px;border-radius:50%;background:var(--green);
+  display:inline-block;margin-right:6px;
+  box-shadow:0 0 6px var(--green);animation:livePulse 1.5s infinite;
+}
+@keyframes livePulse{0%,100%{opacity:1;transform:scale(1);}50%{opacity:0.6;transform:scale(1.2);}}
+
+/* Responsive */
+@media(max-width:1100px){
+  .app-container{grid-template-columns:80px 1fr 0;}
+  .right-panel{display:none;}
+  .nav-item span,.logo-text,.sidebar-user-info{display:none;}
+  .logo{justify-content:center;padding:8px;}
+  .sidebar{align-items:center;}
+  .post-btn span{display:none;}
+  .post-btn{width:48px;height:48px;border-radius:50%;padding:0;}
+}
+@media(max-width:700px){
+  .app-container{grid-template-columns:1fr;}
+  .sidebar{
+    position:fixed;bottom:0;left:0;right:0;top:auto;height:auto;
+    flex-direction:row;justify-content:space-around;padding:10px;
+    border-right:none;border-top:1px solid var(--border);z-index:100;
+    background:var(--bg);
+  }
+  .feed{padding:0 16px;}
+  .logo,.sidebar-user,.post-btn{display:none;}
+  .nav-item{flex-direction:column;gap:2px;padding:8px;font-size:10px;}
+  .nav-item span{display:block;font-size:10px;}
+  .nav-item .icon{font-size:20px;}
+  .stories-row{padding-left:16px;}
+}
+
+/* Loading skeleton */
+.skeleton{background:linear-gradient(90deg,var(--card) 25%,var(--card2) 50%,var(--card) 75%);background-size:200% 100%;animation:shimmer 1.5s infinite;border-radius:8px;}
+@keyframes shimmer{from{background-position:200% 0;}to{background-position:-200% 0;}}
+.skel-post{padding:18px 0;border-bottom:1px solid var(--border);}
+.skel-header{display:flex;gap:12px;align-items:center;}
+.skel-avatar{width:46px;height:46px;border-radius:50%;}
+.skel-lines{flex:1;display:flex;flex-direction:column;gap:8px;}
+.skel-line{height:12px;border-radius:6px;}
+.skel-body{margin-top:12px;margin-left:58px;display:flex;flex-direction:column;gap:8px;}
+</style>
 </head>
 <body>
-        body {
-            background-color: #f3f4f6;
-            color: #111827;
-        }
-    <div class="layout">
-        <!-- Sidebar Navigation -->
-        <nav class="sidebar">
-            <div class="logo">
-                <i class="fas fa-bullhorn logo-icon"></i> 
-                <span>Echo</span>
-            </div>
-            
-            <div class="nav-links">
-                <a href="#" class="nav-item active"><i class="fas fa-home"></i> <span>Home</span></a>
-                <a href="#" class="nav-item"><i class="fas fa-hashtag"></i> <span>Explore</span></a>
-                <a href="#" class="nav-item">
-                    <i class="far fa-bell"></i> 
-                    <span>Notifications</span>
-                    <div class="badge">3</div>
-                </a>
-                <a href="#" class="nav-item"><i class="far fa-envelope"></i> <span>Messages</span></a>
-                <a href="#" class="nav-item"><i class="far fa-user"></i> <span>Profile</span></a>
-            </div>
-        .container {
-            max-width: 600px;
-            margin: 0 auto;
-            background: #fff;
-            min-height: 100vh;
-            border-left: 1px solid #e5e7eb;
-            border-right: 1px solid #e5e7eb;
-        }
-            <button class="btn-primary btn-post-nav">Post</button>
-        /* Header */
-        header {
-            position: sticky;
-            top: 0;
-            background: rgba(255, 255, 255, 0.9);
-            backdrop-filter: blur(10px);
-            padding: 15px 20px;
-            border-bottom: 1px solid #e5e7eb;
-            z-index: 10;
-        }
-            <div class="user-profile">
-                <img src="https://ui-avatars.com/api/?name=Ramya+S&background=6366f1&color=fff" alt="User">
-                <div class="user-info">
-                    <strong>Ramya S</strong>
-                    <span>@ramya_s</span>
-                </div>
-                <i class="fas fa-ellipsis-h" style="margin-left: auto;"></i>
-            </div>
-        </nav>
-        header h1 {
-            font-size: 20px;
-            font-weight: 700;
-        }
-        <!-- Main Feed -->
-        <main class="feed-container">
-            <header class="feed-header">
-                <h2>Home</h2>
-                <div class="header-tabs">
-                    <div class="tab active">For you</div>
-                    <div class="tab">Following</div>
-                </div>
-            </header>
-        /* Compose Post */
-        .compose {
-            padding: 20px;
-            border-bottom: 1px solid #e5e7eb;
-            display: flex;
-            gap: 15px;
-        }
-        .avatar {
-            width: 48px;
-            height: 48px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, #3b82f6, #8b5cf6);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: #fff;
-            font-weight: bold;
-            font-size: 20px;
-            flex-shrink: 0;
-        }
-        .compose-area {
-            flex: 1;
-        }
-        .compose-area textarea {
-            width: 100%;
-            border: none;
-            resize: none;
-            font-size: 18px;
-            outline: none;
-            min-height: 60px;
-            padding-top: 12px;
-        }
-        .compose-actions {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-top: 15px;
-            padding-top: 15px;
-            border-top: 1px solid #f3f4f6;
-        }
-        .action-icons {
-            display: flex;
-            gap: 15px;
-            color: #3b82f6;
-            font-size: 18px;
-        }
-        
-        .action-icons i {
-            cursor: pointer;
-            padding: 8px;
-            border-radius: 50%;
-            transition: 0.2s;
-        }
-        
-        .action-icons i:hover {
-            background: #eff6ff;
-        }
-        .btn-post {
-            background: #3b82f6;
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 30px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: 0.2s;
-        }
-        .btn-post:hover {
-            background: #2563eb;
-        }
-        
-        .btn-post:disabled {
-            background: #93c5fd;
-            cursor: not-allowed;
-        }
-        /* Feed */
-        .feed {
-            display: flex;
-            flex-direction: column;
-        }
-        .post {
-            padding: 20px;
-            border-bottom: 1px solid #e5e7eb;
-            display: flex;
-            gap: 15px;
-            transition: 0.2s;
-            cursor: pointer;
-        }
-        
-        .post:hover {
-            background: #f9fafb;
-        }
-        .post-content {
-            flex: 1;
-        }
-        .post-header {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            margin-bottom: 5px;
-        }
-        .post-name {
-            font-weight: 700;
-            color: #111827;
-        }
-        .post-handle, .post-time {
-            color: #6b7280;
-            font-size: 14px;
-        }
-        .post-text {
-            font-size: 16px;
-            line-height: 1.5;
-            margin-bottom: 15px;
-            word-wrap: break-word;
-        }
-        .post-actions {
-            display: flex;
-            justify-content: space-between;
-            max-width: 400px;
-            color: #6b7280;
-        }
-        .post-action {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            transition: 0.2s;
-        }
-        
-        .post-action i {
-            padding: 8px;
-            border-radius: 50%;
-        }
-        .post-action.like:hover, .post-action.liked {
-            color: #ef4444;
-        }
-        
-        .post-action.like:hover i { background: #fef2f2; }
-        
-        .post-action.retweet:hover { color: #10b981; }
-        .post-action.retweet:hover i { background: #ecfdf5; }
-        
-        .post-action.reply:hover { color: #3b82f6; }
-        .post-action.reply:hover i { background: #eff6ff; }
-    </style>
-</head>
-<body>
-    <div class="container">
-        <header>
-            <h1>Home</h1>
-        </header>
-        <div class="compose">
-            <div class="avatar">R</div>
-            <div class="compose-area">
-                <textarea id="post-input" placeholder="What's happening?" oninput="checkInput()"></textarea>
-                <div class="compose-actions">
-                    <div class="action-icons">
-                        <i class="far fa-image"></i>
-                        <i class="fas fa-poll"></i>
-                        <i class="far fa-smile"></i>
-            <!-- Compose Post -->
-            <div class="compose-box">
-                <img src="https://ui-avatars.com/api/?name=Ramya+S&background=6366f1&color=fff" alt="User" class="avatar">
-                <div class="compose-content">
-                    <textarea id="postInput" placeholder="What's happening?"></textarea>
-                    
-                    <div class="compose-footer">
-                        <div class="compose-actions">
-                            <button class="action-btn"><i class="far fa-image"></i></button>
-                            <button class="action-btn"><i class="fas fa-poll-h"></i></button>
-                            <button class="action-btn"><i class="far fa-smile"></i></button>
-                            <button class="action-btn"><i class="far fa-calendar-alt"></i></button>
-                        </div>
-                        
-                        <div class="post-controls">
-                            <div class="char-count" id="charCount">0/280</div>
-                            <button class="btn-primary" id="submitPost" disabled>Post</button>
-                        </div>
-                    </div>
-                    <button class="btn-post" id="post-btn" onclick="addPost()" disabled>Post</button>
-                </div>
-            </div>
-        </div>
-        <div class="feed" id="feed">
-            <!-- Initial Dummy Post -->
-            <div class="post">
-                <div class="avatar" style="background: #10b981;">J</div>
-                <div class="post-content">
-                    <div class="post-header">
-                        <span class="post-name">John Doe</span>
-                        <span class="post-handle">@johndoe</span>
-                        <span class="post-time">· 2h</span>
-                    </div>
-                    <div class="post-text">
-                        Just setting up my microblogging platform. It's looking really clean and minimal! 🚀✨ #webdev
-                    </div>
-                    <div class="post-actions">
-                        <div class="post-action reply"><i class="far fa-comment"></i> 12</div>
-                        <div class="post-action retweet"><i class="fas fa-retweet"></i> 4</div>
-                        <div class="post-action like" onclick="toggleLike(this)"><i class="far fa-heart"></i> <span>48</span></div>
-                    </div>
-            <div class="live-indicator" id="liveIndicator">
-                <div class="spinner-small"></div>
-                <span>Checking for new posts...</span>
-            </div>
-            
-            <div class="typing-indicator" id="typingIndicator">
-                <img src="https://ui-avatars.com/api/?name=Tech+Bot&background=10b981&color=fff" alt="Bot" class="avatar-small">
-                <div class="typing-dots">
-                    <span class="dot"></span>
-                    <span class="dot"></span>
-                    <span class="dot"></span>
-                </div>
-                <span class="typing-text">TechGuru is typing...</span>
-            </div>
-        </div>
+<div class="app-container">
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <div class="logo">
+      <div class="logo-icon"><i class="fas fa-bolt"></i></div>
+      <span class="logo-text">Pulse</span>
     </div>
-    <script>
-        const postInput = document.getElementById('post-input');
-        const postBtn = document.getElementById('post-btn');
-        const feed = document.getElementById('feed');
-            <!-- Feed Stream -->
-            <div id="feedStream">
-                <!-- Posts injected via JS -->
-            </div>
-        </main>
-        function checkInput() {
-            if (postInput.value.trim().length > 0) {
-                postBtn.disabled = false;
-            } else {
-                postBtn.disabled = true;
-            }
-            
-            // Auto resize textarea
-            postInput.style.height = 'auto';
-            postInput.style.height = (postInput.scrollHeight) + 'px';
-        }
-        <!-- Right Sidebar (Trends) -->
-        <aside class="right-sidebar">
-            <div class="search-bar">
-                <i class="fas fa-search"></i>
-                <input type="text" placeholder="Search Echo">
-            </div>
-        function addPost() {
-            const content = postInput.value.trim();
-            if (!content) return;
-            <div class="trends-card">
-                <h3>Trending for you</h3>
-                
-                <div class="trend-item">
-                    <div class="trend-meta">Technology • Trending</div>
-                    <div class="trend-title">#WebDevelopment</div>
-                    <div class="trend-stats">125K posts</div>
-                </div>
-                
-                <div class="trend-item">
-                    <div class="trend-meta">Design • Trending</div>
-                    <div class="trend-title">#UIUX</div>
-                    <div class="trend-stats">85.2K posts</div>
-                </div>
-            const postHTML = `
-                <div class="post" style="animation: fadeIn 0.3s ease;">
-                    <div class="avatar">R</div>
-                    <div class="post-content">
-                        <div class="post-header">
-                            <span class="post-name">Ramya S</span>
-                            <span class="post-handle">@ramya_s</span>
-                            <span class="post-time">· Just now</span>
-                        </div>
-                        <div class="post-text">${escapeHTML(content)}</div>
-                        <div class="post-actions">
-                            <div class="post-action reply"><i class="far fa-comment"></i> 0</div>
-                            <div class="post-action retweet"><i class="fas fa-retweet"></i> 0</div>
-                            <div class="post-action like" onclick="toggleLike(this)"><i class="far fa-heart"></i> <span>0</span></div>
-                        </div>
-                    </div>
-                <div class="trend-item">
-                    <div class="trend-meta">AI • Trending</div>
-                    <div class="trend-title">Generative AI</div>
-                    <div class="trend-stats">250K posts</div>
-                </div>
-            `;
-            
-            // Insert at the top
-            feed.insertAdjacentHTML('afterbegin', postHTML);
-            
-            // Reset
-            postInput.value = '';
-            postInput.style.height = 'auto';
-            postBtn.disabled = true;
-        }
-            </div>
-        </aside>
+    <a class="nav-item active" onclick="setNav(this)" data-section="home">
+      <span class="icon"><i class="fas fa-home"></i></span>
+      <span>Home</span>
+    </a>
+    <a class="nav-item" onclick="setNav(this)" data-section="explore">
+      <span class="icon"><i class="fas fa-compass"></i></span>
+      <span>Explore</span>
+    </a>
+    <a class="nav-item" onclick="openNotifs()">
+      <span class="icon"><i class="fas fa-bell"></i></span>
+      <span>Notifications</span>
+      <span class="nav-badge" id="notif-badge">3</span>
+    </a>
+    <a class="nav-item" onclick="setNav(this)" data-section="messages">
+      <span class="icon"><i class="fas fa-envelope"></i></span>
+      <span>Messages</span>
+      <span class="nav-badge">12</span>
+    </a>
+    <a class="nav-item" onclick="setNav(this)" data-section="bookmarks">
+      <span class="icon"><i class="fas fa-bookmark"></i></span>
+      <span>Bookmarks</span>
+    </a>
+    <a class="nav-item" onclick="setNav(this)" data-section="profile">
+      <span class="icon"><i class="fas fa-user"></i></span>
+      <span>Profile</span>
+    </a>
+    <a class="nav-item" onclick="setNav(this)" data-section="settings">
+      <span class="icon"><i class="fas fa-cog"></i></span>
+      <span>Settings</span>
+    </a>
+    <button class="post-btn" onclick="document.getElementById('composer-area').scrollIntoView({behavior:'smooth'});document.getElementById('composer-text').focus()">
+      <i class="fas fa-plus"></i>
+      <span>Post</span>
+    </button>
+    <div class="sidebar-user" onclick="setNav(document.querySelector('[data-section=profile]'))">
+      <img class="sidebar-avatar" src="https://api.dicebear.com/7.x/avataaars/svg?seed=user1" alt="You">
+      <div class="sidebar-user-info">
+        <div class="sidebar-user-name">Alex Morgan</div>
+        <div class="sidebar-user-handle">@alexmorgan</div>
+      </div>
+      <i class="fas fa-ellipsis-h" style="color:var(--text2)"></i>
     </div>
-        function toggleLike(element) {
-            const icon = element.querySelector('i');
-            const span = element.querySelector('span');
-            let count = parseInt(span.innerText);
-            if (element.classList.contains('liked')) {
-                element.classList.remove('liked');
-                icon.classList.remove('fas');
-                icon.classList.add('far');
-                span.innerText = count - 1;
-            } else {
-                element.classList.add('liked');
-                icon.classList.remove('far');
-                icon.classList.add('fas');
-                span.innerText = count + 1;
-            }
-        }
-        
-        function escapeHTML(str) {
-            return str.replace(/[&<>'"]/g, 
-                tag => ({
-                    '&': '&amp;',
-                    '<': '&lt;',
-                    '>': '&gt;',
-                    "'": '&#39;',
-                    '"': '&quot;'
-                }[tag] || tag)
-            );
-        }
-    </script>
-    <script src="app.js"></script>
+  </aside>
+
+  <!-- Main Feed -->
+  <main class="feed" id="main-feed">
+    <!-- Feed Tabs -->
+    <div class="feed-tabs">
+      <div class="feed-tab active" onclick="switchTab(this,'forYou')">For You</div>
+      <div class="feed-tab" onclick="switchTab(this,'following')">Following</div>
+      <div class="feed-tab" onclick="switchTab(this,'trending')"><span class="live-dot"></span>Live</div>
+    </div>
+
+    <!-- Stories -->
+    <div class="stories-row" id="stories-row"></div>
+
+    <!-- Composer -->
+    <div class="composer" id="composer-area">
+      <div class="composer-top">
+        <img class="composer-avatar" src="https://api.dicebear.com/7.x/avataaars/svg?seed=user1" alt="You">
+        <textarea class="composer-textarea" id="composer-text" placeholder="What's on your mind?" rows="2" oninput="updateCharCount()"></textarea>
+      </div>
+      <div class="composer-actions">
+        <button class="composer-action-btn" title="Image"><i class="fas fa-image"></i></button>
+        <button class="composer-action-btn" title="GIF"><i class="fas fa-film"></i></button>
+        <button class="composer-action-btn" title="Poll"><i class="fas fa-poll-h"></i></button>
+        <button class="composer-action-btn" title="Emoji"><i class="fas fa-face-smile"></i></button>
+        <button class="composer-action-btn" title="Location"><i class="fas fa-map-marker-alt"></i></button>
+        <span class="char-count" id="char-count">280</span>
+        <button class="submit-post-btn" id="submit-btn" onclick="submitPost()" disabled>Post</button>
+      </div>
+    </div>
+
+    <!-- Feed Posts -->
+    <div id="posts-container"></div>
+
+    <!-- Loading -->
+    <div id="feed-loader" style="padding:20px 0;">
+      <div class="skel-post">
+        <div class="skel-header">
+          <div class="skeleton skel-avatar"></div>
+          <div class="skel-lines"><div class="skeleton skel-line" style="width:40%"></div><div class="skeleton skel-line" style="width:70%"></div></div>
+        </div>
+        <div class="skel-body"><div class="skeleton skel-line"></div><div class="skeleton skel-line" style="width:80%"></div><div class="skeleton skel-line" style="width:60%"></div></div>
+      </div>
+    </div>
+  </main>
+
+  <!-- Right Panel -->
+  <aside class="right-panel">
+    <div class="search-bar">
+      <i class="fas fa-search"></i>
+      <input type="text" id="search-input" placeholder="Search Pulse..." oninput="doSearch(this.value)" onfocus="showSearch()" onblur="hideSearch()">
+      <div class="search-results" id="search-results"></div>
+    </div>
+
+    <!-- Trending -->
+    <div class="widget">
+      <div class="widget-title">🔥 Trending Now</div>
+      <div id="trending-list"></div>
+    </div>
+
+    <!-- Who to Follow -->
+    <div class="widget">
+      <div class="widget-title">👤 Who to Follow</div>
+      <div id="follow-list"></div>
+    </div>
+
+    <div style="font-size:12px;color:var(--text2);line-height:1.8;margin-top:8px;">
+      Terms · Privacy · Cookies · Ads · <br>© 2026 Pulse Inc.
+    </div>
+  </aside>
+</div>
+
+<!-- Theme Toggle -->
+<button class="theme-toggle" onclick="toggleTheme()" id="theme-btn" title="Toggle theme">
+  <i class="fas fa-sun"></i>
+</button>
+
+<!-- Toast Container -->
+<div class="toast-container" id="toast-container"></div>
+
+<!-- Comment Modal -->
+<div class="modal-overlay" id="comment-modal" onclick="closeModal(event)">
+  <div class="modal">
+    <div class="modal-header">
+      <span style="font-size:18px;font-weight:700;">💬 Replies</span>
+      <button class="modal-close" onclick="closeCommentModal()"><i class="fas fa-times"></i></button>
+    </div>
+    <div id="modal-post-content"></div>
+    <div id="modal-comments" style="margin-top:16px;"></div>
+    <div class="composer" style="margin-top:16px;">
+      <textarea class="composer-textarea" id="modal-reply" placeholder="Write a reply..." rows="2"></textarea>
+      <div style="display:flex;justify-content:flex-end;margin-top:10px;">
+        <button class="submit-post-btn" onclick="submitReply()">Reply</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+const AVATARS = [
+  'https://api.dicebear.com/7.x/avataaars/svg?seed=alice',
+  'https://api.dicebear.com/7.x/avataaars/svg?seed=bob',
+  'https://api.dicebear.com/7.x/avataaars/svg?seed=carol',
+  'https://api.dicebear.com/7.x/avataaars/svg?seed=dave',
+  'https://api.dicebear.com/7.x/avataaars/svg?seed=emma',
+  'https://api.dicebear.com/7.x/avataaars/svg?seed=frank',
+  'https://api.dicebear.com/7.x/avataaars/svg?seed=grace',
+  'https://api.dicebear.com/7.x/avataaars/svg?seed=henry',
+];
+const IMAGES = [
+  'https://picsum.photos/seed/tech1/600/320',
+  'https://picsum.photos/seed/nature2/600/320',
+  'https://picsum.photos/seed/city3/600/320',
+  'https://picsum.photos/seed/code4/600/320',
+];
+const USERS = [
+  {name:'Alice Chen',handle:'@alicechen',verified:true},
+  {name:'Bob Keller',handle:'@bobkeller',verified:false},
+  {name:'Carol Zhang',handle:'@carolz',verified:true},
+  {name:'Dave Patel',handle:'@davepatel',verified:false},
+  {name:'Emma Wilson',handle:'@emmaw',verified:true},
+  {name:'Frank Liu',handle:'@frankliu',verified:false},
+];
+const CONTENTS = [
+  'Just shipped a new feature that cuts load time by 60%! 🚀 The secret? Lazy loading + virtual scroll. #WebDev #Performance',
+  'Hot take: The best UI is the one users never notice. Invisible design is the hardest and most rewarding craft. #UXDesign #DesignThinking',
+  'Been using AI tools for 3 months now. My productivity went up 3x but my critical thinking went down. Balance is everything. #AI #Productivity',
+  'Unpopular opinion: Dark mode isn\'t easier on the eyes by default. Contrast ratio and ambient lighting matter more. #Design #Accessibility',
+  'Just crossed 10k followers! Thank you all so much 🥹❤️ Never thought I\'d be here. Starting as a nobody, now connecting with brilliant minds. #Grateful',
+  'The loneliest moment in life is when you see your whole life fall apart but all you do is stare at it quietly. #Thoughts #Life',
+  'CSS Grid + CSS Container Queries = the layout system we deserved 5 years ago. We\'re finally living in the future. #CSS #Frontend #WebDev',
+  'Coffee shops are the world\'s best coworking spaces because nobody bothers you and everyone pretends they\'re working. ☕ #WFH #Remote',
+  'Reading "Designing Data-Intensive Applications". Chapter 3 on storage engines just changed how I think about databases forever. #Learning #Engineering',
+  'Your mental health is more important than your code review. Take breaks. Go for walks. The PR will still be there. #MentalHealth #TechLife',
+];
+const TRENDING = [
+  {cat:'Technology',tag:'#AIRevolution',count:'245K posts'},
+  {cat:'Design',tag:'#UIInspirations',count:'89K posts'},
+  {cat:'Trending in Tech',tag:'#WebDev2026',count:'167K posts'},
+  {cat:'Programming',tag:'#OpenSource',count:'112K posts'},
+  {cat:'Trending',tag:'#MindfulCoding',count:'54K posts'},
+];
+const FOLLOW_USERS = [
+  {name:'Sarah Kim',handle:'@sarahkim',verified:true,idx:4},
+  {name:'Marcus Green',handle:'@marcusg',verified:false,idx:5},
+  {name:'Priya Sharma',handle:'@priyasharma',verified:true,idx:6},
+];
+const NOTIFS = [
+  {icon:'❤️',msg:'Alice Chen liked your post'},
+  {icon:'🔁',msg:'Bob Keller reposted your thought'},
+  {icon:'💬',msg:'Emma Wilson replied to you'},
+  {icon:'👤',msg:'3 new followers this hour!'},
+];
+
+let posts = [];
+let postIdCounter = 100;
+let currentModal = null;
+
+function timeAgo(ms){
+  const s = Math.floor((Date.now()-ms)/1000);
+  if(s<60)return s+'s';
+  if(s<3600)return Math.floor(s/60)+'m';
+  if(s<86400)return Math.floor(s/3600)+'h';
+  return Math.floor(s/86400)+'d';
+}
+
+function generatePost(forceNew=false){
+  const idx = Math.floor(Math.random()*USERS.length);
+  const user = USERS[idx];
+  const hasImage = Math.random() > 0.65;
+  const imgIdx = Math.floor(Math.random()*IMAGES.length);
+  return {
+    id: postIdCounter++,
+    user, avatar: AVATARS[idx],
+    content: CONTENTS[Math.floor(Math.random()*CONTENTS.length)],
+    hasImage, image: IMAGES[imgIdx],
+    time: Date.now() - Math.floor(Math.random()*(forceNew?60000:7200000)),
+    likes: Math.floor(Math.random()*800)+5,
+    reposts: Math.floor(Math.random()*200)+1,
+    comments: [],
+    bookmarks: Math.floor(Math.random()*100),
+    liked: false, reposted: false, bookmarked: false,
+  };
+}
+
+function renderContent(text){
+  return text
+    .replace(/(#\w+)/g,'<span class="post-hashtag">$1</span>')
+    .replace(/(@\w+)/g,'<span class="post-mention">$1</span>');
+}
+
+function renderPost(post,prepend=false){
+  const container = document.getElementById('posts-container');
+  const div = document.createElement('div');
+  div.className='post-card';
+  div.id=`post-${post.id}`;
+  div.innerHTML=`
+    <div class="post-header">
+      <img class="post-avatar" src="${post.avatar}" alt="${post.user.name}">
+      <div class="post-meta">
+        <div class="post-user">
+          <span class="post-name">${post.user.name}</span>
+          ${post.user.verified?'<i class="fas fa-circle-check verified"></i>':''}
+          <span class="post-handle">${post.user.handle}</span>
+          <span class="post-time" id="pt-${post.id}">${timeAgo(post.time)}</span>
+        </div>
+      </div>
+      <button class="post-more" onclick="showPostMenu(${post.id})"><i class="fas fa-ellipsis-h"></i></button>
+    </div>
+    <div class="post-content">${renderContent(post.content)}</div>
+    ${post.hasImage?`<div class="post-image"><img src="${post.image}" alt="Post image" loading="lazy"></div>`:''}
+    <div class="post-actions">
+      <button class="action-btn comment" onclick="openComments(${post.id})">
+        <i class="far fa-comment"></i>
+        <span id="cc-${post.id}">${post.comments.length}</span>
+      </button>
+      <button class="action-btn repost ${post.reposted?'reposted':''}" id="rp-${post.id}" onclick="toggleRepost(${post.id})">
+        <i class="fas fa-retweet"></i>
+        <span id="rc-${post.id}">${post.reposts}</span>
+      </button>
+      <button class="action-btn like ${post.liked?'liked':''}" id="lk-${post.id}" onclick="toggleLike(${post.id})">
+        <i class="${post.liked?'fas':'far'} fa-heart"></i>
+        <span id="lc-${post.id}">${post.likes}</span>
+      </button>
+      <button class="action-btn share ${post.bookmarked?'bookmarked':''}" id="bk-${post.id}" onclick="toggleBookmark(${post.id})" style="${post.bookmarked?'color:var(--orange)':''}">
+        <i class="${post.bookmarked?'fas':'far'} fa-bookmark"></i>
+      </button>
+      <button class="action-btn share" onclick="sharePost(${post.id})">
+        <i class="fas fa-arrow-up-from-bracket"></i>
+      </button>
+    </div>
+  `;
+  if(prepend&&container.firstChild){
+    container.insertBefore(div,container.firstChild);
+  } else {
+    container.appendChild(div);
+  }
+}
+
+function toggleLike(id){
+  const p = posts.find(p=>p.id===id);
+  if(!p)return;
+  p.liked=!p.liked;
+  p.likes+=p.liked?1:-1;
+  const btn=document.getElementById(`lk-${id}`);
+  btn.className=`action-btn like ${p.liked?'liked':''}`;
+  btn.querySelector('i').className=`${p.liked?'fas':'far'} fa-heart`;
+  document.getElementById(`lc-${id}`).textContent=p.likes;
+  if(p.liked)showToast('❤️','You liked this post!');
+}
+
+function toggleRepost(id){
+  const p = posts.find(p=>p.id===id);
+  if(!p)return;
+  p.reposted=!p.reposted;
+  p.reposts+=p.reposted?1:-1;
+  const btn=document.getElementById(`rp-${id}`);
+  btn.className=`action-btn repost ${p.reposted?'reposted':''}`;
+  document.getElementById(`rc-${id}`).textContent=p.reposts;
+  if(p.reposted)showToast('🔁','Reposted!');
+}
+
+function toggleBookmark(id){
+  const p = posts.find(p=>p.id===id);
+  if(!p)return;
+  p.bookmarked=!p.bookmarked;
+  const btn=document.getElementById(`bk-${id}`);
+  btn.className=`action-btn share ${p.bookmarked?'bookmarked':''}`;
+  btn.style.color=p.bookmarked?'var(--orange)':'';
+  btn.querySelector('i').className=`${p.bookmarked?'fas':'far'} fa-bookmark`;
+  showToast(p.bookmarked?'🔖':'📌',p.bookmarked?'Added to bookmarks!':'Removed from bookmarks');
+}
+
+function sharePost(id){
+  showToast('🔗','Link copied to clipboard!');
+}
+
+function showPostMenu(id){
+  showToast('⚙️','Post options coming soon!');
+}
+
+function openComments(id){
+  const p = posts.find(p=>p.id===id);
+  if(!p)return;
+  currentModal=id;
+  const overlay=document.getElementById('comment-modal');
+  document.getElementById('modal-post-content').innerHTML=`
+    <div class="post-card" style="border:none;padding:0;">
+      <div class="post-header">
+        <img class="post-avatar" src="${p.avatar}" alt="">
+        <div class="post-meta">
+          <div class="post-user">
+            <span class="post-name">${p.user.name}</span>
+            <span class="post-handle">${p.user.handle}</span>
+          </div>
+        </div>
+      </div>
+      <div class="post-content">${renderContent(p.content)}</div>
+    </div>
+  `;
+  renderModalComments(p);
+  overlay.classList.add('open');
+}
+
+function renderModalComments(p){
+  const c=document.getElementById('modal-comments');
+  if(p.comments.length===0){
+    c.innerHTML='<div style="color:var(--text2);text-align:center;padding:20px;">No replies yet. Be the first!</div>';
+    return;
+  }
+  c.innerHTML=p.comments.map(cm=>`
+    <div class="comment-item">
+      <img class="post-avatar" src="${cm.avatar}" alt="" style="width:36px;height:36px;">
+      <div class="comment-body">
+        <div class="comment-author">${cm.name}</div>
+        <div class="comment-text">${cm.text}</div>
+        <div class="comment-time">${timeAgo(cm.time)}</div>
+      </div>
+    </div>
+  `).join('');
+}
+
+function submitReply(){
+  const text=document.getElementById('modal-reply').value.trim();
+  if(!text||currentModal===null)return;
+  const p=posts.find(p=>p.id===currentModal);
+  if(!p)return;
+  p.comments.push({
+    avatar:'https://api.dicebear.com/7.x/avataaars/svg?seed=user1',
+    name:'Alex Morgan',text,time:Date.now()
+  });
+  document.getElementById('modal-reply').value='';
+  document.getElementById(`cc-${p.id}`).textContent=p.comments.length;
+  renderModalComments(p);
+  showToast('💬','Reply posted!');
+}
+
+function closeCommentModal(){
+  document.getElementById('comment-modal').classList.remove('open');
+}
+function closeModal(e){
+  if(e.target===document.getElementById('comment-modal'))closeCommentModal();
+}
+
+function submitPost(){
+  const text=document.getElementById('composer-text').value.trim();
+  if(!text)return;
+  const p={
+    id:postIdCounter++,
+    user:{name:'Alex Morgan',handle:'@alexmorgan',verified:false},
+    avatar:'https://api.dicebear.com/7.x/avataaars/svg?seed=user1',
+    content:text,hasImage:false,image:'',
+    time:Date.now(),
+    likes:0,reposts:0,comments:[],bookmarks:0,
+    liked:false,reposted:false,bookmarked:false,
+  };
+  posts.unshift(p);
+  renderPost(p,true);
+  document.getElementById('composer-text').value='';
+  document.getElementById('char-count').textContent='280';
+  document.getElementById('submit-btn').disabled=true;
+  showToast('🚀','Post published!');
+}
+
+function updateCharCount(){
+  const val=document.getElementById('composer-text').value;
+  const remaining=280-val.length;
+  const el=document.getElementById('char-count');
+  el.textContent=remaining;
+  el.className='char-count'+(remaining<20?' danger':remaining<50?' warn':'');
+  document.getElementById('submit-btn').disabled=val.trim().length===0||remaining<0;
+}
+
+function switchTab(el,tab){
+  document.querySelectorAll('.feed-tab').forEach(t=>t.classList.remove('active'));
+  el.classList.add('active');
+  document.getElementById('posts-container').innerHTML='';
+  document.getElementById('feed-loader').style.display='block';
+  setTimeout(()=>{
+    document.getElementById('feed-loader').style.display='none';
+    initFeed();
+  },800);
+}
+
+function setNav(el){
+  if(!el)return;
+  document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
+  el.classList.add('active');
+}
+
+function showToast(icon,msg,duration=3000){
+  const container=document.getElementById('toast-container');
+  const div=document.createElement('div');
+  div.className='toast';
+  div.innerHTML=`<span class="toast-icon">${icon}</span><span class="toast-msg">${msg}</span>`;
+  container.appendChild(div);
+  setTimeout(()=>{
+    div.classList.add('removing');
+    setTimeout(()=>div.remove(),300);
+  },duration);
+}
+
+function toggleTheme(){
+  const html=document.documentElement;
+  const isDark=html.getAttribute('data-theme')==='dark';
+  html.setAttribute('data-theme',isDark?'light':'dark');
+  document.getElementById('theme-btn').innerHTML=isDark?'<i class="fas fa-moon"></i>':'<i class="fas fa-sun"></i>';
+}
+
+function openNotifs(){
+  const badge=document.getElementById('notif-badge');
+  badge.style.display='none';
+  NOTIFS.slice(0,2).forEach((n,i)=>{
+    setTimeout(()=>showToast(n.icon,n.msg),i*400);
+  });
+}
+
+function doSearch(val){
+  const res=document.getElementById('search-results');
+  if(!val.trim()){res.style.display='none';return;}
+  const filtered=USERS.filter(u=>u.name.toLowerCase().includes(val.toLowerCase())||u.handle.includes(val.toLowerCase()));
+  if(!filtered.length){res.style.display='none';return;}
+  res.style.display='block';
+  res.innerHTML=filtered.map((u,i)=>`
+    <div class="search-result-item">
+      <img src="${AVATARS[i%AVATARS.length]}" alt="" style="width:36px;height:36px;border-radius:50%;">
+      <div>
+        <div style="font-weight:600;font-size:14px;">${u.name} ${u.verified?'<i class="fas fa-circle-check verified"></i>':''}</div>
+        <div style="font-size:12px;color:var(--text2);">${u.handle}</div>
+      </div>
+    </div>
+  `).join('');
+}
+function showSearch(){setTimeout(()=>{if(document.getElementById('search-input').value)document.getElementById('search-results').style.display='block';},100);}
+function hideSearch(){setTimeout(()=>{document.getElementById('search-results').style.display='none';},200);}
+
+function initStories(){
+  const row=document.getElementById('stories-row');
+  const people=[{name:'Add Story',add:true},...USERS.slice(0,6).map((u,i)=>({name:u.name.split(' ')[0],avatar:AVATARS[i]}))];
+  row.innerHTML=people.map((p,i)=>
+    p.add
+      ?`<div class="story-item story-add"><div class="story-ring"><div class="story-add-icon">+</div></div><span class="story-name">Add Story</span></div>`
+      :`<div class="story-item" onclick="showToast('👀','Viewing ${p.name}\'s story...')">
+          <div class="story-ring"><div class="story-inner"><img src="${p.avatar}" alt="${p.name}"></div></div>
+          <span class="story-name">${p.name}</span>
+        </div>`
+  ).join('');
+}
+
+function initTrending(){
+  document.getElementById('trending-list').innerHTML=TRENDING.map(t=>`
+    <div class="trend-item" onclick="showToast('🔥','Showing ${t.tag} feed...')">
+      <div class="trend-meta">${t.cat}</div>
+      <div class="trend-tag">${t.tag}</div>
+      <div class="trend-count">${t.count}</div>
+    </div>
+  `).join('');
+}
+
+function initFollowList(){
+  document.getElementById('follow-list').innerHTML=FOLLOW_USERS.map((u,i)=>`
+    <div class="follow-item">
+      <img class="follow-avatar" src="${AVATARS[u.idx%AVATARS.length]}" alt="${u.name}">
+      <div class="follow-info">
+        <div class="follow-name">${u.name}${u.verified?' <i class="fas fa-circle-check verified" style="font-size:12px;"></i>':''}</div>
+        <div class="follow-handle">${u.handle}</div>
+      </div>
+      <button class="follow-btn" id="fb-${i}" onclick="toggleFollow(${i},this)">${['Follow','Follow','Follow'][i]}</button>
+    </div>
+  `).join('');
+}
+
+function toggleFollow(i,btn){
+  const isFollowing=btn.classList.contains('following');
+  btn.classList.toggle('following');
+  btn.textContent=isFollowing?'Follow':'Following';
+  if(!isFollowing)showToast('👤',`Now following ${FOLLOW_USERS[i].name}!`);
+}
+
+function initFeed(){
+  const container=document.getElementById('posts-container');
+  container.innerHTML='';
+  posts=Array.from({length:12},()=>generatePost());
+  posts.forEach(p=>renderPost(p));
+}
+
+// Real-time simulation
+function simulateRealTime(){
+  setInterval(()=>{
+    const newPost=generatePost(true);
+    posts.unshift(newPost);
+    renderPost(newPost,true);
+    showToast('⚡','New post in your feed!',2000);
+  },25000);
+
+  setInterval(()=>{
+    const randomPost=posts[Math.floor(Math.random()*posts.length)];
+    if(!randomPost)return;
+    randomPost.likes+=Math.floor(Math.random()*5)+1;
+    const el=document.getElementById(`lc-${randomPost.id}`);
+    if(el){el.textContent=randomPost.likes;el.style.animation='none';el.offsetHeight;el.style.animation='heartPop 0.4s';}
+  },3000);
+}
+
+// Update timestamps
+setInterval(()=>{
+  posts.forEach(p=>{
+    const el=document.getElementById(`pt-${p.id}`);
+    if(el)el.textContent=timeAgo(p.time);
+  });
+},30000);
+
+// Init
+initStories();
+initTrending();
+initFollowList();
+initFeed();
+setTimeout(()=>{
+  document.getElementById('feed-loader').style.display='none';
+  simulateRealTime();
+},600);
+
+// Infinite scroll
+window.addEventListener('scroll',()=>{
+  const feed=document.getElementById('main-feed');
+  if(!feed)return;
+},true);
+
+document.getElementById('main-feed').addEventListener('scroll',function(){
+  if(this.scrollTop+this.clientHeight>=this.scrollHeight-200){
+    const newPosts=Array.from({length:5},()=>generatePost());
+    newPosts.forEach(p=>{posts.push(p);renderPost(p,false);});
+  }
+});
+</script>
 </body>
 </html>
